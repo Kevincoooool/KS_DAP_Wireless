@@ -37,6 +37,7 @@
 #include "DAP.h"
 #include "rl_usb.h"
 #include "device.h"
+#include "malloc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,7 +87,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+char test[]="test\n";
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -106,7 +107,7 @@ int main(void)
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 //	while (!USBD_Configured(0U)){}         // Wait for USB Device to configure
-
+	my_mem_init(SRAMIN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -117,7 +118,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  
-
+//	CDC_Transmit_FS((uint8_t*)test,sizeof(test));
+//	HAL_Delay(500);
 //	  hhid = (USBD_CUSTOM_HID_HandleTypeDef*) hUsbDeviceFS.pClassData;
 //    
 //		usbd_hid_process();

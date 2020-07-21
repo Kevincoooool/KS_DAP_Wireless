@@ -25,6 +25,7 @@
 /* USER CODE BEGIN INCLUDE */
 #include "DAP_Common.h"
 #include "DAP_config.h"
+#include "hid_transfer.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/

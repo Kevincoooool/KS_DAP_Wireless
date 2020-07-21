@@ -18,12 +18,12 @@
           <Vendor>STMicroelectronics</Vendor>
           <PackID>Keil.STM32F1xx_DFP.2.1.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20000000-0x20004FFF) IROM(0x8000000-0x800FFFF)  CLOCK(8000000) CPUTYPE("Cortex-M3")</Cpu>
+          <Cpu>IRAM(0x20000000,0x5000) IROM(0x08000000,0x10000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll></FlashDriverDll>
-          <DeviceId></DeviceId>
-          <RegisterFile></RegisterFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000 -FP0($$Device:STM32F103C8$Flash\STM32F10x_128.FLM))</FlashDriverDll>
+          <DeviceId>4235</DeviceId>
+          <RegisterFile>$$Device:STM32F103C8$Device\Include\stm32f10x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -137,7 +137,7 @@
             <DriverSelection>4107</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>STLink\ST-LINKIII-KEIL_SWO.dll</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../FATFS/Target;  ../FATFS/App;  ../USB_DEVICE/App;  ../USB_DEVICE/Target;  ../Core/Inc;  ../Drivers/STM32F1xx_HAL_Driver/Inc;  ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;  ../Middlewares/Third_Party/FatFs/src;  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;  ../Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Inc;  ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;  ../Drivers/CMSIS/Include;  ..\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc;  ..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;  ..\CMSIS-DAP\Include</IncludePath>
+              <IncludePath>../FATFS/Target;    ../FATFS/App;    ../USB_DEVICE/App;    ../USB_DEVICE/Target;    ../Core/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;    ../Middlewares/Third_Party/FatFs/src;    ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;    ../Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Inc;    ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;    ../Drivers/CMSIS/Include;    ..\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc;    ..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc;    ..\CMSIS-DAP\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -513,9 +513,19 @@
               <FilePath>..\USB_DEVICE\App\usbd_cdc_if.c</FilePath>
             </File>
             <File>
+              <FileName>usbd_cdc_if.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USB_DEVICE\App\usbd_cdc_if.h</FilePath>
+            </File>
+            <File>
               <FileName>usbd_custom_hid_if.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USB_DEVICE\App\usbd_custom_hid_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_custom_hid_if.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USB_DEVICE\App\usbd_custom_hid_if.h</FilePath>
             </File>
             <File>
               <FileName>usbd_composite.c</FileName>
@@ -526,21 +536,6 @@
               <FileName>usbd_composite.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USB_DEVICE\App\usbd_composite.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_conf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USB_DEVICE\Target\usbd_conf.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_cdc_if.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USB_DEVICE\App\usbd_cdc_if.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_custom_hid_if.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USB_DEVICE\App\usbd_custom_hid_if.h</FilePath>
             </File>
             <File>
               <FileName>usbd_storage_if.h</FileName>
@@ -562,11 +557,26 @@
               <FileType>1</FileType>
               <FilePath>../USB_DEVICE/App/usbd_storage_if.c</FilePath>
             </File>
+            <File>
+              <FileName>malloc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USB_DEVICE\App\malloc.c</FilePath>
+            </File>
+            <File>
+              <FileName>malloc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USB_DEVICE\App\malloc.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Application/User/USB_DEVICE/Target</GroupName>
           <Files>
+            <File>
+              <FileName>usbd_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USB_DEVICE\Target\usbd_conf.h</FilePath>
+            </File>
             <File>
               <FileName>usbd_conf.c</FileName>
               <FileType>1</FileType>
@@ -713,6 +723,11 @@
               <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Src\usbd_customhid.c</FilePath>
             </File>
             <File>
+              <FileName>usbd_customhid.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc\usbd_customhid.h</FilePath>
+            </File>
+            <File>
               <FileName>usbd_cdc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c</FilePath>
@@ -726,11 +741,6 @@
               <FileName>usbd_msc.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\MSC\Inc\usbd_msc.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_customhid.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\CustomHID\Inc\usbd_customhid.h</FilePath>
             </File>
             <File>
               <FileName>usbd_core.c</FileName>
@@ -779,8 +789,8 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.2.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.5.1"/>
         <targetInfos>
           <targetInfo name="STM32F103C8_MSC"/>
         </targetInfos>
