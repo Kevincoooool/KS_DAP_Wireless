@@ -1,0 +1,42 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start gdb server",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f",
+                "interface/stlink.cfg",
+                "-f",
+                "target/${input:MCUType}.cfg",
+                "-f",
+                "target/patch_stlink.cfg",
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "clear": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+    ],
+    "inputs": [
+        {
+          "type": "pickString",
+          "id": "MCUType",
+          "description": "Select the MCU family?",
+          "options": [
+            "stm32f0x",
+            "stm32f1x",
+            "stm32f2x",
+            "stm32f3x",
+            "stm32f4x",
+            "stm32f7x",
+            "stm32h7x",
+          ],
+          "default": "stm32f7x"
+        }
+      ]
+}

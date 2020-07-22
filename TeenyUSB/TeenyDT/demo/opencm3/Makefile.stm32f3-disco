@@ -1,0 +1,61 @@
+##
+## This file is part of the libopencm3 project.
+##
+## This library is free software: you can redistribute it and/or modify
+## it under the terms of the GNU Lesser General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## This library is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public License
+## along with this library.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+TEENYDT_DIR ?= ../..
+TEENYDT_DESC ?= demo_desc.lua
+OPENCM3_DIR ?= ../../../libopencm3
+
+BOARD = stm32f3-disco
+PROJECT = usb-teenydt-$(BOARD)
+BUILD_DIR = bin-$(BOARD)
+
+SHARED_DIR = $(OPENCM3_DIR)/tests/shared
+
+CFILES = main-$(BOARD).c
+CFILES += opencm3_usb_init.c trace.c trace_stdio.c
+CFILES += delay.c
+
+VPATH += $(SHARED_DIR)
+
+INCLUDES += $(patsubst %,-I%, . $(SHARED_DIR))
+
+### This section can go to an arch shared rules eventually...
+LDSCRIPT = $(OPENCM3_DIR)/lib/stm32/f3/stm32f303xc.ld
+OPENCM3_LIB = opencm3_stm32f3
+OPENCM3_DEFS = -DSTM32F3
+FP_FLAGS ?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
+ARCH_FLAGS = -mthumb -mcpu=cortex-m4 $(FP_FLAGS)
+#OOCD_INTERFACE = stlink-v2
+#OOCD_TARGET = stm32f3x
+OOCD_FILE = openocd.stm32f3-disco.cfg
+
+
+include $(OPENCM3_DIR)/tests/rules.mk
+
+
+## rule for generate USB descriptor
+USBMEM ?= 512
+USBEP  ?= 7
+
+PWD = $(shell pwd)
+opencm3_usb_init.c opencm3_usb_init.h :$(TEENYDT_DESC)
+	@echo generate USB descriptor
+	@cd $(TEENYDT_DIR) && \
+	lua gen_descriptor.lua $(PWD)/$< -mode=opencm3 -maxmem=$(USBMEM) -maxep=$(USBEP) && \
+	cd $(PWD)
+
+main-$(BOARD).c: opencm3_usb_init.h
