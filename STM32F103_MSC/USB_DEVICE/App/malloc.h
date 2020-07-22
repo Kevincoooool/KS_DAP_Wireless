@@ -22,7 +22,6 @@
 
 //定义两个内存池
 #define SRAMIN	 0		//内部内存池
-#define SRAMEX   1		//外部内存池(精英STM32开发板不支持外部内存) 
 
 #define SRAMBANK 	1	//定义支持的SRAM块数. 精英版实际上只支持1个内存区域,即内部内存.	
 
@@ -51,8 +50,8 @@ uint8_t my_mem_free(uint8_t memx,uint32_t offset);		//内存释放(内部调用)
 uint8_t my_mem_perused(uint8_t memx);				//获得内存使用率(外/内部调用) 
 ////////////////////////////////////////////////////////////////////////////////
 //用户调用函数
-void myfree(uint8_t memx,void *ptr);  			//内存释放(外部调用)
-void *mymalloc(uint8_t memx,uint32_t size);			//内存分配(外部调用)
+void myfree(void *ptr);  			//内存释放(外部调用)
+void *mymalloc(uint32_t size);			//内存分配(外部调用)
 void *myrealloc(uint8_t memx,void *ptr,uint32_t size);//重新分配内存(外部调用)
 #endif
 

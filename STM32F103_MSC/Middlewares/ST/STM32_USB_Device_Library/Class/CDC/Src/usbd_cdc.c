@@ -468,6 +468,7 @@ __ALIGN_BEGIN uint8_t USBD_CDC_OtherSpeedCfgDesc[USB_CDC_CONFIG_DESC_SIZ] __ALIG
   * @param  cfgidx: Configuration index
   * @retval status
   */
+static USBD_CDC_HandleTypeDef usbd_cdc_handle;
 static uint8_t  USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
   uint8_t ret = 0U;
@@ -506,8 +507,9 @@ static uint8_t  USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
   USBD_LL_OpenEP(pdev, CDC_CMD_EP, USBD_EP_TYPE_INTR, CDC_CMD_PACKET_SIZE);
   pdev->ep_in[CDC_CMD_EP & 0xFU].is_used = 1U;
 
-  pdev->pClassData = USBD_malloc(sizeof(USBD_CDC_HandleTypeDef));
+  //pdev->pClassData = USBD_malloc(sizeof(USBD_CDC_HandleTypeDef));
 
+  pdev->pClassData = &usbd_cdc_handle;
   if (pdev->pClassData == NULL)
   {
     ret = 1U;
@@ -566,7 +568,7 @@ static uint8_t  USBD_CDC_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
   if (pdev->pClassData != NULL)
   {
     ((USBD_CDC_ItfTypeDef *)pdev->pUserData)->DeInit();
-    USBD_free(pdev->pClassData);
+//    USBD_free(pdev->pClassData);
     pdev->pClassData = NULL;
   }
 
@@ -583,7 +585,8 @@ static uint8_t  USBD_CDC_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 static uint8_t  USBD_CDC_Setup(USBD_HandleTypeDef *pdev,
                                USBD_SetupReqTypedef *req)
 {
-  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+//  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+	USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   uint8_t ifalt = 0U;
   uint16_t status_info = 0U;
   uint8_t ret = USBD_OK;
@@ -676,7 +679,8 @@ static uint8_t  USBD_CDC_Setup(USBD_HandleTypeDef *pdev,
   */
 static uint8_t  USBD_CDC_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum)
 {
-  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassData;
+//  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassData;
+	USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   PCD_HandleTypeDef *hpcd = pdev->pData;
 
   if (pdev->pClassData != NULL)
@@ -737,8 +741,8 @@ static uint8_t  USBD_CDC_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
   */
 static uint8_t  USBD_CDC_EP0_RxReady(USBD_HandleTypeDef *pdev)
 {
-  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
-
+//  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   if ((pdev->pUserData != NULL) && (hcdc->CmdOpCode != 0xFFU))
   {
     ((USBD_CDC_ItfTypeDef *)pdev->pUserData)->Control(hcdc->CmdOpCode,
@@ -831,8 +835,8 @@ uint8_t  USBD_CDC_SetTxBuffer(USBD_HandleTypeDef   *pdev,
                               uint8_t  *pbuff,
                               uint16_t length)
 {
-  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
-
+//  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   hcdc->TxBuffer = pbuff;
   hcdc->TxLength = length;
 
@@ -849,8 +853,8 @@ uint8_t  USBD_CDC_SetTxBuffer(USBD_HandleTypeDef   *pdev,
 uint8_t  USBD_CDC_SetRxBuffer(USBD_HandleTypeDef   *pdev,
                               uint8_t  *pbuff)
 {
-  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
-
+//  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   hcdc->RxBuffer = pbuff;
 
   return USBD_OK;
@@ -864,8 +868,8 @@ uint8_t  USBD_CDC_SetRxBuffer(USBD_HandleTypeDef   *pdev,
   */
 uint8_t  USBD_CDC_TransmitPacket(USBD_HandleTypeDef *pdev)
 {
-  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
-
+//  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   if (pdev->pClassData != NULL)
   {
     if (hcdc->TxState == 0U)
@@ -902,8 +906,8 @@ uint8_t  USBD_CDC_TransmitPacket(USBD_HandleTypeDef *pdev)
   */
 uint8_t  USBD_CDC_ReceivePacket(USBD_HandleTypeDef *pdev)
 {
-  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
-
+ // USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;
+USBD_CDC_HandleTypeDef   *hcdc = &usbd_cdc_handle;
   /* Suspend or Resume USB Out process */
   if (pdev->pClassData != NULL)
   {

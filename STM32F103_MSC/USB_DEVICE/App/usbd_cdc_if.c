@@ -23,7 +23,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "usbd_composite.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -263,19 +263,21 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
-	if(Buf[0] == '1')
-	{
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-		char dta[] = "LED ON!";
-		CDC_Transmit_FS((uint8_t *)dta, strlen(dta));
-	}else if(Buf[0] == '0')
-	{
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-		char dta[] = "LED OFF!";
-		CDC_Transmit_FS((uint8_t *)dta, strlen(dta));
-	}
+//	if(Buf[0] == '1')
+//	{
+//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+//		char dta[] = "LED ON!";
+//		CDC_Transmit_FS((uint8_t *)dta, strlen(dta));
+//	}else if(Buf[0] == '0')
+//	{
+//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+//		char dta[] = "LED OFF!";
+//		CDC_Transmit_FS((uint8_t *)dta, strlen(dta));
+//	}
+	CDC_Transmit_FS((uint8_t *)Buf, CDC_DATA_FS_MAX_PACKET_SIZE);
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+	memset(Buf,0,CDC_DATA_FS_MAX_PACKET_SIZE);
   return (USBD_OK);
 
   /* USER CODE END 6 */
@@ -296,12 +298,13 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 {
   uint8_t result = USBD_OK;
   /* USER CODE BEGIN 7 */
-  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)pCDCData;
   if (hcdc->TxState != 0){
     return USBD_BUSY;
   }
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+  
   /* USER CODE END 7 */
   return result;
 }

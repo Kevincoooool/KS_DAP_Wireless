@@ -117,23 +117,23 @@ uint8_t my_mem_free(uint8_t memx,uint32_t offset)
 //释放内存(外部调用) 
 //memx:所属内存块
 //ptr:内存首地址 
-void myfree(uint8_t memx,void *ptr)  
+void myfree(void *ptr)  
 {  
 	uint32_t offset;   
 	if(ptr==NULL)return;//地址为0.  
- 	offset=(uint32_t)ptr-(uint32_t)mallco_dev.membase[memx];     
-    my_mem_free(memx,offset);	//释放内存      
+ 	offset=(uint32_t)ptr-(uint32_t)mallco_dev.membase[0];     
+    my_mem_free(0,offset);	//释放内存      
 }  
 //分配内存(外部调用)
 //memx:所属内存块
 //size:内存大小(字节)
 //返回值:分配到的内存首地址.
-void *mymalloc(uint8_t memx,uint32_t size)  
+void *mymalloc(uint32_t size)  
 {  
     uint32_t offset;   
-	offset=my_mem_malloc(memx,size);  	   	 	   
+	offset=my_mem_malloc(0,size);  	   	 	   
     if(offset==0XFFFFFFFF)return NULL;  
-    else return (void*)((uint32_t)mallco_dev.membase[memx]+offset);  
+    else return (void*)((uint32_t)mallco_dev.membase[0]+offset);  
 }  
 //重新分配内存(外部调用)
 //memx:所属内存块
@@ -148,7 +148,7 @@ void *myrealloc(uint8_t memx,void *ptr,uint32_t size)
     else  
     {  									   
 	    mymemcpy((void*)((uint32_t)mallco_dev.membase[memx]+offset),ptr,size);	//拷贝旧内存内容到新内存   
-        myfree(memx,ptr);  											  		//释放旧内存
+        myfree(ptr);  											  		//释放旧内存
         return (void*)((uint32_t)mallco_dev.membase[memx]+offset);  				//返回新内存首地址
     }  
 }

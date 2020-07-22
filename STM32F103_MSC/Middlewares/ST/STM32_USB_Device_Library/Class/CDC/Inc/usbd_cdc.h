@@ -46,15 +46,15 @@ extern "C" {
 #define CDC_CMD_EP                                  0x83U  /* EP2 for CDC commands */
 
 #ifndef CDC_HS_BINTERVAL
-#define CDC_HS_BINTERVAL                          0x10U
+#define CDC_HS_BINTERVAL                          0x01U
 #endif /* CDC_HS_BINTERVAL */
 
 #ifndef CDC_FS_BINTERVAL
-#define CDC_FS_BINTERVAL                          0x10U
+#define CDC_FS_BINTERVAL                          0x01U
 #endif /* CDC_FS_BINTERVAL */
 
 /* CDC Endpoints parameters: you can fine tune these values depending on the needed baudrates and performance. */
-#define CDC_DATA_HS_MAX_PACKET_SIZE                 512U  /* Endpoint IN & OUT Packet size */
+#define CDC_DATA_HS_MAX_PACKET_SIZE                 64U  /* Endpoint IN & OUT Packet size */
 #define CDC_DATA_FS_MAX_PACKET_SIZE                 64U  /* Endpoint IN & OUT Packet size */
 #define CDC_CMD_PACKET_SIZE                         8U  /* Control Endpoint Packet size */
 

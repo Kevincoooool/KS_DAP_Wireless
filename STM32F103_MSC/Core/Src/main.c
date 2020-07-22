@@ -87,7 +87,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-char test[]="test\n";
+char test[]="test\r\n";
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -119,7 +119,7 @@ char test[]="test\n";
     /* USER CODE BEGIN 3 */
 	  
 //	CDC_Transmit_FS((uint8_t*)test,sizeof(test));
-//	HAL_Delay(500);
+	HAL_Delay(10);
 //	  hhid = (USBD_CUSTOM_HID_HandleTypeDef*) hUsbDeviceFS.pClassData;
 //    
 //		usbd_hid_process();

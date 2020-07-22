@@ -573,14 +573,14 @@
           <GroupName>Application/User/USB_DEVICE/Target</GroupName>
           <Files>
             <File>
-              <FileName>usbd_conf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USB_DEVICE\Target\usbd_conf.h</FilePath>
-            </File>
-            <File>
               <FileName>usbd_conf.c</FileName>
               <FileType>1</FileType>
               <FilePath>../USB_DEVICE/Target/usbd_conf.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USB_DEVICE\Target\usbd_conf.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -738,11 +738,6 @@
               <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc\usbd_cdc.h</FilePath>
             </File>
             <File>
-              <FileName>usbd_msc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\MSC\Inc\usbd_msc.h</FilePath>
-            </File>
-            <File>
               <FileName>usbd_core.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</FilePath>
@@ -761,6 +756,11 @@
               <FileName>usbd_msc.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Src/usbd_msc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_msc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Middlewares\ST\STM32_USB_Device_Library\Class\MSC\Inc\usbd_msc.h</FilePath>
             </File>
             <File>
               <FileName>usbd_msc_bot.c</FileName>

@@ -70,7 +70,7 @@
 /* USER CODE BEGIN PRIVATE_DEFINES */
 
 #define     FLASH_START_ADDR        		0x08005000    // 
-#define     FLASH_PAGE_NBR              96       			// 48K
+#define     FLASH_PAGE_NBR              40       			// 48K
 
 /* USER CODE END PRIVATE_DEFINES */
 
@@ -280,7 +280,7 @@ int8_t STORAGE_Write_FS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t b
 int8_t STORAGE_GetMaxLun_FS(void)
 {
   /* USER CODE BEGIN 8 */
-  return (STORAGE_LUN_NBR - 1);
+  return (FLASH_PAGE_NBR - 1);
   /* USER CODE END 8 */
 }
 
