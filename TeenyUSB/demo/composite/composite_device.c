@@ -271,9 +271,10 @@ int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uin
 #else
 
 #if defined(FLASH_SIZE)
-#define START_ADDR (const uint8_t *)(0x08000000ul + 20 * 1024ul)
+#define PROGRAM_SIZE  24*1024ul
+#define START_ADDR (const uint8_t *)(0x08000000ul + PROGRAM_SIZE)
 #define BLOCK_SIZE FLASH_PAGE_SIZE
-#define BLOCK_COUNT ((FLASH_SIZE - 20 * 1024ul) / FLASH_PAGE_SIZE)
+#define BLOCK_COUNT ((FLASH_SIZE - PROGRAM_SIZE) / FLASH_PAGE_SIZE)
 int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32_t *block_size)
 {
   *block_size = BLOCK_SIZE;
@@ -284,7 +285,8 @@ int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32
 int msc_block_read(tusb_msc_device_t *msc, uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
   uint32_t len = block_len * BLOCK_SIZE;
-  memcpy(buf, START_ADDR + block_addr * BLOCK_SIZE, len);
+  memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
+  
   return len;
 }
 

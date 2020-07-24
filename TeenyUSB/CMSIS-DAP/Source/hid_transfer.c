@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:35:23
  * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-07-23 21:20:26
+ * @LastEditTime: 2020-07-24 08:03:18
  * @FilePath: \TeenyUSB\CMSIS-DAP\Source\hid_transfer.c
  */
 /***************************************************************/
@@ -21,21 +21,20 @@
 
 #define SIMPLE 1
 extern tusb_hid_device_t hid_dev;
+
+
+#if !SIMPLE
 extern tusb_cdc_device_t cdc_dev;
 extern uint8_t cdc_buf[32];
+static volatile uint8_t USB_RequestFlag; // Request  Buffer Usage Flag
+
+static volatile uint8_t USB_ResponseIdle = 1; // Response Buffer Idle  Flag
+static volatile uint8_t USB_ResponseFlag;	  // Response Buffer Usage Flag
 uint16_t USB_In_queue_in;  // Request  Index In
 uint16_t USB_In_queue_out; // Request  Index Out
 
 uint16_t USB_Out_queue_in;	// Response Index In
 uint16_t USB_Out_queue_out; // Response Index Out
-
-static volatile uint8_t USB_RequestFlag; // Request  Buffer Usage Flag
-
-static volatile uint8_t USB_ResponseIdle = 1; // Response Buffer Idle  Flag
-static volatile uint8_t USB_ResponseFlag;	  // Response Buffer Usage Flag
-
-#if !SIMPLE
-
 uint8_t USB_Request[DAP_PACKET_COUNT][DAP_PACKET_SIZE + 1];	 // Request  Buffer
 uint8_t USB_Response[DAP_PACKET_COUNT][DAP_PACKET_SIZE + 1]; // Response Buffer
 uint8_t usbd_hid_process(void)
@@ -156,14 +155,16 @@ void HID_SetInReport(void)
 #else
 uint8_t MYUSB_Request[DAP_PACKET_SIZE + 1];	 // Request  Buffer
 uint8_t MYUSB_Response[DAP_PACKET_SIZE + 1]; // Response Buffer
+uint8_t dealing_data = 0;
 uint8_t usbd_hid_process(void)
 {
 	//如果需要收数据
-	if (USB_RequestFlag)
+	if (dealing_data)
 	{
 		DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
-		USB_RequestFlag = 0;
 		tusb_hid_device_send(&hid_dev, MYUSB_Response, DAP_PACKET_SIZE);
+		dealing_data = 0;
+		
 		return 1;
 	}
 	return 0;
@@ -180,10 +181,10 @@ void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 		return;
 	}
 	//如果需要收数据且没有在处理数据过程中才会接收 不然直接退出
-	if (USB_RequestFlag)
+	if (dealing_data)
 		return; // Discard packet when buffer is full
 	memcpy(MYUSB_Request, EpBuf, len);
-	USB_RequestFlag = 1;
+	dealing_data = 1;
 }
 
 /*

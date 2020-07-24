@@ -38,6 +38,7 @@
 ////////////////////////////////////////////////
 
 #include "teeny_usb.h"
+#define SET_BIT(REG, BIT)     ((REG) |= (BIT))
 
 static int flash_init;
 
@@ -106,4 +107,5 @@ void flash_write(uint32_t addr, const uint8_t* buf, uint32_t size)
         size-=FLASH_PAGE_SIZE;
         addr+=FLASH_PAGE_SIZE;
     }
+    SET_BIT(FLASH->CR, FLASH_CR_LOCK);
 }
