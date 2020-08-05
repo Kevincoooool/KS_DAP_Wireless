@@ -48,7 +48,7 @@
 #include "stm32f103xb.h"
 #include "system_stm32f1xx.h"
 #include "stm32f1xx_hal.h"
-#include "usbd_customhid.h"
+
 
 /**
   * @brief  The hardware initialize routine. Derived from the source code

@@ -20,15 +20,38 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usb_device.h"
+#include "dma.h"
+#include "fatfs.h"
+#include "iwdg.h"
+#include "spi.h"
+#include "usart.h"
+#include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "usbd_custom_hid_if.h"
 #include "DAP_Common.h"
 #include "DAP_config.h"
 #include "hid_transfer.h"
 #include "DAP.h"
+#include "teeny_usb.h"
+#include "teeny_usb.h"
+#include "tusbd_user.h"
+#include "tusbd_hid.h"
+#include "tusbd_cdc.h"
+#include "tusbd_msc.h"
+#include "tusbd_cdc_rndis.h"
+#include "board_config.h"
+#include "tusb_cdc.h"
+#include "board_config.h"
+#include "teeny_usb.h"
+#include "tusbd_user.h"
+#include "tusbd_hid.h"
+#include "tusbd_cdc.h"
+#include "tusbd_msc.h"
+#include "hid_transfer.h"
+#include "DAP.h"
+#include "DAP_config.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,128 +69,171 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-SPI_HandleTypeDef hspi1;
-SPI_HandleTypeDef hspi2;
-DMA_HandleTypeDef hdma_spi1_tx;
-DMA_HandleTypeDef hdma_spi1_rx;
 
-UART_HandleTypeDef huart2;
-DMA_HandleTypeDef hdma_usart2_rx;
-DMA_HandleTypeDef hdma_usart2_tx;
-
-DMA_HandleTypeDef hdma_memtomem_dma1_channel1;
 /* USER CODE BEGIN PV */
-void HID_SetInReport(void);
-void HID_GetOutReport(uint8_t *EpBuf, uint32_t len);
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
-static void MX_SPI1_Init(void);
-static void MX_USART2_UART_Init(void);
-static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-USBD_CUSTOM_HID_HandleTypeDef *hhid;
-extern uint16_t USB_RequestIndexI;      // Request  Index In
-extern uint16_t USB_RequestIndexO;      // Request  Index Out
 
-extern uint16_t USB_ResponseIndexI;     // Response Index In
-extern uint16_t USB_ResponseIndexO;     // Response Index Out
+#define USER_RX_EP_SIZE 32
+#define CDC_RX_EP_SIZE 32
+#define HID_RX_EP_SIZE 64
+#define HID_REPORT_DESC COMP_ReportDescriptor_if0
+#define HID_REPORT_DESC_SIZE COMP_REPORT_DESCRIPTOR_SIZE_IF0
 
-extern uint8_t  USB_Request [DAP_PACKET_COUNT][DAP_PACKET_SIZE + 1];  // Request  Buffer
-extern uint8_t  USB_Response[DAP_PACKET_COUNT][DAP_PACKET_SIZE + 1];  // Response Buffer
+// allocate more buffer for better performance
+__ALIGN_BEGIN uint8_t user_buf[USER_RX_EP_SIZE * 4] __ALIGN_END;
 
-static volatile uint8_t  USB_RequestFlag;       // Request  Buffer Usage Flag
+int user_recv_data(tusb_user_device_t *raw, const void *data, uint16_t len);
+int user_send_done(tusb_user_device_t *raw);
 
-static volatile uint8_t  USB_ResponseIdle = 1;  // Response Buffer Idle  Flag
-static volatile uint8_t  USB_ResponseFlag;      // Response Buffer Usage Flag
+tusb_user_device_t user_dev = {
+    .backend = &user_device_backend,
+    .ep_in = 3,
+    .ep_out = 3,
+    .on_recv_data = user_recv_data,
+    .on_send_done = user_send_done,
+    .rx_buf = user_buf,
+    .rx_size = sizeof(user_buf),
+};
 
-uint8_t usbd_hid_process(void)
+// The HID recv buffer size must equal to the out report size
+__ALIGN_BEGIN uint8_t hid_buf[HID_RX_EP_SIZE] __ALIGN_END;
+int hid_recv_data(tusb_hid_device_t *hid, const void *data, uint16_t len);
+int hid_send_done(tusb_hid_device_t *hid);
+
+tusb_hid_device_t hid_dev = {
+    .backend = &hid_device_backend,
+    .ep_in = 2,
+    .ep_out = 2,
+    .on_recv_data = hid_recv_data,
+    .on_send_done = hid_send_done,
+    .rx_buf = hid_buf,
+    .rx_size = sizeof(hid_buf),
+    .report_desc = HID_REPORT_DESC,
+    .report_desc_size = HID_REPORT_DESC_SIZE,
+};
+
+// The CDC recv buffer size should equal to the out endpoint size
+// or we will need a timeout to flush the recv buffer
+uint8_t cdc_buf[CDC_RX_EP_SIZE];
+
+int cdc_recv_data(tusb_cdc_device_t *cdc, const void *data, uint16_t len);
+int cdc_send_done(tusb_cdc_device_t *cdc);
+void cdc_line_coding_change(tusb_cdc_device_t *cdc);
+
+tusb_cdc_device_t cdc_dev = {
+    .backend = &cdc_device_backend,
+    .ep_in = 1,
+    .ep_out = 1,
+    .ep_int = 8,
+    .on_recv_data = cdc_recv_data,
+    .on_send_done = cdc_send_done,
+    .on_line_coding_change = cdc_line_coding_change,
+    .rx_buf = cdc_buf,
+    .rx_size = sizeof(cdc_buf),
+};
+
+int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32_t *block_size);
+int msc_block_read(tusb_msc_device_t *msc, uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len);
+int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uint32_t block_addr, uint16_t block_len);
+
+tusb_msc_device_t msc_dev = {
+    .backend = &msc_device_backend,
+    .ep_in = 4,
+    .ep_out = 4,
+    .max_lun = 0, // 1 logic unit
+    .get_cap = msc_get_cap,
+    .block_read = msc_block_read,
+    .block_write = msc_block_write,
+};
+
+// make sure the interface order is same in "composite_desc.lua"
+static tusb_device_interface_t *device_interfaces[] = {
+    (tusb_device_interface_t *)&hid_dev,
+    (tusb_device_interface_t *)&cdc_dev,
+    0, // CDC need two interfaces
+       //  (tusb_device_interface_t*)&user_dev,
+    (tusb_device_interface_t *)&msc_dev,
+};
+
+static void init_ep(tusb_device_t *dev)
 {
-	uint32_t n;
-
-	// Process pending requests
-	if((USB_RequestIndexO != USB_RequestIndexI) || USB_RequestFlag)
-	{
-		DAP_ProcessCommand(USB_Request[USB_RequestIndexI], USB_Response[USB_ResponseIndexI]);
-
-		// Update request index and flag
-		n = USB_RequestIndexO + 1;
-		if(n == DAP_PACKET_COUNT)
-			n = 0;
-		USB_RequestIndexO = n;
-
-		if(USB_RequestIndexO == USB_RequestIndexI)
-			USB_RequestFlag = 0;
-
-		if(USB_ResponseIdle)
-		{	// Request that data is send back to host
-			USB_ResponseIdle = 0;
-			
-			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,USB_Response[USB_ResponseIndexI],DAP_PACKET_SIZE);
-		}
-		else
-		{	// Update response index and flag
-			n = USB_ResponseIndexI + 1;
-			if (n == DAP_PACKET_COUNT)
-				n = 0;
-			USB_ResponseIndexI = n;
-
-			if (USB_ResponseIndexI == USB_ResponseIndexO)
-				USB_ResponseFlag = 1;
-		}
-		return 1;
-	}
-	return 0;
+  COMP_TUSB_INIT(dev);
 }
 
+tusb_device_config_t device_config = {
+    .if_count = sizeof(device_interfaces) / sizeof(device_interfaces[0]),
+    .interfaces = &device_interfaces[0],
+    .ep_init = init_ep,
+};
 
-void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
+void tusb_delay_ms(uint32_t ms)
 {
-    if(EpBuf[0] == ID_DAP_TransferAbort)
-	{
-		DAP_TransferAbort = 1;
-		return;
-	}
-	
-	if(USB_RequestFlag && (USB_RequestIndexI == USB_RequestIndexO))
-		return;  // Discard packet when buffer is full
-
-	// Store data into request packet buffer
-	memcpy(USB_Request[USB_RequestIndexI], EpBuf, len);
-
-	USB_RequestIndexI++;
-	if(USB_RequestIndexI == DAP_PACKET_COUNT)
-		USB_RequestIndexI = 0;
-	if(USB_RequestIndexI == USB_RequestIndexO)
-		USB_RequestFlag = 1;
+  uint32_t i, j;
+  for (i = 0; i < ms; ++i)
+    for (j = 0; j < 200; ++j)
+      ;
 }
 
-
-void HID_SetInReport(void)
+//static int user_len = 0;
+int user_recv_data(tusb_user_device_t *raw, const void *data, uint16_t len)
 {
-	if((USB_ResponseIndexO != USB_ResponseIndexI) || USB_ResponseFlag)
-	{
-
-		//USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,USB_Response[USB_ResponseIndexI],DAP_PACKET_SIZE);
-		USB_ResponseIndexO++;
-		if (USB_ResponseIndexO == DAP_PACKET_COUNT)
-			USB_ResponseIndexO = 0;
-		if (USB_ResponseIndexO == USB_ResponseIndexI)
-			USB_ResponseFlag = 0;
-	}
-	else
-	{
-		USB_ResponseIdle = 1;
-	}
+// user_len = (int)len;
+  return 1; // return 1 means the recv buffer is busy
 }
+
+int user_send_done(tusb_user_device_t *raw)
+{
+  tusb_set_rx_valid(raw->dev, raw->ep_out);
+  return 0;
+}
+
+static int hid_len = 0;
+int hid_recv_data(tusb_hid_device_t *hid, const void *data, uint16_t len)
+{
+  hid_len = (int)len;
+  HID_GetOutReport(hid_buf, len);
+  return 1; // return 1 means the recv buffer is busy
+}
+
+int hid_send_done(tusb_hid_device_t *hid)
+{
+  tusb_set_rx_valid(hid->dev, hid->ep_out);
+  HID_SetInReport();
+  return 0;
+}
+
+static int cdc_len = 0;
+int cdc_recv_data(tusb_cdc_device_t *cdc, const void *data, uint16_t len)
+{
+  cdc_len = (int)len;
+  return 1; // return 1 means the recv buffer is busy
+}
+
+int cdc_send_done(tusb_cdc_device_t *cdc)
+{
+  tusb_set_rx_valid(cdc->dev, cdc->ep_out);
+  return 0;
+}
+
+void cdc_line_coding_change(tusb_cdc_device_t *cdc)
+{
+  // TODO, handle the line coding change
+  //cdc->line_coding.bitrate;
+  //cdc->line_coding.databits;
+  //cdc->line_coding.stopbits;
+  //cdc->line_coding.parity;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -201,10 +267,14 @@ int main(void)
   MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
-  MX_USB_DEVICE_Init();
-  MX_SPI2_Init();
-  /* USER CODE BEGIN 2 */
 
+  MX_SPI2_Init();
+  MX_IWDG_Init();
+  MX_FATFS_Init();
+  /* USER CODE BEGIN 2 */
+	tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
+	tusb_set_device_config(dev, &device_config);
+	tusb_open_device(dev);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -214,13 +284,27 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	  hhid = (USBD_CUSTOM_HID_HandleTypeDef*) hUsbDeviceFS.pClassData;
-//    
-		usbd_hid_process();
-		// USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,USB_Request[0],64);
-		
-	}
+	if (hid_len)
+    {
+      usbd_hid_process();
+    }
+    //    if(user_len){
+    //      for(int i=0;i<user_len;i++){
+    // //       user_buf[i]+=1;
+    //      }
+    //      tusb_user_device_send(&user_dev, user_buf, user_len);
+    //      user_len = 0;
+    //    }
+
+    if (cdc_len)
+    {
+      tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+      cdc_len = 0;
+    }
+
+    tusb_msc_device_loop(&msc_dev);
   /* USER CODE END 3 */
+}
 }
 
 /**
@@ -235,10 +319,11 @@ void SystemClock_Config(void)
 
   /** Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
@@ -265,203 +350,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief SPI1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI1_Init(void)
-{
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
-
-}
-
-/**
-  * @brief SPI2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI2_Init(void)
-{
-
-  /* USER CODE BEGIN SPI2_Init 0 */
-
-  /* USER CODE END SPI2_Init 0 */
-
-  /* USER CODE BEGIN SPI2_Init 1 */
-
-  /* USER CODE END SPI2_Init 1 */
-  /* SPI2 parameter configuration*/
-  hspi2.Instance = SPI2;
-  hspi2.Init.Mode = SPI_MODE_MASTER;
-  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi2.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI2_Init 2 */
-
-  /* USER CODE END SPI2_Init 2 */
-
-}
-
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-
-  /* USER CODE END USART2_Init 2 */
-
-}
-
-/** 
-  * Enable DMA controller clock
-  * Configure DMA for memory to memory transfers
-  *   hdma_memtomem_dma1_channel1
-  */
-static void MX_DMA_Init(void) 
-{
-
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA1_CLK_ENABLE();
-
-  /* Configure DMA request hdma_memtomem_dma1_channel1 on DMA1_Channel1 */
-  hdma_memtomem_dma1_channel1.Instance = DMA1_Channel1;
-  hdma_memtomem_dma1_channel1.Init.Direction = DMA_MEMORY_TO_MEMORY;
-  hdma_memtomem_dma1_channel1.Init.PeriphInc = DMA_PINC_ENABLE;
-  hdma_memtomem_dma1_channel1.Init.MemInc = DMA_MINC_ENABLE;
-  hdma_memtomem_dma1_channel1.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-  hdma_memtomem_dma1_channel1.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-  hdma_memtomem_dma1_channel1.Init.Mode = DMA_NORMAL;
-  hdma_memtomem_dma1_channel1.Init.Priority = DMA_PRIORITY_LOW;
-  if (HAL_DMA_Init(&hdma_memtomem_dma1_channel1) != HAL_OK)
-  {
-    Error_Handler( );
-  }
-
-  /* DMA interrupt init */
-  /* DMA1_Channel2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-  /* DMA1_Channel3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
-  /* DMA1_Channel6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
-  /* DMA1_Channel7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
-
-}
-
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13|GPIO_PIN_14, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|GPIO_PIN_8, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : PC13 PC14 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA4 PA8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PB10 PB11 PB12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */

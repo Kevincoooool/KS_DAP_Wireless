@@ -35,8 +35,8 @@
  *---------------------------------------------------------------------------*/
 #ifndef __DAP_CONFIG_H__
 #define __DAP_CONFIG_H__
-
-
+//1 有线  2无线发射端  3无线接收端  4脱机
+#define WROK_MODE 1
 //**************************************************************************************************
 /**
 \defgroup DAP_Config_Debug_gr CMSIS-DAP Debug Unit Information
@@ -54,7 +54,11 @@ This information includes:
 
 /* I removed RTE directory from the source code. Zach Lee */
 
-#include "device.h"                             // Debug Unit Cortex-M Processor Header File
+#include "stm32f1xx.h"                             // Debug Unit Cortex-M Processor Header File
+#include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx_hal_gpio.h"
+#include "swd_host.h"
+
 
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
@@ -74,7 +78,7 @@ This information includes:
 
 /// Indicate that JTAG communication mode is available at the Debug Port.
 /// This information is returned by the command \ref DAP_Info as part of <b>Capabilities</b>.
-#define DAP_JTAG                0               ///< JTAG Mode: 1 = available, 0 = not available.
+#define DAP_JTAG                1               ///< JTAG Mode: 1 = available, 0 = not available.
 
 /// Configure maximum number of JTAG devices on the scan chain connected to the Debug Access Port.
 /// This setting impacts the RAM requirements of the Debug Unit. Valid range is 1 .. 255.
@@ -183,6 +187,8 @@ __STATIC_INLINE uint8_t DAP_GetSerNumString (char *str) {
 #define JTAG_nTRST_Pin GPIO_PIN_15
 #define JTAG_nTRST_GPIO_Port GPIOB
 
+#define LED_CONNECTED_Pin   GPIO_PIN_13
+#define LED_GPIO_Port       GPIOC
 
 // Connected LED                PIN13 of GPIOC
 
@@ -239,7 +245,7 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 */
 __STATIC_INLINE void PORT_JTAG_SETUP (void) {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-
+__HAL_RCC_GPIOC_CLK_ENABLE();
 //  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_TDI_GPIO_Port, JTAG_TDI_Pin, GPIO_PIN_SET);
@@ -251,22 +257,27 @@ __STATIC_INLINE void PORT_JTAG_SETUP (void) {
   GPIO_InitStruct.Pin = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : JTAG_nRESET_Pin JTAG_nTRST_Pin */
   GPIO_InitStruct.Pin = JTAG_nRESET_Pin|JTAG_nTRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : JTAG_TDO_Pin */
   GPIO_InitStruct.Pin = JTAG_TDO_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 }
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
@@ -285,20 +296,26 @@ __STATIC_INLINE void PORT_SWD_SETUP (void) {
   GPIO_InitStruct.Pin = JTAG_TMS_Pin|JTAG_TCK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = JTAG_nRESET_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(JTAG_nRESET_GPIO_Port, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = JTAG_TDI_Pin|JTAG_TDO_Pin|JTAG_nTRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 }
 
 /** Disable JTAG/SWD I/O Pins.
@@ -499,6 +516,10 @@ __STATIC_FORCEINLINE void     PIN_nRESET_OUT (uint32_t bit) {
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(JTAG_nRESET_GPIO_Port, &GPIO_InitStruct);
+	  
+	swd_init_debug();
+	uint32_t swd_mem_write_data = 0x05FA0000 | 0x4;
+	swd_write_memory(0xE000ED0C,(uint8_t*)&swd_mem_write_data,4);
   }
 }
 
@@ -524,6 +545,12 @@ It is recommended to provide the following LEDs for status indication:
            - 0: Connect LED OFF: debugger is not connected to CMSIS-DAP Debug Unit.
 */
 __STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {
+GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
   if ((bit & 1U) == 1) {
     LED_GPIO_Port->BRR =  LED_CONNECTED_Pin;
   } else {
@@ -583,8 +610,11 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
  - LED output pins are enabled and LEDs are turned off.
 */
 __STATIC_INLINE void DAP_SETUP (void) {
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  PORT_JTAG_SETUP();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	PORT_JTAG_SETUP();
+	PORT_SWD_SETUP();
+	
 }
 
 /** Reset Target Device with custom specific I/O pin or command sequence.

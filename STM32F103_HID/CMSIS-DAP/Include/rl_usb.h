@@ -65,6 +65,6 @@ void USBD_HID_GetReportTrigger(int, int, void *, int);
 #define USBD_HID_REQ_PERIOD_UPDATE  0x02
 #define USBD_HID_REQ_EP_INT         0x03
 
-#include "usb_device.h"
+
 
 #endif

@@ -336,9 +336,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F103xB</Define>
+              <Define>USE_HAL_DRIVER,STM32F103xB,NO_HOST,MSC_DATA_PACKET_LENGTH=4096</Define>
               <Undefine></Undefine>
-              <IncludePath>../USB_DEVICE/App;           ../USB_DEVICE/Target;           ../Core/Inc;           ../Drivers/STM32F1xx_HAL_Driver/Inc;           ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;           ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;           ../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;           ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;           ../Drivers/CMSIS/Include;           ..\CMSIS-DAP\Include</IncludePath>
+              <IncludePath>../USB_DEVICE/App;../USB_DEVICE/Target;../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;..\CMSIS-DAP\Include;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;..\TeenyUSB;..\TeenyUSB\usb_stack\class;..\Wireless</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -380,6 +380,151 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>Wireless</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_nrf2401.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Wireless\bsp_nrf2401.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_nrf2401.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Wireless\bsp_nrf2401.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Wireless\bsp_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Wireless\bsp_spi.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CMSIS_DAP</GroupName>
+          <Files>
+            <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>DAP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
+            </File>
+            <File>
+              <FileName>DAP_vendor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\DAP_vendor.c</FilePath>
+            </File>
+            <File>
+              <FileName>JTAG_DP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\JTAG_DP.c</FilePath>
+            </File>
+            <File>
+              <FileName>SW_DP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SW_DP.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
+            </File>
+            <File>
+              <FileName>hid_transfer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_host.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_host.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_flash.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>TeenyUSB</GroupName>
+          <Files>
+            <File>
+              <FileName>stm32_otg_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\stm32_otg_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>teeny_usb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\teeny_usb.c</FilePath>
+            </File>
+            <File>
+              <FileName>teeny_usb_desc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\teeny_usb_desc.c</FilePath>
+            </File>
+            <File>
+              <FileName>teeny_usb_stm32_otg_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\teeny_usb_stm32_otg_device.c</FilePath>
+            </File>
+            <File>
+              <FileName>teeny_usb_stm32_fs_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\teeny_usb_stm32_fs_device.c</FilePath>
+            </File>
+            <File>
+              <FileName>composite_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\composite_device.c</FilePath>
+            </File>
+            <File>
+              <FileName>tusbd_hid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\usb_stack\class\tusbd_hid.c</FilePath>
+            </File>
+            <File>
+              <FileName>tusbd_msc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\usb_stack\class\tusbd_msc.c</FilePath>
+            </File>
+            <File>
+              <FileName>tusbd_user.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\usb_stack\class\tusbd_user.c</FilePath>
+            </File>
+            <File>
+              <FileName>tusbd_cdc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\usb_stack\class\tusbd_cdc.c</FilePath>
+            </File>
+            <File>
+              <FileName>board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\board.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32_fs_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\usb_stack\src\stm32_fs_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>tusbd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\TeenyUSB\usb_stack\class\tusbd.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Application/MDK-ARM</GroupName>
           <Files>
             <File>
@@ -398,6 +543,31 @@
               <FilePath>../Core/Src/main.c</FilePath>
             </File>
             <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/iwdg.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/usart.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f1xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f1xx_it.c</FilePath>
@@ -406,36 +576,6 @@
               <FileName>stm32f1xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f1xx_hal_msp.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/User/USB_DEVICE/App</GroupName>
-          <Files>
-            <File>
-              <FileName>usb_device.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../USB_DEVICE/App/usb_device.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_desc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../USB_DEVICE/App/usbd_desc.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_custom_hid_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../USB_DEVICE/App/usbd_custom_hid_if.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/User/USB_DEVICE/Target</GroupName>
-          <Files>
-            <File>
-              <FileName>usbd_conf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../USB_DEVICE/Target/usbd_conf.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -513,6 +653,11 @@
               <FilePath>../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c</FilePath>
             </File>
             <File>
+              <FileName>stm32f1xx_hal_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_iwdg.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f1xx_hal_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c</FilePath>
@@ -545,67 +690,47 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/USB_Device_Library</GroupName>
+          <GroupName>Application/User/FATFS/Target</GroupName>
           <Files>
             <File>
-              <FileName>usbd_core.c</FileName>
+              <FileName>user_diskio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_ctlreq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_ioreq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_customhid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_customhid.c</FilePath>
+              <FilePath>../FATFS/Target/user_diskio.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>DAP</GroupName>
+          <GroupName>Application/User/FATFS/App</GroupName>
           <Files>
             <File>
-              <FileName>DAP_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+              <FileName>fatfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../FATFS/App/fatfs.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/FatFs</GroupName>
+          <Files>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/diskio.c</FilePath>
             </File>
             <File>
-              <FileName>DAP.c</FileName>
+              <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/ff.c</FilePath>
             </File>
             <File>
-              <FileName>DAP_vendor.c</FileName>
+              <FileName>ff_gen_drv.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\DAP_vendor.c</FilePath>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</FilePath>
             </File>
             <File>
-              <FileName>JTAG_DP.c</FileName>
+              <FileName>syscall.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\JTAG_DP.c</FilePath>
-            </File>
-            <File>
-              <FileName>SW_DP.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SW_DP.c</FilePath>
-            </File>
-            <File>
-              <FileName>SWO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
-            </File>
-            <File>
-              <FileName>hid_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
+              <FilePath>../Middlewares/Third_Party/FatFs/src/option/syscall.c</FilePath>
             </File>
           </Files>
         </Group>
