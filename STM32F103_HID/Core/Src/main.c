@@ -25,6 +25,7 @@
 #include "iwdg.h"
 #include "spi.h"
 #include "usart.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -267,10 +268,11 @@ int main(void)
   MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
-
+//  MX_USB_DEVICE_Init();
   MX_SPI2_Init();
   MX_IWDG_Init();
   MX_FATFS_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 	tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
 	tusb_set_device_config(dev, &device_config);
@@ -284,27 +286,27 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	if (hid_len)
-    {
-      usbd_hid_process();
-    }
-    //    if(user_len){
-    //      for(int i=0;i<user_len;i++){
-    // //       user_buf[i]+=1;
-    //      }
-    //      tusb_user_device_send(&user_dev, user_buf, user_len);
-    //      user_len = 0;
-    //    }
+		if (hid_len)
+		{
+		  usbd_hid_process();
+		}
+		//    if(user_len){
+		//      for(int i=0;i<user_len;i++){
+		// //       user_buf[i]+=1;
+		//      }
+		//      tusb_user_device_send(&user_dev, user_buf, user_len);
+		//      user_len = 0;
+		//    }
 
-    if (cdc_len)
-    {
-      tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-      cdc_len = 0;
-    }
+		if (cdc_len)
+		{
+		  tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+		  cdc_len = 0;
+		}
 
-    tusb_msc_device_loop(&msc_dev);
+		tusb_msc_device_loop(&msc_dev);
+	}
   /* USER CODE END 3 */
-}
 }
 
 /**
