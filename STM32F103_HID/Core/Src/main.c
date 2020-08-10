@@ -35,24 +35,12 @@
 #include "hid_transfer.h"
 #include "DAP.h"
 #include "teeny_usb.h"
-#include "teeny_usb.h"
 #include "tusbd_user.h"
 #include "tusbd_hid.h"
 #include "tusbd_cdc.h"
 #include "tusbd_msc.h"
 #include "tusbd_cdc_rndis.h"
 #include "board_config.h"
-#include "tusb_cdc.h"
-#include "board_config.h"
-#include "teeny_usb.h"
-#include "tusbd_user.h"
-#include "tusbd_hid.h"
-#include "tusbd_cdc.h"
-#include "tusbd_msc.h"
-#include "hid_transfer.h"
-#include "DAP.h"
-#include "DAP_config.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
