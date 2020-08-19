@@ -25,7 +25,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f1xx_hal_dma.h"
+#include "stm32f1xx_hal.h"
 
 /* DMA memory to memory transfer handles -------------------------------------*/
 extern DMA_HandleTypeDef hdma_memtomem_dma1_channel1;

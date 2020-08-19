@@ -4,8 +4,8 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-04 20:32:30
  * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-05 10:44:48
- * @FilePath: \TeenyUSB\Wireless\bsp_spi.c
+ * @LastEditTime: 2020-08-19 21:48:03
+ * @FilePath: \Simple_TeenyUSB\USER\bsp_spi.c
  */
 #include "bsp_spi.h"
 #include "hid_transfer.h"
@@ -14,11 +14,11 @@
 #include "dma.h"
 void DAP_SPI_Init(void)
 {
-//	MX_GPIO_Init();
-//	MX_DMA_Init();
-//	MX_SPI1_Init();
-//	MX_SPI2_Init();
-//	HAL_SPI_Receive_DMA(&hspi1, USB_Response[USB_ResponseIndexI], DAP_PACKET_SIZE);
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_SPI1_Init();
+	MX_SPI2_Init();
+	
 }
 
 uint8_t SPI_RW(uint8_t dat)

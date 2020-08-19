@@ -44,7 +44,7 @@ void MX_USART1_UART_Init(void)
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
-    Error_Handler();
+//    Error_Handler();
   }
 
 }
@@ -63,7 +63,7 @@ void MX_USART2_UART_Init(void)
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart2) != HAL_OK)
   {
-    Error_Handler();
+//    Error_Handler();
   }
 
 }
@@ -134,7 +134,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
     {
-      Error_Handler();
+//      Error_Handler();
     }
 
     __HAL_LINKDMA(uartHandle,hdmarx,hdma_usart2_rx);
@@ -150,7 +150,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK)
     {
-      Error_Handler();
+//      Error_Handler();
     }
 
     __HAL_LINKDMA(uartHandle,hdmatx,hdma_usart2_tx);

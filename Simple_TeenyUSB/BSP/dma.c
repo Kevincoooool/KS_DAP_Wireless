@@ -55,7 +55,7 @@ void MX_DMA_Init(void)
   hdma_memtomem_dma1_channel1.Init.Priority = DMA_PRIORITY_LOW;
   if (HAL_DMA_Init(&hdma_memtomem_dma1_channel1) != HAL_OK)
   {
-    Error_Handler();
+//    Error_Handler();
   }
 
   /* DMA interrupt init */

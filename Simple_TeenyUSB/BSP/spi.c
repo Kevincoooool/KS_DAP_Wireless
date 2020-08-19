@@ -47,7 +47,7 @@ void MX_SPI1_Init(void)
   hspi1.Init.CRCPolynomial = 10;
   if (HAL_SPI_Init(&hspi1) != HAL_OK)
   {
-    Error_Handler();
+//    Error_Handler();
   }
 
 }
@@ -69,7 +69,7 @@ void MX_SPI2_Init(void)
   hspi2.Init.CRCPolynomial = 10;
   if (HAL_SPI_Init(&hspi2) != HAL_OK)
   {
-    Error_Handler();
+//    Error_Handler();
   }
 
 }
@@ -114,7 +114,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     hdma_spi1_tx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_spi1_tx) != HAL_OK)
     {
-      Error_Handler();
+//      Error_Handler();
     }
 
     __HAL_LINKDMA(spiHandle,hdmatx,hdma_spi1_tx);
@@ -130,7 +130,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     hdma_spi1_rx.Init.Priority = DMA_PRIORITY_LOW;
     if (HAL_DMA_Init(&hdma_spi1_rx) != HAL_OK)
     {
-      Error_Handler();
+//      Error_Handler();
     }
 
     __HAL_LINKDMA(spiHandle,hdmarx,hdma_spi1_rx);
