@@ -40,6 +40,8 @@
 #include "hid_transfer.h"
 #include "DAP.h"
 #include "DAP_config.h"
+#include "online.h"
+
 #define USER_RX_EP_SIZE 32
 #define CDC_RX_EP_SIZE 32
 #define HID_RX_EP_SIZE 64

@@ -4,8 +4,8 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-04 20:26:31
  * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-04 21:02:17
- * @FilePath: \TeenyUSB\Wireless\bsp_nrf2401.h
+ * @LastEditTime: 2020-08-21 21:28:00
+ * @FilePath: \Simple_TeenyUSB\BSP\bsp_nrf2401.h
  */
 #ifndef __DRV_NRF24L01_H__
 #define __DRV_NRF24L01_H__
@@ -13,11 +13,11 @@
 #include "stm32f1xx.h"
 
 //ST7789端口定义
-#define SPI_CSN_L()  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET)//RES
-#define SPI_CSN_H()  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET)
+#define SPI_CSN_L()  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET)//RES
+#define SPI_CSN_H()  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET)
 
-#define SPI_CE_L()   HAL_GPIO_WritePin(GPIOD,GPIO_PIN_13,GPIO_PIN_RESET)//DC
-#define SPI_CE_H()   HAL_GPIO_WritePin(GPIOD,GPIO_PIN_13,GPIO_PIN_SET)
+#define SPI_CE_L()   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_RESET)//DC
+#define SPI_CE_H()   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET)
 
 
 #define MODEL_RX				1			//普通接收
@@ -25,8 +25,8 @@
 #define MODEL_RX2				3			//接收模式2,用于双向传输
 #define MODEL_TX2				4			//发送模式2,用于双向传输
 
-#define RX_PLOAD_WIDTH  255  	
-#define TX_PLOAD_WIDTH  255  	
+#define RX_PLOAD_WIDTH  64  	
+#define TX_PLOAD_WIDTH  64  	
 #define TX_ADR_WIDTH    5 	 	
 #define RX_ADR_WIDTH    5   
 
@@ -50,7 +50,7 @@ uint8_t NRF_Connect(void);
 	uint8_t NRF_Write_Reg(uint8_t reg, uint8_t value);
 	uint8_t NRF_Write_Buf(uint8_t reg, uint8_t *pBuf, uint8_t uchars);
 	uint8_t NRF_Read_Buf(uint8_t reg, uint8_t *pBuf, uint8_t uchars);
-
+extern uint8_t NRF_GETDATA;
 #endif
 
 

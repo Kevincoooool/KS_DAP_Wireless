@@ -172,19 +172,19 @@ __STATIC_INLINE uint8_t DAP_GetSerNumString (char *str) {
 #define JTAG_TCK_Pin GPIO_PIN_10
 #define JTAG_TCK_GPIO_Port GPIOB
 
-#define JTAG_TMS_Pin GPIO_PIN_11
+#define JTAG_TMS_Pin GPIO_PIN_9
 #define JTAG_TMS_GPIO_Port GPIOB
 
-#define JTAG_nRESET_Pin GPIO_PIN_12
+#define JTAG_nRESET_Pin GPIO_PIN_11
 #define JTAG_nRESET_GPIO_Port GPIOB
 
-#define JTAG_TDI_Pin GPIO_PIN_13
-#define JTAG_TDI_GPIO_Port GPIOB
+#define JTAG_TDI_Pin GPIO_PIN_0
+#define JTAG_TDI_GPIO_Port GPIOA
 
-#define JTAG_TDO_Pin GPIO_PIN_14
-#define JTAG_TDO_GPIO_Port GPIOB
+#define JTAG_TDO_Pin GPIO_PIN_1
+#define JTAG_TDO_GPIO_Port GPIOA
 
-#define JTAG_nTRST_Pin GPIO_PIN_15
+#define JTAG_nTRST_Pin GPIO_PIN_11
 #define JTAG_nTRST_GPIO_Port GPIOB
 
 #define LED_CONNECTED_Pin   GPIO_PIN_13

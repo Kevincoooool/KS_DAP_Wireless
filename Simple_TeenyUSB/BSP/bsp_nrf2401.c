@@ -71,7 +71,7 @@ uint8_t NRF_Read_Reg(uint8_t reg)
 {
 	uint8_t reg_val;
 	SPI_CSN_L();		 /* 选通器件 */
-	SPI_RW(reg);	 /* 写寄存器地址 */
+	SPI_RW(reg);		 /* 写寄存器地址 */
 	reg_val = SPI_RW(0); /* 读取该寄存器返回数据 */
 	SPI_CSN_H();		 /* 禁止该器件 */
 	return reg_val;
@@ -202,34 +202,32 @@ uint8_t NRF_Check(void)
 
 uint8_t NRF_SSI, NRF_SSI_CNT; //NRF信号强度
 uint16_t Nrf_Err_cnt;
+uint8_t NRF_GETDATA = 0;
 void NRF_Check_Event(void)
 {
 	uint8_t sta = NRF_Read_Reg(NRF_READ_REG + NRFRegSTATUS);
-	////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
+	//收到了一帧有效数据
 	if (sta & (1 << RX_DR))
 	{
 		uint8_t rx_len = NRF_Read_Reg(R_RX_PL_WID);
 		if (rx_len < 33)
 		{
 			NRF_Read_Buf(RD_RX_PLOAD, NRF24L01_2_RXDATA, rx_len); // read receive payload from RX_FIFO buffer
-			//Uart1_Put_Buf(NRF24L01_2_RXDATA,rx_len);
-
-			//			NRF_SSI_CNT++;
+			NRF_GETDATA = 1;
 			Nrf_Err_cnt = 0;
 		}
+		//如果它的宽度大于32字节，则数据包包含错误并且必须丢弃。 使用Flush_RX命令丢弃数据包。
 		else
 		{
+			NRF_GETDATA = 0;
 			NRF_Write_Reg(FLUSH_RX, 0xff); //清空缓冲区
 		}
 	}
-	////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
+	//发送成功 收到了ack响应
 	if (sta & (1 << TX_DS))
 	{
 	}
-	////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
+	//重发了10次都还没收到ack包
 	if (sta & (1 << MAX_RT))
 	{
 		if (sta & 0x01) //TX FIFO FULL
@@ -237,14 +235,12 @@ void NRF_Check_Event(void)
 			NRF_Write_Reg(FLUSH_TX, 0xff);
 		}
 	}
-	////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////
+
 	NRF_Write_Reg(NRF_WRITE_REG + NRFRegSTATUS, sta);
 }
+uint8_t Connect_flag;
 uint8_t NRF_Connect(void) //1KHZ
 {
-	static uint8_t Connect_flag;
-
 	Nrf_Err_cnt++;
 	if (Nrf_Err_cnt == 1)
 	{

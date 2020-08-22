@@ -1,11 +1,15 @@
 --cpu Cortex-M3
 "..\build\main.o"
-"..\build\bsp_nrf2401.o"
-"..\build\bsp_spi.o"
+"..\build\online.o"
+"..\build\wireless_rx.o"
+"..\build\wireless_tx.o"
+"..\build\offline.o"
 "..\build\gpio.o"
 "..\build\dma.o"
 "..\build\usart.o"
 "..\build\spi.o"
+"..\build\bsp_spi.o"
+"..\build\bsp_nrf2401.o"
 "..\build\dap.o"
 "..\build\dap_vendor.o"
 "..\build\error.o"
@@ -44,6 +48,10 @@
 "..\build\stm32f1xx_hal_cortex.o"
 "..\build\stm32f1xx_hal_rcc.o"
 "..\build\stm32f1xx_hal_rcc_ex.o"
+"..\build\diskio.o"
+"..\build\ff.o"
+"..\build\ffsystem.o"
+"..\build\ffunicode.o"
 --library_type=microlib --strict --scatter "..\BUILD\ks_wireless_dap.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

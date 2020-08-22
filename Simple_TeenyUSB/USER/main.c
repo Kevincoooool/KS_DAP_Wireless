@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-04 20:32:30
  * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-19 21:44:06
+ * @LastEditTime: 2020-08-21 21:42:53
  * @FilePath: \Simple_TeenyUSB\USER\main.c
  */
 #include "bsp_spi.h"
@@ -20,11 +20,14 @@
 #include "tusbd_msc.h"
 #include "DAP.h"
 #include "usart.h"
+#include "include.h"
+
 extern int hid_len, cdc_len;
 extern uint8_t cdc_buf[32];
 extern tusb_cdc_device_t cdc_dev;
 extern tusb_msc_device_t msc_dev;
 extern tusb_device_config_t device_config;
+uint8_t NRF_OK = 0;
 int main(void)
 {
     tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
@@ -32,15 +35,34 @@ int main(void)
     tusb_open_device(dev);
     DAP_SPI_Init();
     DAP_Setup();
-	MX_USART1_UART_Init();
-	MX_USART2_UART_Init();
+    MX_USART1_UART_Init();
+    MX_USART2_UART_Init();
+    NRF_OK = NRF_Check();
+    if (NRF_OK == 0)
+    {
+
+        NRF_Init(MODEL_RX2, 125);
+    }
     while (1)
     {
+#if !ONLINE 
+        NRF_Check_Event(); //检测遥控数据
+        if (NRF_Connect() == 0)
+        {
+        }
+#endif
+#if !WIRELESS_RX
         if (hid_len)
         {
-            usbd_hid_process();
+#if ONLINE
+            usbd_hid_process_online();
+#elif WIRELESS_TX
+            usbd_hid_process_wireless_tx();
+#endif
         }
-
+#elif WIRELESS_RX
+        usbd_hid_process_wireless_rx();
+#endif
         if (cdc_len)
         {
 
