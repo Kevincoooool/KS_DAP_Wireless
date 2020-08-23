@@ -4,8 +4,8 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-21 20:10:56
  * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-21 21:24:41
- * @FilePath: \Simple_TeenyUSB\USER\wireless_rx.h
+ * @LastEditTime: 2020-08-23 10:39:57
+ * @FilePath: \Simple_TeenyUSB_TX\USER\wireless_rx.h
  */
 #ifndef __WIRELESS_RX_H__
 #define __WIRELESS_RX_H__
@@ -20,8 +20,12 @@
     */
 enum
 {
-    wait_nrf_data,
-    dap_deal,
+    wait_nrf_data_1,
+    dap_deal_1,
+    wait_nrf_data_2,
+    dap_deal_2,
+    wait_nrf_data_3,
+    dap_deal_3,
     get_dap_reponse,
     seng_nrf_data
 };
