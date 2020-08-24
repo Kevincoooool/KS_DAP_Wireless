@@ -719,7 +719,7 @@
             <File>
               <FileName>stm32f1xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HAL_LIB\stm32f103ret6\stm32f1xx_it.c</FilePath>
+              <FilePath>..\BSP\stm32f1xx_it.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1442,7 +1442,7 @@
             <File>
               <FileName>stm32f1xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HAL_LIB\stm32f103ret6\stm32f1xx_it.c</FilePath>
+              <FilePath>..\BSP\stm32f1xx_it.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2234,7 +2234,7 @@
             <File>
               <FileName>stm32f1xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HAL_LIB\stm32f103ret6\stm32f1xx_it.c</FilePath>
+              <FilePath>..\BSP\stm32f1xx_it.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3026,7 +3026,7 @@
             <File>
               <FileName>stm32f1xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HAL_LIB\stm32f103ret6\stm32f1xx_it.c</FilePath>
+              <FilePath>..\BSP\stm32f1xx_it.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3818,7 +3818,7 @@
             <File>
               <FileName>stm32f1xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HAL_LIB\stm32f103ret6\stm32f1xx_it.c</FilePath>
+              <FilePath>..\BSP\stm32f1xx_it.c</FilePath>
             </File>
           </Files>
         </Group>

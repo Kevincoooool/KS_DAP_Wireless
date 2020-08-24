@@ -37,7 +37,7 @@ void Delay20ms(void) //@33.000MHz
 
         __NOP();
         __NOP();
-        i = 10;
+        i = 50;
         j = 130;
         k = 254;
         do
@@ -63,8 +63,10 @@ int main(void)
         {
                 NRF_Init(MODEL_RX2, 51);
         }
+		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
         while (1)
         {
+			
 //		Delay20ms();
 //		HAL_Delay(10);
 //		NRF_SEND[10]++;

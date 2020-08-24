@@ -20,7 +20,10 @@
 #include "wireless_tx.h"
 #include "online.h"
 #include "offline.h"
-
+extern volatile uint8_t rx_len;
+extern volatile uint8_t recv_end_flag;
+extern uint8_t  rx_buffer[100];
+extern char      BUFFER_SIZE;
 void Delay20ms(void);
 #endif
 

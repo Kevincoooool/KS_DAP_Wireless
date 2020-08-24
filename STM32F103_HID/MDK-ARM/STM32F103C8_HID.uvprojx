@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB,NO_HOST,MSC_DATA_PACKET_LENGTH=4096</Define>
               <Undefine></Undefine>
-              <IncludePath>../USB_DEVICE/App;  ../USB_DEVICE/Target;  ../Core/Inc;  ../Drivers/STM32F1xx_HAL_Driver/Inc;  ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;  ../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;  ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;  ../Drivers/CMSIS/Include;  ..\CMSIS-DAP\Include;  ../FATFS/Target;  ../FATFS/App;  ../Middlewares/Third_Party/FatFs/src;  ..\TeenyUSB;  ..\TeenyUSB\usb_stack\class;  ..\Wireless</IncludePath>
+              <IncludePath>../USB_DEVICE/App;    ../USB_DEVICE/Target;    ../Core/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc;    ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;    ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;    ../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc;    ../Drivers/CMSIS/Device/ST/STM32F1xx/Include;    ../Drivers/CMSIS/Include;    ..\CMSIS-DAP\Include;    ../FATFS/Target;    ../FATFS/App;    ../Middlewares/Third_Party/FatFs/src;    ..\TeenyUSB;    ..\TeenyUSB\usb_stack\class;    ..\Wireless</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -731,6 +731,61 @@
               <FileName>syscall.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Middlewares/Third_Party/FatFs/src/option/syscall.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/USB_DEVICE/App</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USB_DEVICE/App/usb_device.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_desc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USB_DEVICE/App/usbd_desc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_custom_hid_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USB_DEVICE/App/usbd_custom_hid_if.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/USB_DEVICE/Target</GroupName>
+          <Files>
+            <File>
+              <FileName>usbd_conf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../USB_DEVICE/Target/usbd_conf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/USB_Device_Library</GroupName>
+          <Files>
+            <File>
+              <FileName>usbd_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_ctlreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_customhid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_customhid.c</FilePath>
             </File>
           </Files>
         </Group>

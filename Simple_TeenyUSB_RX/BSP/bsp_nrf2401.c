@@ -219,7 +219,7 @@ void NRF_Check_Event(void)
 		//如果它的宽度大于32字节，则数据包包含错误并且必须丢弃。 使用Flush_RX命令丢弃数据包。
 		else
 		{
-			NRF_GETDATA = 0;
+			
 			NRF_Write_Reg(FLUSH_RX, 0xff); //清空缓冲区
 		}
 	}

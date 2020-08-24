@@ -24,12 +24,12 @@ extern uint8_t MYUSB_Request[DAP_PACKET_SIZE + 1];  // Request  Buffer
 extern uint8_t MYUSB_Response[DAP_PACKET_SIZE + 1]; // Response Buffer
 extern uint8_t dealing_data;
 uint8_t state_w_rx = wait_nrf_data_1;
-uint8_t RX_ONE[32] = {0};
-uint8_t RX_TWO[32] = {0};
-uint8_t RX_THREE[32] = {0};
-uint8_t TX_ONE[32] = {0};
-uint8_t TX_TWO[32] = {0};
-uint8_t TX_TWO[32] = {0};
+extern uint8_t TX_ONE[32] ;
+extern uint8_t TX_TWO[32] ;
+extern uint8_t RX_THREE[5];
+extern uint8_t RX_ONE[32] ;
+extern uint8_t RX_TWO[32] ;
+extern uint8_t TX_THREE[32] ;
 uint8_t usbd_hid_process_wireless_rx(void)
 {
 
