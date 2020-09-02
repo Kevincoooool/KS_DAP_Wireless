@@ -135,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>d</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -254,6 +254,11 @@
           <count>20</count>
           <WinNumber>1</WinNumber>
           <ItemText>dealing_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>21</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>hid_buf</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

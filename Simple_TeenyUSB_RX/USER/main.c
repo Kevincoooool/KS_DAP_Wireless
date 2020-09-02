@@ -63,10 +63,10 @@ int main(void)
         {
                 NRF_Init(MODEL_RX2, 51);
         }
-		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
+		
         while (1)
         {
-			
+		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);	
 //		Delay20ms();
 //		HAL_Delay(10);
 //		NRF_SEND[10]++;
@@ -74,10 +74,10 @@ int main(void)
 //			NRF_SEND[10] = 0;
 //		NRF_TxPacket(NRF_SEND, 32);
 #if !ONLINE
-                NRF_Check_Event(); //检测遥控数据
-                if (NRF_Connect() == 0)
-                {
-                }
+//                NRF_Check_Event(); //检测遥控数据
+//                if (NRF_Connect() == 0)
+//                {
+//                }
 #endif
 #if !WIRELESS_RX
                 if (hid_len)

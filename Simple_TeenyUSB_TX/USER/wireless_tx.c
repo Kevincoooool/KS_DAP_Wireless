@@ -52,7 +52,7 @@ uint8_t usbd_hid_process_wireless_tx(void)
         {
 			
             state_w_tx = nrf_send;
-			tusb_cdc_device_send(&cdc_dev, MYUSB_Request, DAP_PACKET_SIZE);
+//			tusb_cdc_device_send(&cdc_dev, MYUSB_Request, DAP_PACKET_SIZE);
 			
 			memset(MYUSB_Response,0,DAP_PACKET_SIZE);
         }
