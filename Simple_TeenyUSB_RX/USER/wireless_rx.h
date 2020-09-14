@@ -20,7 +20,7 @@
     */
 enum
 {
-    wait_nrf_data_1,
+    wait_dap_tx_data,
     dap_deal_1,
     wait_nrf_data_2,
     dap_deal_2,

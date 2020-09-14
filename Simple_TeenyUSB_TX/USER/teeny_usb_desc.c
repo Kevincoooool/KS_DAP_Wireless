@@ -23,15 +23,17 @@ __ALIGN_BEGIN  const uint8_t COMP_DeviceDescriptor [18] __ALIGN_END = {
   0x03,                                             /* iSerial */
   0x01,                                             /* bNumConfigurations */
 };
-#define  COMP_CONFIG_DESCRIPTOR_SIZE  (130)
-__ALIGN_BEGIN  const uint8_t COMP_ConfigDescriptor [130] __ALIGN_END = {
+#define  COMP_CONFIG_DESCRIPTOR_SIZE  (107)
+__ALIGN_BEGIN  const uint8_t COMP_ConfigDescriptor [107] __ALIGN_END = {
+
   ///////////////////////////////////////
   /// config descriptor
   ///////////////////////////////////////
   0x09,                                             /* bLength */
   USB_CONFIGURATION_DESCRIPTOR_TYPE,                /* bDescriptorType */
-  0x82, 0x00,                                       /* wTotalLength */
-  0x04,                                             /* bNumInterfaces */
+ 0x6b, 0x00,                                       /* wTotalLength */
+  0x03,                                             /* bNumInterfaces */
+
   0x01,                                             /* bConfigurationValue */
   0x00,                                             /* iConfiguration */
   0x80,                                             /* bmAttributes */
@@ -183,38 +185,6 @@ __ALIGN_BEGIN  const uint8_t COMP_ConfigDescriptor [130] __ALIGN_END = {
   0x20, 0x00,                                       /* wMaxPacketSize */
   0x01,                                             /* bInterval */
   
-  ///////////////////////////////////////
-  /// interface descriptor
-  ///////////////////////////////////////
-  0x09,                                             /* bLength */
-  USB_INTERFACE_DESCRIPTOR_TYPE,                    /* bDescriptorType */
-  0x03,                                             /* bInterfaceNumber */
-  0x00,                                             /* bAlternateSetting */
-  0x02,                                             /* bNumEndpoints */
-  0x08,                                             /* bInterfaceClass */
-  0x06,                                             /* bInterfaceSubClass */
-  0x50,                                             /* bInterfaceProtocol */
-  0x00,                                             /* iInterface */
-  
-  ///////////////////////////////////////
-  /// endpoint descriptor
-  ///////////////////////////////////////
-  0x07,                                             /* bLength */
-  USB_ENDPOINT_DESCRIPTOR_TYPE,                     /* bDescriptorType */
-  0x84,                                             /* bEndpointAddress */
-  0x02,                                             /* bmAttributes */
-  0x40, 0x00,                                       /* wMaxPacketSize */
-  0x01,                                             /* bInterval */
-  
-  ///////////////////////////////////////
-  /// endpoint descriptor
-  ///////////////////////////////////////
-  0x07,                                             /* bLength */
-  USB_ENDPOINT_DESCRIPTOR_TYPE,                     /* bDescriptorType */
-  0x04,                                             /* bEndpointAddress */
-  0x02,                                             /* bmAttributes */
-  0x40, 0x00,                                       /* wMaxPacketSize */
-  0x01,                                             /* bInterval */
 };
 #define  COMP_STRING_DESCRIPTOR0_STR   "\x09\x04"
 #define  COMP_STRING_DESCRIPTOR0_SIZE  (4)
@@ -235,27 +205,32 @@ WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor1 [14] __ALIGN_END = {
   'I', 0x00,                                        /* wcChar4 */
   'Y', 0x00,                                        /* wcChar5 */
 };
-#define  COMP_STRING_DESCRIPTOR2_STR   "KS 996 CMSIS-DAP"
-#define  COMP_STRING_DESCRIPTOR2_SIZE   (34)
-WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor2 [34] __ALIGN_END = {
-  0x22,                                             /* bLength */
+#define  COMP_STRING_DESCRIPTOR2_STR   "KS Wireless CMSIS-DAP"
+#define  COMP_STRING_DESCRIPTOR2_SIZE   (44)
+WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor2 [44] __ALIGN_END = {
+  0x2c,                                             /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,                       /* bDescriptorType */
   'K', 0x00,                                        /* wcChar0 */
   'S', 0x00,                                        /* wcChar1 */
   ' ', 0x00,                                        /* wcChar2 */
-  '9', 0x00,                                        /* wcChar3 */
-  '9', 0x00,                                        /* wcChar4 */
-  '6', 0x00,                                        /* wcChar5 */
-  ' ', 0x00,                                        /* wcChar6 */
-  'C', 0x00,                                        /* wcChar7 */
-  'M', 0x00,                                        /* wcChar8 */
-  'S', 0x00,                                        /* wcChar9 */
-  'I', 0x00,                                        /* wcChar10 */
-  'S', 0x00,                                        /* wcChar11 */
-  '-', 0x00,                                        /* wcChar12 */
-  'D', 0x00,                                        /* wcChar13 */
-  'A', 0x00,                                        /* wcChar14 */
-  'P', 0x00,                                        /* wcChar15 */
+  'W', 0x00,                                        /* wcChar3 */
+  'i', 0x00,                                        /* wcChar4 */
+  'r', 0x00,                                        /* wcChar5 */
+  'e', 0x00,                                        /* wcChar6 */
+  'l', 0x00,                                        /* wcChar7 */
+  'e', 0x00,                                        /* wcChar8 */
+  's', 0x00,                                        /* wcChar9 */
+  's', 0x00,                                        /* wcChar10 */
+  ' ', 0x00,                                        /* wcChar11 */
+  'C', 0x00,                                        /* wcChar12 */
+  'M', 0x00,                                        /* wcChar13 */
+  'S', 0x00,                                        /* wcChar14 */
+  'I', 0x00,                                        /* wcChar15 */
+  'S', 0x00,                                        /* wcChar16 */
+  '-', 0x00,                                        /* wcChar17 */
+  'D', 0x00,                                        /* wcChar18 */
+  'A', 0x00,                                        /* wcChar19 */
+  'P', 0x00,                                        /* wcChar20 */
 };
 #define  COMP_STRING_DESCRIPTOR3_STR   "996_996_996"
 #define  COMP_STRING_DESCRIPTOR3_SIZE   (24)

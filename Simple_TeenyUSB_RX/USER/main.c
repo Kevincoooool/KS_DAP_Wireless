@@ -31,23 +31,20 @@ extern tusb_msc_device_t msc_dev;
 extern tusb_device_config_t device_config;
 uint8_t NRF_OK = 1;
 uint8_t NRF_SEND[32] = {0};
-void Delay20ms(void) //@33.000MHz
+void Delay100ms()		//@30.000MHz
 {
-        uint8_t i, j, k;
+	unsigned char i, j, k;
 
-        __NOP();
-        __NOP();
-        i = 50;
-        j = 130;
-        k = 254;
-        do
-        {
-                do
-                {
-                        while (--k)
-                                ;
-                } while (--j);
-        } while (--i);
+	i = 2;
+	j = 2;
+
+	do
+	{
+		do
+		{
+			
+		} while (--j);
+	} while (--i);
 }
 int main(void)
 {
@@ -66,8 +63,6 @@ int main(void)
 		
         while (1)
         {
-		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);	
-//		Delay20ms();
 //		HAL_Delay(10);
 //		NRF_SEND[10]++;
 //		if (NRF_SEND[10]>15)
@@ -91,12 +86,12 @@ int main(void)
 #elif WIRELESS_RX
                 usbd_hid_process_wireless_rx();
 #endif
-                if (cdc_len)
-                {
+//                if (cdc_len)
+//                {
 
-                        tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-                        cdc_len = 0;
-                }
+//                        tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+//                        cdc_len = 0;
+//                }
 
 //                tusb_msc_device_loop(&msc_dev);
         }

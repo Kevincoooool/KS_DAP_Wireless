@@ -1,7 +1,7 @@
 /*
  * Name   :  teeny_usb_desc.c
  * Author :  admin@xtoolbox.org
- * Date   :  2020-07-21 09:59:32
+ * Date   :  2020-09-14 09:47:36
 
  * Desc   :  This file is auto generate by the TeenyDT
  *           Visit http://dt.tusb.org for more info
@@ -14,8 +14,8 @@
   ------------- lua script begin ------------
 return Device {
     strManufacturer = "KS_DIY",
-    strProduct = "KS_DIY Composite DEMO",
-    strSerial = "TUSB123456",
+    strProduct = "KS Wireless CMSIS-DAP",
+    strSerial = "996_996_996",
     idVendor = 0x0483,
     idProduct = 0x0011,
     prefix = "COMP",
@@ -33,6 +33,7 @@ return Device {
 
    }
 }
+
 
   ------------- lua script end   ------------
  */
@@ -237,48 +238,49 @@ WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor1 [14] __ALIGN_END = {
   'I', 0x00,                                        /* wcChar4 */
   'Y', 0x00,                                        /* wcChar5 */
 };
-#define  COMP_STRING_DESCRIPTOR2_STR   "KS_DIY Composite DEMO"
+#define  COMP_STRING_DESCRIPTOR2_STR   "KS Wireless CMSIS-DAP"
 #define  COMP_STRING_DESCRIPTOR2_SIZE   (44)
 WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor2 [44] __ALIGN_END = {
   0x2c,                                             /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,                       /* bDescriptorType */
   'K', 0x00,                                        /* wcChar0 */
   'S', 0x00,                                        /* wcChar1 */
-  '_', 0x00,                                        /* wcChar2 */
-  'D', 0x00,                                        /* wcChar3 */
-  'I', 0x00,                                        /* wcChar4 */
-  'Y', 0x00,                                        /* wcChar5 */
-  ' ', 0x00,                                        /* wcChar6 */
-  'C', 0x00,                                        /* wcChar7 */
-  'o', 0x00,                                        /* wcChar8 */
-  'm', 0x00,                                        /* wcChar9 */
-  'p', 0x00,                                        /* wcChar10 */
-  'o', 0x00,                                        /* wcChar11 */
-  's', 0x00,                                        /* wcChar12 */
-  'i', 0x00,                                        /* wcChar13 */
-  't', 0x00,                                        /* wcChar14 */
-  'e', 0x00,                                        /* wcChar15 */
-  ' ', 0x00,                                        /* wcChar16 */
-  'D', 0x00,                                        /* wcChar17 */
-  'E', 0x00,                                        /* wcChar18 */
-  'M', 0x00,                                        /* wcChar19 */
-  'O', 0x00,                                        /* wcChar20 */
+  ' ', 0x00,                                        /* wcChar2 */
+  'W', 0x00,                                        /* wcChar3 */
+  'i', 0x00,                                        /* wcChar4 */
+  'r', 0x00,                                        /* wcChar5 */
+  'e', 0x00,                                        /* wcChar6 */
+  'l', 0x00,                                        /* wcChar7 */
+  'e', 0x00,                                        /* wcChar8 */
+  's', 0x00,                                        /* wcChar9 */
+  's', 0x00,                                        /* wcChar10 */
+  ' ', 0x00,                                        /* wcChar11 */
+  'C', 0x00,                                        /* wcChar12 */
+  'M', 0x00,                                        /* wcChar13 */
+  'S', 0x00,                                        /* wcChar14 */
+  'I', 0x00,                                        /* wcChar15 */
+  'S', 0x00,                                        /* wcChar16 */
+  '-', 0x00,                                        /* wcChar17 */
+  'D', 0x00,                                        /* wcChar18 */
+  'A', 0x00,                                        /* wcChar19 */
+  'P', 0x00,                                        /* wcChar20 */
 };
-#define  COMP_STRING_DESCRIPTOR3_STR   "TUSB123456"
-#define  COMP_STRING_DESCRIPTOR3_SIZE   (22)
-WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor3 [22] __ALIGN_END = {
-  0x16,                                             /* bLength */
+#define  COMP_STRING_DESCRIPTOR3_STR   "996_996_996"
+#define  COMP_STRING_DESCRIPTOR3_SIZE   (24)
+WEAK __ALIGN_BEGIN  const uint8_t COMP_StringDescriptor3 [24] __ALIGN_END = {
+  0x18,                                             /* bLength */
   USB_STRING_DESCRIPTOR_TYPE,                       /* bDescriptorType */
-  'T', 0x00,                                        /* wcChar0 */
-  'U', 0x00,                                        /* wcChar1 */
-  'S', 0x00,                                        /* wcChar2 */
-  'B', 0x00,                                        /* wcChar3 */
-  '1', 0x00,                                        /* wcChar4 */
-  '2', 0x00,                                        /* wcChar5 */
-  '3', 0x00,                                        /* wcChar6 */
-  '4', 0x00,                                        /* wcChar7 */
-  '5', 0x00,                                        /* wcChar8 */
-  '6', 0x00,                                        /* wcChar9 */
+  '9', 0x00,                                        /* wcChar0 */
+  '9', 0x00,                                        /* wcChar1 */
+  '6', 0x00,                                        /* wcChar2 */
+  '_', 0x00,                                        /* wcChar3 */
+  '9', 0x00,                                        /* wcChar4 */
+  '9', 0x00,                                        /* wcChar5 */
+  '6', 0x00,                                        /* wcChar6 */
+  '_', 0x00,                                        /* wcChar7 */
+  '9', 0x00,                                        /* wcChar8 */
+  '9', 0x00,                                        /* wcChar9 */
+  '6', 0x00,                                        /* wcChar10 */
 };
 #define COMP_STRING_COUNT    (4)
 const uint8_t* const COMP_StringDescriptors[4] = {

@@ -22,8 +22,8 @@
 enum
 {
     wait_hid_data,
-    nrf_send,
-    wait_nrf_reply_1,
+    dap_tx_send,
+    wait_dap_rx_reply,
     get_nrf_data_1,
     wait_nrf_reply_2,
     get_nrf_data_2,
@@ -32,4 +32,7 @@ enum
     seng_hid_data
 };
 uint8_t usbd_hid_process_wireless_tx(void);
+void Delay20ms(void);
+uint8_t CalcCheck(uint8_t *buffer, uint8_t len);
+uint8_t SumCheck(uint8_t *buffer, uint8_t len);
 #endif

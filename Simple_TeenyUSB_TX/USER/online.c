@@ -173,6 +173,7 @@ uint8_t usbd_hid_process_online(void)
 /****************************************************************
  * 获取USB HID数据
  ***************************************************************/
+extern int hid_len;
 void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 {
 	//如果收到的数据包的第一个数据等于传输终止标志   就直接退出
@@ -184,8 +185,9 @@ void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 	//没有在处理数据过程中才会接收 不然直接退出
 	if (dealing_data)
 		return; // Discard packet when buffer is full
-	memcpy(MYUSB_Request, EpBuf, len);
+	memcpy(MYUSB_Request, EpBuf, 64);
 	dealing_data = 1;
+	hid_len = 64;
 }
 
 /*

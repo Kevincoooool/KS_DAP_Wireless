@@ -1,7 +1,7 @@
 /*
  * Name   :  teeny_usb_init.h
  * Author :  admin@xtoolbox.org
- * Date   :  2020-07-21 09:59:32
+ * Date   :  2020-09-14 09:47:36
 
  * Desc   :  This file is auto generate by the TeenyDT
  *           Visit http://dt.tusb.org for more info
@@ -14,8 +14,8 @@
   ------------- lua script begin ------------
 return Device {
     strManufacturer = "KS_DIY",
-    strProduct = "KS_DIY Composite DEMO",
-    strSerial = "TUSB123456",
+    strProduct = "KS Wireless CMSIS-DAP",
+    strSerial = "996_996_996",
     idVendor = 0x0483,
     idProduct = 0x0011,
     prefix = "COMP",
@@ -33,6 +33,7 @@ return Device {
 
    }
 }
+
 
   ------------- lua script end   ------------
  */

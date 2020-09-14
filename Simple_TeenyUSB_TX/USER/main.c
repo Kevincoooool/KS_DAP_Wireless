@@ -22,6 +22,7 @@
 #include "usart.h"
 #include "include.h"
 extern uint8_t MYUSB_Request[64 + 1];
+extern uint8_t MYUSB_Response[64 + 1];
 extern int hid_len, cdc_len;
 extern uint8_t cdc_buf[32];
 extern tusb_hid_device_t hid_dev;
@@ -29,27 +30,28 @@ extern tusb_cdc_device_t cdc_dev;
 extern tusb_msc_device_t msc_dev;
 extern tusb_device_config_t device_config;
 uint8_t NRF_OK = 1;
-uint8_t NRF_SEND[] = {0x55,0xaa,0x88,0x00};
+uint8_t In_MYUSB_Response[64 + 3]; // Request  Buffer
+uint8_t Out_MYUSB_Request[64 + 3]; // Response Buffer
 extern uint8_t dealing_data;
-void Delay20ms(void)		//@33.000MHz
+void Delay20ms(void) //@33.000MHz
 {
-	unsigned char i, j, k;
+    unsigned char i, j;
 
-	__NOP();
-	__NOP();
-	i = 20;
-	j = 130;
-	k = 254;
-	do
-	{
-		do
-		{
-			while (--k);
-		} while (--j);
-	} while (--i);
+    __NOP();
+    i = 2;
+    j = 2;
+
+    do
+    {
+        do
+        {
+
+        } while (--j);
+    } while (--i);
 }
 int main(void)
 {
+	uint32_t err_cnt = 0;
     tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
     tusb_set_device_config(dev, &device_config);
     tusb_open_device(dev);
@@ -62,35 +64,32 @@ int main(void)
     {
         NRF_Init(MODEL_TX2, 51);
     }
-	
+	HAL_UART_Transmit(&huart1, "Start DAP_TX!", 15, 2000);
     while (1)
     {
-//		HAL_UART_Transmit(&huart1,NRF_SEND,4,100);
-		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
-//		Delay20ms();
-//		HAL_Delay(10);
-//		NRF_SEND[3]++;
-//		if (NRF_SEND[3]>15)
-//			NRF_SEND[3] = 0;
-//		HAL_UART_Transmit(&huart1,NRF_SEND,4,1000);
-//		NRF_TxPacket(NRF_SEND, 4);
-//		if (NRF_GETDATA)
-//		{
-//			NRF_GETDATA=0;
-//			tusb_cdc_device_send(&cdc_dev, NRF24L01_2_RXDATA, 64);
-//		}
-//		memset(MYUSB_Request,0,64);
-//		if (hid_len)
-//		tusb_cdc_device_send(&cdc_dev, MYUSB_Request, 64);
-		if (recv_end_flag == 1&&!dealing_data)
-        {
-            recv_end_flag = 0;
-            tusb_hid_device_send(&hid_dev, rx_buffer, rx_len);
-            rx_len=0; //清除计数
-            recv_end_flag=0; //清除接收结束标志位
+        HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
+//Delay20ms();
+//        if (recv_end_flag == 1 && !dealing_data &&!hid_len)
+//        {
+//            memcpy(In_MYUSB_Response, rx_buffer, 67);
 
-        }
-#if !ONLINE 
+//            for (uint8_t i = 1; i < 65; i++)
+//            {
+//                MYUSB_Response[i - 1] = In_MYUSB_Response[i];
+//            }
+////            if (In_MYUSB_Response[0] == 0xAA && In_MYUSB_Response[66] == 0xFB && SumCheck(MYUSB_Response, 65) == In_MYUSB_Response[65])
+////            {
+////                tusb_hid_device_send(&hid_dev, MYUSB_Response, 64);
+////            }
+////            else
+////            {
+////                tusb_hid_device_send(&hid_dev, MYUSB_Response, 64);
+////            }
+
+//            rx_len = 0;        //清除计数
+//            recv_end_flag = 0; //清除接收结束标志位
+//        }
+#if !ONLINE
 //        NRF_Check_Event(); //检测遥控数据
 //        if (NRF_Connect() == 0)
 //        {
@@ -105,16 +104,27 @@ int main(void)
             usbd_hid_process_wireless_tx();
 #endif
         }
+		else if (!dealing_data)
+		{
+			err_cnt++;
+			if (err_cnt >1000000)
+			{
+				err_cnt=0;
+				//HAL_UART_Transmit(&huart1, MYUSB_Response, 64, 2000);
+			}
+			
+			
+		}
 #elif WIRELESS_RX
         usbd_hid_process_wireless_rx();
 #endif
-        if (cdc_len)
-        {
+//        if (cdc_len)
+//        {
 
-            tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-            cdc_len = 0;
-        }
+//            tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+//            cdc_len = 0;
+//        }
 
-        tusb_msc_device_loop(&msc_dev);
+//        tusb_msc_device_loop(&msc_dev);
     }
 }
