@@ -40,6 +40,8 @@
 #include "hid_transfer.h"
 #include "DAP.h"
 #include "DAP_config.h"
+
+
 #define USER_RX_EP_SIZE 32
 #define CDC_RX_EP_SIZE 32
 #define HID_RX_EP_SIZE 64
@@ -119,7 +121,7 @@ static tusb_device_interface_t *device_interfaces[] = {
     (tusb_device_interface_t *)&cdc_dev,
     0, // CDC need two interfaces
        //  (tusb_device_interface_t*)&user_dev,
-    (tusb_device_interface_t *)&msc_dev,
+//    (tusb_device_interface_t *)&msc_dev,
 };
 
 static void init_ep(tusb_device_t *dev)
@@ -141,7 +143,7 @@ void tusb_delay_ms(uint32_t ms)
       ;
 }
 
-static int user_len = 0;
+int user_len = 0;
 int user_recv_data(tusb_user_device_t *raw, const void *data, uint16_t len)
 {
   user_len = (int)len;
@@ -154,11 +156,11 @@ int user_send_done(tusb_user_device_t *raw)
   return 0;
 }
 
-static int hid_len = 0;
+int hid_len = 0;
 int hid_recv_data(tusb_hid_device_t *hid, const void *data, uint16_t len)
 {
   hid_len = (int)len;
-  HID_GetOutReport(hid_buf, len);
+  HID_GetOutReport(hid_buf, len); 
   return 1; // return 1 means the recv buffer is busy
 }
 
@@ -169,7 +171,7 @@ int hid_send_done(tusb_hid_device_t *hid)
   return 0;
 }
 
-static int cdc_len = 0;
+int cdc_len = 0;
 int cdc_recv_data(tusb_cdc_device_t *cdc, const void *data, uint16_t len)
 {
   cdc_len = (int)len;
@@ -191,47 +193,29 @@ void cdc_line_coding_change(tusb_cdc_device_t *cdc)
   //cdc->line_coding.parity;
 }
 
-int main(void)
-{
-  tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
-  tusb_set_device_config(dev, &device_config);
-  tusb_open_device(dev);
-  DAP_Setup();
+ int main(void)
+ {
+   tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
+   tusb_set_device_config(dev, &device_config);
+   tusb_open_device(dev);
+   DAP_Setup();
 
-  while (1)
-  {
-    if (hid_len)
-    {
-      usbd_hid_process();
-    }
-    //    if(user_len){
-    //      for(int i=0;i<user_len;i++){
-    // //       user_buf[i]+=1;
-    //      }
-    //      tusb_user_device_send(&user_dev, user_buf, user_len);
-    //      user_len = 0;
-    //    }
+   while (1)
+   {
+     if (hid_len)
+     {
+       usbd_hid_process();
+     }
+ 
+     if (cdc_len)
+     {
+       tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+       cdc_len = 0;
+     }
 
-    //    if(hid_len){
-    //      for(int i=0;i<hid_len;i++){
-    //        //hid_buf[i]+=2;
-    //      }
-    //      tusb_hid_device_send(&hid_dev, hid_buf, hid_len);
-    //      hid_len = 0;
-    //    }
-
-    if (cdc_len)
-    {
-      // for(int i=0;i<cdc_len;i++){
-      //   cdc_buf[i]+=3;
-      // }
-      tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-      cdc_len = 0;
-    }
-
-    tusb_msc_device_loop(&msc_dev);
-  }
-}
+//     tusb_msc_device_loop(&msc_dev);
+   }
+ }
 
 #if defined(STM32F723xx) || defined(STM32F767xx) || defined(STM32F407xx)
 #define BLOCK_SIZE 512

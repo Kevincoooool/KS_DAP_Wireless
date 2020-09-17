@@ -54,9 +54,9 @@ This information includes:
 
 /* I removed RTE directory from the source code. Zach Lee */
 
-#include "stm32f1xx.h"                             // Debug Unit Cortex-M Processor Header File
-#include "stm32f1xx_hal_conf.h"
-#include "stm32f1xx_hal_gpio.h"
+#include "stm32f0xx.h"                             // Debug Unit Cortex-M Processor Header File
+#include "stm32f0xx_hal_conf.h"
+#include "stm32f0xx_hal_gpio.h"
 #include "swd_host.h"
 
 
@@ -169,14 +169,14 @@ __STATIC_INLINE uint8_t DAP_GetSerNumString (char *str) {
 ///@}
 
 /* Private defines -----------------------------------------------------------*/
-#define JTAG_TCK_Pin GPIO_PIN_10
-#define JTAG_TCK_GPIO_Port GPIOB
+#define JTAG_TCK_Pin GPIO_PIN_2
+#define JTAG_TCK_GPIO_Port GPIOA
 
-#define JTAG_TMS_Pin GPIO_PIN_11
-#define JTAG_TMS_GPIO_Port GPIOB
+#define JTAG_TMS_Pin GPIO_PIN_4
+#define JTAG_TMS_GPIO_Port GPIOA
 
-#define JTAG_nRESET_Pin GPIO_PIN_12
-#define JTAG_nRESET_GPIO_Port GPIOB
+#define JTAG_nRESET_Pin GPIO_PIN_1
+#define JTAG_nRESET_GPIO_Port GPIOA
 
 #define JTAG_TDI_Pin GPIO_PIN_13
 #define JTAG_TDI_GPIO_Port GPIOB
@@ -184,11 +184,11 @@ __STATIC_INLINE uint8_t DAP_GetSerNumString (char *str) {
 #define JTAG_TDO_Pin GPIO_PIN_14
 #define JTAG_TDO_GPIO_Port GPIOB
 
-#define JTAG_nTRST_Pin GPIO_PIN_15
-#define JTAG_nTRST_GPIO_Port GPIOB
+#define JTAG_nTRST_Pin GPIO_PIN_1
+#define JTAG_nTRST_GPIO_Port GPIOA
 
-#define LED_CONNECTED_Pin   GPIO_PIN_13
-#define LED_GPIO_Port       GPIOC
+#define LED_CONNECTED_Pin   GPIO_PIN_0
+#define LED_GPIO_Port       GPIOA
 
 // Connected LED                PIN13 of GPIOC
 
@@ -251,28 +251,28 @@ __HAL_RCC_GPIOC_CLK_ENABLE();
 //  HAL_GPIO_WritePin(JTAG_TDI_GPIO_Port, JTAG_TDI_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_nTRST_GPIO_Port, JTAG_nTRST_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_nRESET_GPIO_Port, JTAG_nRESET_Pin, GPIO_PIN_SET);
-  GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin|JTAG_nTRST_Pin|JTAG_nRESET_Pin;
+  JTAG_TCK_GPIO_Port->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin|JTAG_nTRST_Pin|JTAG_nRESET_Pin;
 
   /*Configure GPIO pins : JTAG_TCK_Pin JTAG_TMS_Pin JTAG_TDI_Pin */
   GPIO_InitStruct.Pin = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(JTAG_TCK_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : JTAG_nRESET_Pin JTAG_nTRST_Pin */
   GPIO_InitStruct.Pin = JTAG_nRESET_Pin|JTAG_nTRST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(JTAG_TCK_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : JTAG_TDO_Pin */
   GPIO_InitStruct.Pin = JTAG_TDO_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(JTAG_TCK_GPIO_Port, &GPIO_InitStruct);
     GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -291,13 +291,13 @@ __STATIC_INLINE void PORT_SWD_SETUP (void) {
 //  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_nRESET_GPIO_Port, JTAG_nRESET_Pin, GPIO_PIN_SET);
-  GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_nRESET_Pin;
+  JTAG_TCK_GPIO_Port->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_nRESET_Pin;
 
   GPIO_InitStruct.Pin = JTAG_TMS_Pin|JTAG_TCK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(JTAG_TCK_GPIO_Port, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = JTAG_nRESET_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
@@ -309,7 +309,7 @@ __STATIC_INLINE void PORT_SWD_SETUP (void) {
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(JTAG_TCK_GPIO_Port, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
@@ -330,7 +330,7 @@ __STATIC_INLINE void PORT_OFF (void) {
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(JTAG_TCK_GPIO_Port, &GPIO_InitStruct);
 }
 
 
@@ -517,9 +517,9 @@ __STATIC_FORCEINLINE void     PIN_nRESET_OUT (uint32_t bit) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(JTAG_nRESET_GPIO_Port, &GPIO_InitStruct);
 	  
-	swd_init_debug();
-	uint32_t swd_mem_write_data = 0x05FA0000 | 0x4;
-	swd_write_memory(0xE000ED0C,(uint8_t*)&swd_mem_write_data,4);
+//	swd_init_debug();
+//	uint32_t swd_mem_write_data = 0x05FA0000 | 0x4;
+//	swd_write_memory(0xE000ED0C,(uint8_t*)&swd_mem_write_data,4);
   }
 }
 
@@ -564,8 +564,13 @@ GPIO_InitTypeDef GPIO_InitStruct = {0};
            - 0: Target Running LED OFF: program execution in target stopped.
 */
 __STATIC_INLINE void LED_RUNNING_OUT (uint32_t bit) {
-  (void)bit;
-  ;             // Not available
+	if ((bit & 1U) == 1) {
+    LED_GPIO_Port->BSRR =  LED_CONNECTED_Pin;
+  } else {
+    LED_GPIO_Port->BRR = LED_CONNECTED_Pin;
+  }
+//  (void)bit;
+//  ;             // Not available
 }
 
 ///@}
@@ -586,9 +591,9 @@ default, the DWT timer is used.  The frequency of this timer is configured with 
 /** Get timestamp of Test Domain Timer.
 \return Current timestamp value.
 */
-__STATIC_INLINE uint32_t TIMESTAMP_GET (void) {
-  return (DWT->CYCCNT);
-}
+//__STATIC_INLINE uint32_t TIMESTAMP_GET (void) {
+//  return (DWT->CYCCNT);
+//}
 ///@}
 
 
@@ -610,10 +615,11 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
  - LED output pins are enabled and LEDs are turned off.
 */
 __STATIC_INLINE void DAP_SETUP (void) {
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	PORT_JTAG_SETUP();
-	PORT_SWD_SETUP();
+	PORT_SWD_SETUP();  
 	
 }
 
