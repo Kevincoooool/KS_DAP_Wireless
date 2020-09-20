@@ -23,8 +23,8 @@
 /* USER CODE BEGIN 0 */
 volatile uint8_t rx_len = 0;        //接收数据长度
 volatile uint8_t recv_end_flag = 0; //接收完成标记位
-uint8_t rx_buffer[67];              //接收缓存
-char BUFFER_SIZE = 67;              //不定长数据的最大长度，设置为100则最大长度为100
+uint8_t rx_buffer[65];              //接收缓存
+char BUFFER_SIZE = 65;              //不定长数据的最大长度，设置为100则最大长度为100
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -40,7 +40,7 @@ void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 1843200;
+  huart1.Init.BaudRate = 2000000;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;

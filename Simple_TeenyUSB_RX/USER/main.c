@@ -31,21 +31,7 @@ extern tusb_msc_device_t msc_dev;
 extern tusb_device_config_t device_config;
 uint8_t NRF_OK = 1;
 uint8_t NRF_SEND[32] = {0};
-void Delay100ms()		//@30.000MHz
-{
-	unsigned char i, j, k;
 
-	i = 2;
-	j = 2;
-
-	do
-	{
-		do
-		{
-			
-		} while (--j);
-	} while (--i);
-}
 int main(void)
 {
         tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);

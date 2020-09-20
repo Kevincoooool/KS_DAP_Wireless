@@ -19,10 +19,10 @@
 #include "tusbd_cdc.h"
 #include "tusbd_msc.h"
 #include "online.h"
-#define SIMPLE 1
+
 extern tusb_hid_device_t hid_dev;
 
-#if !SIMPLE
+#if 0
 extern tusb_cdc_device_t cdc_dev;
 extern uint8_t cdc_buf[32];
 static volatile uint8_t USB_RequestFlag; // Request  Buffer Usage Flag
@@ -187,7 +187,7 @@ void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 		return; // Discard packet when buffer is full
 	memcpy(MYUSB_Request, EpBuf, 64);
 	dealing_data = 1;
-	hid_len = 64;
+
 }
 
 /*

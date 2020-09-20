@@ -18,7 +18,6 @@ void DAP_SPI_Init(void)
 	MX_DMA_Init();
 	MX_SPI1_Init();
 	MX_SPI2_Init();
-	
 }
 
 uint8_t SPI_RW(uint8_t dat)
