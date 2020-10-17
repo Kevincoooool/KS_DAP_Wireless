@@ -1,3 +1,12 @@
+/*
+ * @Descripttion : 
+ * @version      : 
+ * @Author       : Kevincoooool
+ * @Date         : 2020-08-22 17:55:57
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-10-15 19:20:30
+ * @FilePath     : \Simple_TeenyUSB_TX\CMSIS-DAP\algo\STM32F10x_128.c
+ */
 /* Flash OS Routines (Automagically Generated)
  * Copyright (c) 2009-2015 ARM Limited
  */
@@ -9,6 +18,7 @@
 *然后调用这段代码里面的flash读取和擦除函数对目标芯片编程
 *不同芯片的下载算法不同，其下载算法可以在MDK的FLM文件中提取
 */
+const program_target_t flash_algo ;
 static const uint32_t flash_code[] = {
     0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
     0x4603B510, 0x4C442000, 0x48446020, 0x48446060, 0x46206060, 0xF01069C0, 0xD1080F04, 0x5055F245,

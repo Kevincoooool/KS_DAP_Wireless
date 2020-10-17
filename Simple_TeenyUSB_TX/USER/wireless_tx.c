@@ -120,7 +120,7 @@ uint8_t CalcCheck(uint8_t *buffer, uint8_t len)
 }
 uint8_t SumCheck(uint8_t *buffer, uint8_t len)
 {
-    int i, result;
+    int i;
 	uint8_t sum;
     for (sum = buffer[0], i = 1; i < len; i++)
     {

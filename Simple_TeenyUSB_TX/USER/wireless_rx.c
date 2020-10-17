@@ -3,9 +3,9 @@
  * @version: 
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:35:23
- * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-23 10:39:48
- * @FilePath: \Simple_TeenyUSB_TX\USER\wireless_rx.c
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-10-15 12:27:15
+ * @FilePath     : \Simple_TeenyUSB_TX\USER\wireless_rx.c
  */
 /***************************************************************/
 #include "DAP_Config.h"
@@ -19,103 +19,78 @@
 #include "tusbd_cdc.h"
 #include "tusbd_msc.h"
 #include "wireless_rx.h"
+static uint8_t CalcCheck(uint8_t *buffer, uint8_t len);
+static uint8_t SumCheck(uint8_t *buffer, uint8_t len);
+extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 extern tusb_hid_device_t hid_dev;
-extern uint8_t MYUSB_Request[DAP_PACKET_SIZE + 1];  // Request  Buffer
-extern uint8_t MYUSB_Response[DAP_PACKET_SIZE + 1]; // Response Buffer
+extern uint8_t MYUSB_Request[DAP_PACKET_SIZE];  // Request  Buffer
+extern uint8_t MYUSB_Response[DAP_PACKET_SIZE]; // Response Buffer
 extern uint8_t dealing_data;
-uint8_t state_w_rx = wait_nrf_data_1;
-extern uint8_t TX_ONE[32] ;
-extern uint8_t TX_TWO[32] ;
-extern uint8_t RX_THREE[5];
-extern uint8_t RX_ONE[32] ;
-extern uint8_t RX_TWO[32] ;
-extern uint8_t TX_THREE[32] ;
+uint8_t In_MYUSB_Request[DAP_PACKET_SIZE + 3];   // Request  Buffer
+uint8_t Out_MYUSB_Response[DAP_PACKET_SIZE + 3]; // Response Buffer
+uint8_t state_w_rx = wait_dap_tx_data;
+
 uint8_t usbd_hid_process_wireless_rx(void)
 {
 
 #if WIRELESS_RX
     /*
     无线接收端流程
-    1、SPI收到NRF2401的数据
-    2、把SPI收到的数据传给DAP_ProcessCommand处理
-    3、处理完成的结果通过SPI发出NRF
+    1、收到发射端传来的数据
+    2、把数据传给DAP_ProcessCommand处理
+    3、处理完成的结果发出
     4、完成、等待下一包处理
     */
     switch (state_w_rx)
     {
-    case wait_nrf_data_1:
-        if (NRF_GETDATA)
+    case wait_dap_tx_data:
+        if (recv_end_flag == 1 && !dealing_data)
         {
-            NRF_GETDATA = 0;
-            memcpy(RX_ONE, NRF24L01_2_RXDATA, 32);
-            state_w_rx = dap_deal_1;
-        }
-        break;
-    case dap_deal_1:
+            dealing_data = 1;
 
-        for (uint8_t i = 0; i < 30; i++)
-        {
-            MYUSB_Request[i] = RX_ONE[i];
+            memcpy(MYUSB_Request, rx_buffer, DAP_PACKET_SIZE);
+            //            for (uint8_t i = 1; i < 65; i++)
+            //            {
+            //                MYUSB_Request[i - 1] = In_MYUSB_Request[i];
+            //            }
+            //            if (In_MYUSB_Request[0] == 0xAA && In_MYUSB_Request[66] == 0xFB && SumCheck(MYUSB_Request, 65) == In_MYUSB_Request[65])
+            //            {
+            //                state_w_rx = get_dap_reponse;
+            //            }
+            //            else
+            //            {
+            //                memcpy(MYUSB_Response, MYUSB_Request, DAP_PACKET_SIZE);
+            //                state_w_rx = get_dap_reponse;
+            //            }
+            state_w_rx = get_dap_reponse;
+            rx_len = 0;        //清除计数
+            recv_end_flag = 0; //清除接收结束标志位
         }
-        state_w_rx = wait_nrf_data_2;
-        break;
-    case wait_nrf_data_2:
-        if (NRF_GETDATA)
+        else
         {
-            NRF_GETDATA = 0;
-            memcpy(RX_TWO, NRF24L01_2_RXDATA, 30);
-            state_w_rx = dap_deal_2;
+            state_w_rx = wait_dap_tx_data;
         }
-        break;
-    case dap_deal_2:
-
-        for (uint8_t i = 0; i < 30; i++)
-        {
-            MYUSB_Request[i + 30] = RX_TWO[i];
-        }
-        state_w_rx = wait_nrf_data_3;
-        break;
-    case wait_nrf_data_3:
-        if (NRF_GETDATA)
-        {
-            NRF_GETDATA = 0;
-            memcpy(RX_TWO, NRF24L01_2_RXDATA, 30);
-            state_w_rx = dap_deal_3;
-        }
-        break;
-    case dap_deal_3:
-
-        for (uint8_t i = 0; i < 5; i++)
-        {
-            MYUSB_Request[i + 60] = RX_TWO[i];
-        }
-        state_w_rx = get_dap_reponse;
         break;
     case get_dap_reponse:
+        memset(MYUSB_Response, 0, 65);
         DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
         state_w_rx = seng_nrf_data;
         break;
     case seng_nrf_data:
-        for (uint8_t i = 0; i < 30; i++)
-        {
-            TX_ONE[i] = MYUSB_Response[i];
-        }
-        NRF_TxPacket(TX_ONE, 30);
-        Delay20ms();
-        for (uint8_t j = 0; j < 30; j++)
-        {
-            TX_TWO[j] = MYUSB_Response[j + 30];
-        }
-        NRF_TxPacket(TX_TWO, 30);
-        Delay20ms();
-        for (uint8_t j = 0; j < 30; j++)
-        {
-            TX_TWO[j] = MYUSB_Response[j + 60];
-        }
-        NRF_TxPacket(TX_TWO, 5);
-        Delay20ms();
-        state_w_rx = wait_nrf_data_1;
-        //        dealing_data = 0;
+        //        Out_MYUSB_Response[0] = 0xAA;
+        //        Out_MYUSB_Response[65] = SumCheck(MYUSB_Response, 65);
+        //        Out_MYUSB_Response[66] = 0xFB;
+        //        for (uint8_t i = 1; i < 65; i++)
+        //        {
+        //            Out_MYUSB_Response[i] = MYUSB_Response[i - 1];
+        //        }
+        while (HAL_UART_Transmit(&huart1, MYUSB_Response, DAP_PACKET_SIZE, 1000) != HAL_OK)
+            ;
+        HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
+        state_w_rx = wait_dap_tx_data;
+        //memset(MYUSB_Request, 0, 65);
+        dealing_data = 0;
         break;
 
     default:
@@ -125,3 +100,70 @@ uint8_t usbd_hid_process_wireless_rx(void)
 #endif
     return 0;
 }
+
+// uint8_t usbd_hid_process_wireless_rx(void)
+// {
+
+// #if WIRELESS_RX
+//     /*
+//     无线接收端流程
+//     1、收到发射端传来的数据
+//     2、把数据传给DAP_ProcessCommand处理
+//     3、处理完成的结果发出
+//     4、完成、等待下一包处理
+//     */
+//     switch (state_w_rx)
+//     {
+//     case wait_dap_tx_data:
+//         if (recv_end_flag == 1 && !dealing_data)
+//         {
+//             dealing_data = 1;
+//             memcpy(MYUSB_Request, rx_buffer, rx_len);
+//             rx_len = 0;        //清除计数
+//             recv_end_flag = 0; //清除接收结束标志位
+//             state_w_rx = get_dap_reponse;
+//         }
+//         else
+//         {
+//             state_w_rx = wait_dap_tx_data;
+//         }
+//         break;
+//     case get_dap_reponse:
+//         memset(MYUSB_Response, 0, 65);
+//         DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
+//         state_w_rx = seng_nrf_data;
+//         break;
+//     case seng_nrf_data:
+//         HAL_UART_Transmit(&huart1, MYUSB_Response, DAP_PACKET_SIZE, 1000);
+//         HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
+//         state_w_rx = wait_dap_tx_data;
+//         dealing_data = 0;
+//         break;
+
+//     default:
+//         break;
+//     }
+
+// #endif
+//     return 0;
+// }
+//static uint8_t CalcCheck(uint8_t *buffer, uint8_t len)
+//{
+//    int i, result;
+
+//    for (result = buffer[0], i = 1; i < len; i++)
+//    {
+//        result ^= buffer[i];
+//    }
+//    return result;
+//}
+//static uint8_t SumCheck(uint8_t *buffer, uint8_t len)
+//{
+//    int i;
+//    uint8_t sum;
+//    for (sum = buffer[0], i = 1; i < len; i++)
+//    {
+//        sum += buffer[i];
+//    }
+//    return sum;
+//}

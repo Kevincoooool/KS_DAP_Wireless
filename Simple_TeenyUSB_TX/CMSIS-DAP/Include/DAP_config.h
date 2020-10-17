@@ -245,7 +245,7 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 */
 __STATIC_INLINE void PORT_JTAG_SETUP (void) {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-__HAL_RCC_GPIOC_CLK_ENABLE();
+__HAL_RCC_GPIOB_CLK_ENABLE();
 //  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
 //  HAL_GPIO_WritePin(JTAG_TDI_GPIO_Port, JTAG_TDI_Pin, GPIO_PIN_SET);

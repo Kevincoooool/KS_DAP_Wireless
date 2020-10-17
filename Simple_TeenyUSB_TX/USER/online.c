@@ -155,6 +155,7 @@ void HID_SetInReport(void)
 uint8_t MYUSB_Request[DAP_PACKET_SIZE + 1];	 // Request  Buffer
 uint8_t MYUSB_Response[DAP_PACKET_SIZE + 1]; // Response Buffer
 uint8_t dealing_data = 0;
+extern int hid_len;
 uint8_t usbd_hid_process_online(void)
 {
 #if ONLINE
@@ -164,7 +165,7 @@ uint8_t usbd_hid_process_online(void)
 		DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
 		tusb_hid_device_send(&hid_dev, MYUSB_Response, DAP_PACKET_SIZE);
 		dealing_data = 0;
-
+//		hid_len = 0;
 		return 1;
 	}
 #endif
@@ -173,7 +174,7 @@ uint8_t usbd_hid_process_online(void)
 /****************************************************************
  * 获取USB HID数据
  ***************************************************************/
-extern int hid_len;
+
 void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 {
 	//如果收到的数据包的第一个数据等于传输终止标志   就直接退出
@@ -187,7 +188,7 @@ void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 		return; // Discard packet when buffer is full
 	memcpy(MYUSB_Request, EpBuf, 64);
 	dealing_data = 1;
-
+	hid_len = 64;
 }
 
 /*
@@ -196,6 +197,7 @@ USB HID发送完成
 */
 void HID_SetInReport(void)
 {
+	
 }
 
 #endif

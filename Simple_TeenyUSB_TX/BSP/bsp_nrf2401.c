@@ -57,8 +57,8 @@ uint8_t NRF_Write_Reg(uint8_t reg, uint8_t value)
 {
 	uint8_t status;
 	SPI_CSN_L();		  /* 选通器件 */
-	status = SPI_RW(reg); /* 写寄存器地址 */
-	SPI_RW(value);		  /* 写数据 */
+	status = SPI_RW_1(reg); /* 写寄存器地址 */
+	SPI_RW_1(value);		  /* 写数据 */
 	SPI_CSN_H();		  /* 禁止该器件 */
 	return status;
 }
@@ -71,8 +71,8 @@ uint8_t NRF_Read_Reg(uint8_t reg)
 {
 	uint8_t reg_val;
 	SPI_CSN_L();		 /* 选通器件 */
-	SPI_RW(reg);		 /* 写寄存器地址 */
-	reg_val = SPI_RW(0); /* 读取该寄存器返回数据 */
+	SPI_RW_1(reg);		 /* 写寄存器地址 */
+	reg_val = SPI_RW_1(0); /* 读取该寄存器返回数据 */
 	SPI_CSN_H();		 /* 禁止该器件 */
 	return reg_val;
 }
@@ -89,10 +89,10 @@ uint8_t NRF_Write_Buf(uint8_t reg, uint8_t *pBuf, uint8_t uchars)
 	uint8_t i;
 	uint8_t status;
 	SPI_CSN_L();		  /* 选通器件 */
-	status = SPI_RW(reg); /* 写寄存器地址 */
+	status = SPI_RW_1(reg); /* 写寄存器地址 */
 	for (i = 0; i < uchars; i++)
 	{
-		SPI_RW(pBuf[i]); /* 写数据 */
+		SPI_RW_1(pBuf[i]); /* 写数据 */
 	}
 	SPI_CSN_H(); /* 禁止该器件 */
 	return status;
@@ -107,10 +107,10 @@ uint8_t NRF_Read_Buf(uint8_t reg, uint8_t *pBuf, uint8_t uchars)
 	uint8_t i;
 	uint8_t status;
 	SPI_CSN_L();		  /* 选通器件 */
-	status = SPI_RW(reg); /* 写寄存器地址 */
+	status = SPI_RW_1(reg); /* 写寄存器地址 */
 	for (i = 0; i < uchars; i++)
 	{
-		pBuf[i] = SPI_RW(0); /* 读取返回数据 */
+		pBuf[i] = SPI_RW_1(0); /* 读取返回数据 */
 	}
 	SPI_CSN_H(); /* 禁止该器件 */
 	return status;
@@ -161,8 +161,8 @@ void NRF_Init(uint8_t model, uint8_t ch)
 		NRF_Write_Reg(FLUSH_RX, 0xff);
 		NRF_Write_Reg(NRF_WRITE_REG + CONFIG, 0x0f); // IRQ收发完成中断开启,16位CRC,主接收
 
-		SPI_RW(0x50);
-		SPI_RW(0x73);
+		SPI_RW_1(0x50);
+		SPI_RW_1(0x73);
 		NRF_Write_Reg(NRF_WRITE_REG + 0x1c, 0x01);
 		NRF_Write_Reg(NRF_WRITE_REG + 0x1d, 0x06);
 	}
@@ -172,8 +172,8 @@ void NRF_Init(uint8_t model, uint8_t ch)
 		NRF_Write_Reg(FLUSH_TX, 0xff);
 		NRF_Write_Reg(FLUSH_RX, 0xff);
 
-		SPI_RW(0x50);
-		SPI_RW(0x73);
+		SPI_RW_1(0x50);
+		SPI_RW_1(0x73);
 		NRF_Write_Reg(NRF_WRITE_REG + 0x1c, 0x01);
 		NRF_Write_Reg(NRF_WRITE_REG + 0x1d, 0x06);
 	}
@@ -244,7 +244,7 @@ uint8_t NRF_Connect(void) //1KHZ
 	Nrf_Err_cnt++;
 	if (Nrf_Err_cnt == 1)
 	{
-		// ANO_DT_Data_Receive_Anl(NRF24L01_2_RXDATA,NRF24L01_2_RXDATA[3]+5);
+		// DT_Data_Receive_Anl(NRF24L01_2_RXDATA,NRF24L01_2_RXDATA[3]+5);
 		NRF_SSI_CNT++;
 		Connect_flag = 1;
 	}

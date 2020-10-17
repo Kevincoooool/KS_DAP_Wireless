@@ -14,16 +14,16 @@
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>STM32F103CB</Device>
+          <Device>STM32F103C8</Device>
           <Vendor>STMicroelectronics</Vendor>
           <PackID>Keil.STM32F1xx_DFP.2.1.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20000000,0x5000) IROM(0x08000000,0x20000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x5000) IROM(0x08000000,0x10000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000 -FP0($$Device:STM32F103CB$Flash\STM32F10x_128.FLM))</FlashDriverDll>
-          <DeviceId>4401</DeviceId>
-          <RegisterFile>$$Device:STM32F103CB$Device\Include\stm32f10x.h</RegisterFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_128 -FS08000000 -FL020000 -FP0($$Device:STM32F103C8$Flash\STM32F10x_128.FLM))</FlashDriverDll>
+          <DeviceId>4235</DeviceId>
+          <RegisterFile>$$Device:STM32F103C8$Device\Include\stm32f10x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F103CB$SVD\STM32F103xx.svd</SFDFile>
+          <SFDFile>$$Device:STM32F103C8$SVD\STM32F103xx.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -112,11 +112,11 @@
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments></SimDllArguments>
           <SimDlgDll>DARMSTM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pSTM32F103CB</SimDlgDllArguments>
+          <SimDlgDllArguments>-pSTM32F103C8</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
           <TargetDlgDll>TARMSTM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pSTM32F103CB</TargetDlgDllArguments>
+          <TargetDlgDllArguments>-pSTM32F103C8</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -250,7 +250,7 @@
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x10000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -275,7 +275,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x10000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB,HSE_VALUE=8000000,NO_HOST,MSC_DATA_PACKET_LENGTH=4096</Define>
               <Undefine></Undefine>
-              <IncludePath>..\usb_stack\inc;..\usb_stack\class;..\HAL_LIB\Inc;..\HAL_LIB\CMSIS\Include;..\HAL_LIB\stm32f103ret6;..\..\usb_stack\class;..\HAL_LIB\CMSIS\Device\ST\STM32F1xx\Include;..\..\mcu_lib\st_driver\CMSIS\Device\ST\STM32F0xx\Include;..\boards\stm32f072c8t6;..\CMSIS-DAP\Include;..\CMSIS-DAP\algo;..\USER;..\BSP</IncludePath>
+              <IncludePath>..\usb_stack\inc;..\usb_stack\class;..\HAL_LIB\Inc;..\HAL_LIB\CMSIS\Include;..\HAL_LIB\stm32f103ret6;..\..\usb_stack\class;..\HAL_LIB\CMSIS\Device\ST\STM32F1xx\Include;..\..\mcu_lib\st_driver\CMSIS\Device\ST\STM32F0xx\Include;..\boards\stm32f072c8t6;..\CMSIS-DAP\Include;..\CMSIS-DAP\algo;..\USER;..\BSP;D:\Keil_v5\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Include;D:\Keil_v5\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Driver\Include;..\BSP\fatfs</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -497,6 +497,36 @@
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_nrf2401.h</FilePath>
             </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\w25qxx.h</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oled.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oledfont.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -516,11 +546,6 @@
               <FileName>error.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\error.c</FilePath>
-            </File>
-            <File>
-              <FileName>hid_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
             </File>
             <File>
               <FileName>JTAG_DP.c</FileName>
@@ -546,6 +571,11 @@
               <FileName>SWO.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_opt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -580,7 +610,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
+          <GroupName>teeny_usb_def</GroupName>
           <Files>
             <File>
               <FileName>teeny_usb_desc.c</FileName>
@@ -790,6 +820,105 @@
               <FileName>stm32f1xx_hal_rcc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_hal_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>STM32F10x_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>fatfs</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>1</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <uClangAs>2</uClangAs>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\diskio.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1289,6 +1418,36 @@
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_nrf2401.h</FilePath>
             </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\w25qxx.h</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oled.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oledfont.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1308,11 +1467,6 @@
               <FileName>error.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\error.c</FilePath>
-            </File>
-            <File>
-              <FileName>hid_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
             </File>
             <File>
               <FileName>JTAG_DP.c</FileName>
@@ -1338,6 +1492,11 @@
               <FileName>SWO.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_opt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1372,7 +1531,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
+          <GroupName>teeny_usb_def</GroupName>
           <Files>
             <File>
               <FileName>teeny_usb_desc.c</FileName>
@@ -1513,6 +1672,36 @@
               <FileName>stm32f1xx_hal_rcc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_hal_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>STM32F10x_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>fatfs</GroupName>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\diskio.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2012,6 +2201,36 @@
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_nrf2401.h</FilePath>
             </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\w25qxx.h</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oled.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oledfont.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2031,11 +2250,6 @@
               <FileName>error.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\error.c</FilePath>
-            </File>
-            <File>
-              <FileName>hid_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
             </File>
             <File>
               <FileName>JTAG_DP.c</FileName>
@@ -2061,6 +2275,11 @@
               <FileName>SWO.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_opt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2095,7 +2314,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
+          <GroupName>teeny_usb_def</GroupName>
           <Files>
             <File>
               <FileName>teeny_usb_desc.c</FileName>
@@ -2305,6 +2524,36 @@
               <FileName>stm32f1xx_hal_rcc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_hal_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>STM32F10x_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>fatfs</GroupName>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\diskio.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2804,6 +3053,36 @@
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_nrf2401.h</FilePath>
             </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\w25qxx.h</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oled.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oledfont.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2823,11 +3102,6 @@
               <FileName>error.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\error.c</FilePath>
-            </File>
-            <File>
-              <FileName>hid_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
             </File>
             <File>
               <FileName>JTAG_DP.c</FileName>
@@ -2853,6 +3127,11 @@
               <FileName>SWO.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_opt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2887,7 +3166,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
+          <GroupName>teeny_usb_def</GroupName>
           <Files>
             <File>
               <FileName>teeny_usb_desc.c</FileName>
@@ -3097,6 +3376,36 @@
               <FileName>stm32f1xx_hal_rcc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_hal_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>STM32F10x_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>fatfs</GroupName>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\diskio.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3596,6 +3905,36 @@
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_nrf2401.h</FilePath>
             </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\w25qxx.c</FilePath>
+            </File>
+            <File>
+              <FileName>w25qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\w25qxx.h</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oled.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\oledfont.h</FilePath>
+            </File>
+            <File>
+              <FileName>oledfont.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3615,11 +3954,6 @@
               <FileName>error.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\error.c</FilePath>
-            </File>
-            <File>
-              <FileName>hid_transfer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\hid_transfer.c</FilePath>
             </File>
             <File>
               <FileName>JTAG_DP.c</FileName>
@@ -3645,6 +3979,11 @@
               <FileName>SWO.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWD_opt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3679,7 +4018,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
+          <GroupName>teeny_usb_def</GroupName>
           <Files>
             <File>
               <FileName>teeny_usb_desc.c</FileName>
@@ -3889,6 +4228,36 @@
               <FileName>stm32f1xx_hal_rcc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f1xx_hal_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HAL_LIB\Src\stm32f1xx_hal_rcc_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>flash</GroupName>
+          <Files>
+            <File>
+              <FileName>STM32F10x_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>fatfs</GroupName>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\fatfs\diskio.c</FilePath>
             </File>
           </Files>
         </Group>

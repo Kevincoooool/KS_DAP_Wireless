@@ -41,7 +41,7 @@
 #include "DAP.h"
 #include "DAP_config.h"
 #include "online.h"
-
+#include "w25qxx.h"
 #define USER_RX_EP_SIZE 32
 #define CDC_RX_EP_SIZE 32
 #define HID_RX_EP_SIZE 64
@@ -120,8 +120,8 @@ static tusb_device_interface_t *device_interfaces[] = {
     (tusb_device_interface_t *)&hid_dev,
     (tusb_device_interface_t *)&cdc_dev,
     0, // CDC need two interfaces
-       //  (tusb_device_interface_t*)&user_dev,
-//    (tusb_device_interface_t *)&msc_dev,
+  // (tusb_device_interface_t*)&user_dev,
+    (tusb_device_interface_t *)&msc_dev,
 };
 
 static void init_ep(tusb_device_t *dev)
@@ -255,10 +255,10 @@ int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uin
 #else
 
 #if defined(FLASH_SIZE)
-#define PROGRAM_SIZE  24*1024ul
+#define PROGRAM_SIZE  16*1024*1024ul
 #define START_ADDR (const uint8_t *)(0x08000000ul + PROGRAM_SIZE)
-#define BLOCK_SIZE FLASH_PAGE_SIZE
-#define BLOCK_COUNT ((FLASH_SIZE - PROGRAM_SIZE) / FLASH_PAGE_SIZE)
+#define BLOCK_SIZE 512
+#define BLOCK_COUNT PROGRAM_SIZE / BLOCK_SIZE
 int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32_t *block_size)
 {
   *block_size = BLOCK_SIZE;
@@ -269,15 +269,16 @@ int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32
 int msc_block_read(tusb_msc_device_t *msc, uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
   uint32_t len = block_len * BLOCK_SIZE;
-  memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
-  
+//  memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
+  W25QXX_Read(buf, ( block_addr * BLOCK_SIZE), len);
   return len;
 }
 
 int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
   uint32_t len = block_len * BLOCK_SIZE;
-  flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
+//  flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
+	W25QXX_Write((uint8_t *)buf,(uint32_t)block_addr * BLOCK_SIZE,  len);
   return len;
 }
 

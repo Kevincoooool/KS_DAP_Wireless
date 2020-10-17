@@ -3,9 +3,9 @@
  * @version: 
  * @Author: Kevincoooool
  * @Date: 2020-08-20 11:51:46
- * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-21 21:42:28
- * @FilePath: \Simple_TeenyUSB\USER\include.h
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-10-15 12:25:00
+ * @FilePath     : \Simple_TeenyUSB_TX\USER\include.h
  */
 #ifndef _INCLUDE_H
 #define _INCLUDE_H
@@ -24,7 +24,7 @@ extern volatile uint8_t rx_len;
 extern volatile uint8_t recv_end_flag;
 extern uint8_t  rx_buffer[100];
 extern char      BUFFER_SIZE;
-void Delay20ms(void);
+void Delay_ms(uint32_t dealy);
 #endif
 
 
