@@ -432,6 +432,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\include.h</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\button.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -536,6 +546,16 @@
               <FileName>bsp_key.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_button.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1363,6 +1383,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\include.h</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\button.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1467,6 +1497,16 @@
               <FileName>bsp_key.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_button.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2156,6 +2196,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\include.h</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\button.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2260,6 +2310,16 @@
               <FileName>bsp_key.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_button.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3018,6 +3078,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\include.h</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\button.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3122,6 +3192,16 @@
               <FileName>bsp_key.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_button.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3880,6 +3960,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\include.h</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\button.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3984,6 +4074,16 @@
               <FileName>bsp_key.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_button.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_button.h</FilePath>
             </File>
           </Files>
         </Group>

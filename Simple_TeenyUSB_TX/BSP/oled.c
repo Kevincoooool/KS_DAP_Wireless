@@ -264,6 +264,29 @@ void OLED_ShowString(uint8_t x, uint8_t y, const uint8_t *p, uint8_t size, uint8
 	}
 	OLED_Refresh_Gram();
 }
+//进度条显示函数
+void OLED_Show_progress_bar(uint8_t temp,uint8_t chr_star,uint8_t chr_default,uint8_t x,uint8_t y,uint8_t size,uint8_t mode)
+{
+	switch(temp)
+	{
+		case  0:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  1:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  2:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  3:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  4:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  5:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  6:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  7:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  8:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case  9:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case 10:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case 11:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+		case 12:OLED_Show_CH(x,y,chr_star+temp,size,size);break;
+
+		default:OLED_Show_CH(x,y,chr_default,size,size);break;
+	}
+	OLED_Refresh_Gram();
+}
 //显示字符串
 //x,y:起点坐标
 //*p:字符串起始地址

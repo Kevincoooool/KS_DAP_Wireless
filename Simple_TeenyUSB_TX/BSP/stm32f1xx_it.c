@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "include.h"
+#include "bsp_button.h"
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -187,10 +188,18 @@ void PendSV_Handler(void)
 /**
   * @brief This function handles System tick timer.
   */
+uint8_t button_cnt = 0;
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+button_cnt++;
+		if (button_cnt > 20)
+		{
 
+			Button_Process();
+
+			button_cnt = 0;
+		}
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */

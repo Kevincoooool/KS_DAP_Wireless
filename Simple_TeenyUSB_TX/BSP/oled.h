@@ -124,7 +124,7 @@ void OLED_ShowString(uint8_t x,uint8_t y,const uint8_t *p,uint8_t size,uint8_t m
 void OLED_ShowCH(uint8_t x,uint8_t y,uint8_t chr,uint8_t size,uint8_t mode);
 void OLED_Show_CH(uint8_t x,uint8_t y,uint8_t chr,uint8_t size,uint8_t mode);
 void OLED_Show_CH_String(uint8_t x,uint8_t y,const uint8_t *p,uint8_t size,uint8_t mode);
-	
+void OLED_Show_progress_bar(uint8_t temp,uint8_t chr_star,uint8_t chr_default,uint8_t x,uint8_t y,uint8_t size,uint8_t mode);
 #endif  
 	 
 
