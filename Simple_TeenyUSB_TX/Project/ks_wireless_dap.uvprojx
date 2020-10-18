@@ -527,6 +527,16 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1448,6 +1458,16 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2230,6 +2250,16 @@
               <FileName>oledfont.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_key.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3083,6 +3113,16 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_key.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3934,6 +3974,16 @@
               <FileName>oledfont.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\bsp_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BSP\bsp_key.h</FilePath>
             </File>
           </Files>
         </Group>

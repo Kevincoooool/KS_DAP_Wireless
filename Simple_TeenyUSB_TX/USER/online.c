@@ -165,7 +165,7 @@ uint8_t usbd_hid_process_online(void)
 		DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
 		tusb_hid_device_send(&hid_dev, MYUSB_Response, DAP_PACKET_SIZE);
 		dealing_data = 0;
-//		hid_len = 0;
+		//		hid_len = 0;
 		return 1;
 	}
 #endif
@@ -197,8 +197,6 @@ USB HID发送完成
 */
 void HID_SetInReport(void)
 {
-	
 }
 
 #endif
-

@@ -117,6 +117,7 @@ void OLED_ShowChar(uint8_t x, uint8_t y, uint8_t chr, uint8_t size, uint8_t mode
 			}
 		}
 	}
+	OLED_Refresh_Gram();
 }
 //显示汉字
 void OLED_ShowCH(uint8_t x, uint8_t y, uint8_t chr, uint8_t size, uint8_t mode)
@@ -235,6 +236,7 @@ void OLED_ShowNumber(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t si
 		}
 		OLED_ShowChar(x + (size / 2) * t, y, temp + '0', size, 1);
 	}
+	OLED_Refresh_Gram();
 }
 //显示字符串
 //x,y:起点坐标

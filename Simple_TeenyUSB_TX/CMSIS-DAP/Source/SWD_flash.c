@@ -95,6 +95,6 @@ error_t target_flash_erase_chip(void)
     {
         return ERROR_ERASE_ALL;
     }
-
+	
     return status;
 }
