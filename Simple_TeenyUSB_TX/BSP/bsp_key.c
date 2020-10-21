@@ -8,7 +8,6 @@
  * @FilePath     : \Simple_TeenyUSB_TX\BSP\bsp_spi.c
  */
 #include "bsp_key.h"
-#include "hid_transfer.h"
 #include "spi.h"
 #include "gpio.h"
 #include "dma.h"

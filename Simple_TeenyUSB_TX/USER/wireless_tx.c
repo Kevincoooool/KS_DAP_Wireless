@@ -11,13 +11,7 @@
 #include "DAP_Config.h"
 #include "DAP_Common.h"
 #include "DAP.h"
-#include "hid_transfer.h"
 #include "include.h"
-#include "teeny_usb.h"
-#include "tusbd_user.h"
-#include "tusbd_hid.h"
-#include "tusbd_cdc.h"
-#include "tusbd_msc.h"
 #include "wireless_tx.h"
 
 extern int hid_len;

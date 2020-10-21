@@ -37,7 +37,6 @@
 #include "tusbd_hid.h"
 #include "tusbd_cdc.h"
 #include "tusbd_msc.h"
-#include "hid_transfer.h"
 #include "DAP.h"
 #include "DAP_config.h"
 #include "online.h"

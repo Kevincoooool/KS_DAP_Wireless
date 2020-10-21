@@ -336,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,STM32F103xB,HSE_VALUE=8000000,NO_HOST,MSC_DATA_PACKET_LENGTH=4096</Define>
+              <Define>USE_HAL_DRIVER,STM32F103xB,HSE_VALUE=8000000,NO_HOST,MSC_DATA_PACKET_LENGTH=512</Define>
               <Undefine></Undefine>
               <IncludePath>..\usb_stack\inc;..\usb_stack\class;..\HAL_LIB\Inc;..\HAL_LIB\CMSIS\Include;..\HAL_LIB\stm32f103ret6;..\..\usb_stack\class;..\HAL_LIB\CMSIS\Device\ST\STM32F1xx\Include;..\..\mcu_lib\st_driver\CMSIS\Device\ST\STM32F0xx\Include;..\boards\stm32f072c8t6;..\CMSIS-DAP\Include;..\CMSIS-DAP\algo;..\USER;..\BSP;D:\Keil_v5\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Include;D:\Keil_v5\Arm\Packs\ARM\CMSIS\5.5.1\CMSIS\Driver\Include;..\BSP\fatfs</IncludePath>
             </VariousControls>
@@ -388,6 +388,11 @@
               <FilePath>..\USER\main.c</FilePath>
             </File>
             <File>
+              <FileName>include.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\include.h</FilePath>
+            </File>
+            <File>
               <FileName>online.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USER\online.c</FilePath>
@@ -426,11 +431,6 @@
               <FileName>offline.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\offline.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USER\include.h</FilePath>
             </File>
             <File>
               <FileName>button.c</FileName>
@@ -1339,6 +1339,11 @@
               <FilePath>..\USER\main.c</FilePath>
             </File>
             <File>
+              <FileName>include.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\include.h</FilePath>
+            </File>
+            <File>
               <FileName>online.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USER\online.c</FilePath>
@@ -1377,11 +1382,6 @@
               <FileName>offline.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\offline.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USER\include.h</FilePath>
             </File>
             <File>
               <FileName>button.c</FileName>
@@ -2152,6 +2152,11 @@
               <FilePath>..\USER\main.c</FilePath>
             </File>
             <File>
+              <FileName>include.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\include.h</FilePath>
+            </File>
+            <File>
               <FileName>online.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USER\online.c</FilePath>
@@ -2190,11 +2195,6 @@
               <FileName>offline.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\offline.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USER\include.h</FilePath>
             </File>
             <File>
               <FileName>button.c</FileName>
@@ -3034,6 +3034,11 @@
               <FilePath>..\USER\main.c</FilePath>
             </File>
             <File>
+              <FileName>include.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\include.h</FilePath>
+            </File>
+            <File>
               <FileName>online.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USER\online.c</FilePath>
@@ -3072,11 +3077,6 @@
               <FileName>offline.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\offline.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USER\include.h</FilePath>
             </File>
             <File>
               <FileName>button.c</FileName>
@@ -3916,6 +3916,11 @@
               <FilePath>..\USER\main.c</FilePath>
             </File>
             <File>
+              <FileName>include.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\include.h</FilePath>
+            </File>
+            <File>
               <FileName>online.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USER\online.c</FilePath>
@@ -3954,11 +3959,6 @@
               <FileName>offline.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\offline.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\USER\include.h</FilePath>
             </File>
             <File>
               <FileName>button.c</FileName>

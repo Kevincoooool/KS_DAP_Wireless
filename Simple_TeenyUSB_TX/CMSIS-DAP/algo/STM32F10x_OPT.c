@@ -3,7 +3,7 @@
  */
 #include "flash_blob.h"
 
-static const uint32_t flash_code[] =
+static const uint32_t flash_code_f1_128[] =
 {
 	0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
 	0x4603B510, 0x4C5E2000, 0x485E6020, 0x485E6060, 0x485C6060, 0x485C60A0, 0x462060A0, 0xF01069C0,
@@ -21,7 +21,7 @@ static const uint32_t flash_code[] =
 	0x40022000, 0x45670123, 0xCDEF89AB, 0x40003000, 0x1FFFF800, 0x00000000
 };
 
-const program_target_t flash_opt =
+const program_target_t flash_f1_128 =
 {
 	0x20000021,  // Init
 	0x2000005B,  // UnInit
@@ -40,7 +40,7 @@ const program_target_t flash_opt =
 
 	0x20000400,  // mem buffer location
 	0x20000000,  // location to write prog_blob in target RAM
-	sizeof(flash_code),  // prog_blob size
-	flash_code,  // address of prog_blob
+	sizeof(flash_code_f1_128),  // prog_blob size
+	flash_code_f1_128,  // address of prog_blob
 	0x00000010,  // ram_to_flash_bytes_to_be_written
 };
