@@ -34,6 +34,8 @@ char Name_Buffer[20][20];
 int8_t file_name = 0, name_cnt = 0;
 uint32_t progess, address = 0x0;
 extern uint8_t button_num;
+extern uint8_t Select_algo;
+extern uint8_t show_page;
 uint8_t FLASH_SWD(uint8_t *File)
 {
 	Res = f_open(&fnew, (const TCHAR *)File, FA_READ);
@@ -69,10 +71,9 @@ uint8_t FLASH_SWD(uint8_t *File)
 							{
 								address += 1024;
 								progess = (((double)address / f_size(&fnew)) * 100);
-								OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
-
-								OLED_ShowNumber(110, 30, progess, 2, 12);
-								OLED_ShowString(122, 30, "%", 12, 1);
+								//OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
+								OLED_ShowNumber(50, 30, progess, 2, 12);
+								OLED_ShowString(62, 30, "%", 12, 1);
 							}
 							else
 								return 0;
@@ -81,30 +82,17 @@ uint8_t FLASH_SWD(uint8_t *File)
 						{
 							HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 							swd_set_target_reset(0); //复位运行
-							OLED_ShowNumber(92, 30, 100, 5, 12);
-							OLED_ShowString(122, 30, "%", 12, 1);
+							OLED_ShowNumber(32, 30, 100, 5, 12);
+							OLED_ShowString(62, 30, "%", 12, 1);
 							OLED_ShowString(0, 40, "==========", 12, 1);
 							OLED_ShowString(0, 50, "FLASH DONE", 12, 1);
 							HAL_Delay(1000);
 							OLED_Clear();
-							HAL_Delay(100);
+
 							file_name = 0;
 							name_cnt = 0;
 							address = 0;
-							if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
-							{
-								f_readdir(&DirInfo, &FileInfo);
-								while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
-								{
-									if (!FileInfo.fname[0])
-										break;
-									strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-									OLED_ShowString(0, file_name, (const uint8_t *)Name_Buffer[name_cnt], 12, 1);
-									file_name += 10;
-									name_cnt++;
-								}
-							}
-							OLED_ShowString(110, 0, "<<", 12, 1);
+							Display_BIN();
 							file_name = 0;
 							readflag = 1;
 							return 1;
@@ -147,7 +135,7 @@ void Select_BIN(void)
 	{
 		if (!swd_init_debug())
 		{
-			OLED_ShowString(0, 50, "Connect failed", 12, 1);
+			OLED_ShowString(0, 50, "Connect Failed!", 12, 1);
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 			HAL_Delay(1000);
 			OLED_ShowString(0, 50, "                ", 12, 1);
@@ -159,9 +147,9 @@ void Select_BIN(void)
 			file_name /= 10;
 			if (f_open(&fnew, (const TCHAR *)Name_Buffer[file_name], FA_READ) == FR_OK)
 			{
-
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-				OLED_ShowString(20, 0, "START FLASH", 12, 1);
+				for (uint8_t i = 0; i < 8; i++)
+		OLED_Show_CH_String(29 + i * 6, 0, oled_CH3[i], 12, 1);
 				while (!FLASH_SWD((uint8_t *)Name_Buffer[file_name]))
 				{
 					uint8_t WaitTips[] = "....";
@@ -174,7 +162,6 @@ void Select_BIN(void)
 					}
 					OLED_ShowString(35, 30, "               ", 12, 1);
 				}
-				//OLED_ShowString(98, 50, "BACK", 12, 1);
 			}
 			else
 			{
@@ -183,28 +170,76 @@ void Select_BIN(void)
 			}
 		}
 	}
+	
+
 	button_num = 0;
 	OLED_ShowString(110, file_name, "<<", 12, 1);
 }
 
 void Display_BIN(void)
 {
+	file_name = 0;
+	name_cnt = 0;
 	f_unlink("0:write.bin");
 	if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
 	{
 		f_readdir(&DirInfo, &FileInfo);
+
 		while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
 		{
 			if (!FileInfo.fname[0])
 				break;
 			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-			OLED_ShowString(0, file_name, (const uint8_t *)Name_Buffer[name_cnt], 12, 1);
+			OLED_ShowNumber(0, file_name, (file_name + 10) / 10, 1, 12);
+			OLED_ShowString(8, file_name, ".", 12, 1);
+			OLED_ShowString(16, file_name, (const uint8_t *)Name_Buffer[name_cnt], 12, 1);
 			file_name += 10;
 			name_cnt++;
 		}
 	}
 	OLED_ShowString(110, 0, "<<", 12, 1);
 	file_name = 0;
+}
+void Display_FLM(void)
+{
+	file_name = 0;
+	for (uint8_t i = 0; i < 6; i++)
+	{
+		OLED_ShowNumber(0, i * 10, (i + 1), 1, 12);
+		OLED_ShowString(8, i * 10, ".", 12, 1);
+		OLED_ShowString(16, i * 10, (const uint8_t *)STM32_ALGO[i].name, 12, 1);
+	}
+	OLED_ShowString(110, 0, "<<", 12, 1);
+}
+extern uint8_t show_dap;
+void Select_FLM(void)
+{
+	if (button_num == 1)
+	{
+		file_name += 10;
+		if (file_name >= 50)
+			file_name = 50;
+		OLED_ShowString(110, file_name - 10, "  ", 12, 1);
+	}
+	else if (button_num == 3)
+	{
+		file_name -= 10;
+		if (file_name < 10)
+			file_name = 0;
+		OLED_ShowString(110, file_name + 10, "  ", 12, 1);
+	}
+	else if (button_num == 2)
+	{
+		OLED_Clear();
+		OLED_ShowString(20, 30, "Set Success!", 12, 1);
+		Select_algo = file_name / 10;
+		HAL_Delay(1000);
+		show_dap = 1;
+		OLED_Clear();
+		Show.windows = 0;
+	}
+	button_num = 0;
+	OLED_ShowString(110, file_name, "<<", 12, 1);
 }
 // f_open(&fnew, (const TCHAR *)"23.txt", FA_CREATE_NEW | FA_WRITE);
 // /* Write a message */

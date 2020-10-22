@@ -37,8 +37,10 @@
 #include "teeny_usb.h"
 #include "tusbd_cdc_rndis.h"
 #include "board_config.h"
+#include "flash_blob.h"
 #include "DAP.h"
 #include "usart.h"
+#include "show.h"
 #include "ff.h"		/* FatFs configurations and declarations */
 #include "diskio.h" /* Declarations of low level disk I/O functions */
 extern volatile uint8_t rx_len;

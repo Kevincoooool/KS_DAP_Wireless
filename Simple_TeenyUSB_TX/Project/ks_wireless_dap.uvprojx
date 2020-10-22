@@ -442,6 +442,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\button.h</FilePath>
             </File>
+            <File>
+              <FileName>show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\show.c</FilePath>
+            </File>
+            <File>
+              <FileName>show.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\show.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -862,9 +872,39 @@
           <GroupName>flash</GroupName>
           <Files>
             <File>
+              <FileName>STM32F0xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F0xx_OPT.c</FilePath>
+            </File>
+            <File>
               <FileName>STM32F10x_OPT.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F3xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F3xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F4xx_OTP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F4xx_OTP.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F7xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F7xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32H7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32H7xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32_ALGO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32_ALGO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1393,6 +1433,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\button.h</FilePath>
             </File>
+            <File>
+              <FileName>show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\show.c</FilePath>
+            </File>
+            <File>
+              <FileName>show.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\show.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1744,9 +1794,39 @@
           <GroupName>flash</GroupName>
           <Files>
             <File>
+              <FileName>STM32F0xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F0xx_OPT.c</FilePath>
+            </File>
+            <File>
               <FileName>STM32F10x_OPT.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F3xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F3xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F4xx_OTP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F4xx_OTP.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F7xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F7xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32H7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32H7xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32_ALGO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32_ALGO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2206,6 +2286,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\button.h</FilePath>
             </File>
+            <File>
+              <FileName>show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\show.c</FilePath>
+            </File>
+            <File>
+              <FileName>show.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\show.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2626,9 +2716,39 @@
           <GroupName>flash</GroupName>
           <Files>
             <File>
+              <FileName>STM32F0xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F0xx_OPT.c</FilePath>
+            </File>
+            <File>
               <FileName>STM32F10x_OPT.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F3xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F3xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F4xx_OTP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F4xx_OTP.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F7xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F7xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32H7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32H7xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32_ALGO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32_ALGO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3088,6 +3208,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\button.h</FilePath>
             </File>
+            <File>
+              <FileName>show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\show.c</FilePath>
+            </File>
+            <File>
+              <FileName>show.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\show.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3508,9 +3638,39 @@
           <GroupName>flash</GroupName>
           <Files>
             <File>
+              <FileName>STM32F0xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F0xx_OPT.c</FilePath>
+            </File>
+            <File>
               <FileName>STM32F10x_OPT.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F3xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F3xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F4xx_OTP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F4xx_OTP.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F7xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F7xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32H7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32H7xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32_ALGO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32_ALGO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3970,6 +4130,16 @@
               <FileType>5</FileType>
               <FilePath>..\USER\button.h</FilePath>
             </File>
+            <File>
+              <FileName>show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\show.c</FilePath>
+            </File>
+            <File>
+              <FileName>show.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\show.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4390,9 +4560,39 @@
           <GroupName>flash</GroupName>
           <Files>
             <File>
+              <FileName>STM32F0xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F0xx_OPT.c</FilePath>
+            </File>
+            <File>
               <FileName>STM32F10x_OPT.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\algo\STM32F10x_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F3xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F3xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F4xx_OTP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F4xx_OTP.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32F7xx_OPT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32F7xx_OPT.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32H7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32H7xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>STM32_ALGO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\algo\STM32_ALGO.c</FilePath>
             </File>
           </Files>
         </Group>

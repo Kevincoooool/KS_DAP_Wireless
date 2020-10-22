@@ -144,6 +144,7 @@ void OLED_ShowCH(uint8_t x, uint8_t y, uint8_t chr, uint8_t size, uint8_t mode)
 			}
 		}
 	}
+	OLED_Refresh_Gram();
 }
 void OLED_Set_Pos(unsigned char x, unsigned char y)
 {

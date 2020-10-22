@@ -21,7 +21,6 @@ FRESULT Res;
 UINT br, bw;		  /* File R/W count */
 BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
 
-
 extern uint8_t MYUSB_Request[64 + 1];
 extern uint8_t MYUSB_Response[64 + 1];
 extern int hid_len, cdc_len;
@@ -35,9 +34,9 @@ uint8_t NRF_OK = 1;
 uint8_t In_MYUSB_Response[64 + 3]; // Request  Buffer
 uint8_t Out_MYUSB_Request[64 + 3]; // Response Buffer
 extern uint8_t dealing_data;
-extern int8_t file_name , name_cnt;
+extern int8_t file_name, name_cnt;
 extern char Name_Buffer[20][20];
-
+uint8_t show_dap = 0;
 int main(void)
 {
 	uint8_t RES_FS = 0;
@@ -53,14 +52,14 @@ int main(void)
 	OLED_Init();
 	OLED_Clear();								 //清空OLED屏幕
 	OLED_ShowString(0, 0, "DAP Connect", 12, 1); //绘制提示词
-
+	algo_init();
 	RES_FS = f_mount(&fs, "", 1);
 	if (RES_FS == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
 	{
 		OLED_ShowString(0, 10, "Fatfs Success..", 12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
 	}
-	else if (RES_FS == FR_NO_FILESYSTEM)//如果是新芯片还没有文件系统
+	else if (RES_FS == FR_NO_FILESYSTEM) //如果是新芯片还没有文件系统
 	{
 		OLED_ShowString(0, 10, "Fatfs Format..", 12, 1);
 		f_mkfs("", 0, work, sizeof(work));
@@ -75,16 +74,29 @@ int main(void)
 
 	HAL_Delay(1000);
 	OLED_Clear();
-	Display_BIN();
+	//	Display_FLM();
+	//	Display_BIN();
 	Button_Init();
+
 	while (1)
 	{
-		Select_BIN();
-	// HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
+		Select_Menu();
+		Show_Duty();
+		// if (show_dap == 0)
+		// {
+		// 	Select_FLM();
+		// }
+		// else
+		// {
+		// 	Select_BIN();
+		// }
+
+		// HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
 #if !ONLINE
 //    NRF_Check_Event(); //检测nrf数据
 //    if (NRF_Connect() == 0)
 //    {
+
 //    }
 #endif
 #if !WIRELESS_RX

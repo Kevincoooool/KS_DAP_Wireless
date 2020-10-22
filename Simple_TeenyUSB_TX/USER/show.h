@@ -47,7 +47,7 @@ extern struct _Show Show;
 extern uint16_t set_temp;
 extern uint16_t test_temp;
 extern uint8_t send_flag;
-
+void Select_Menu(void);
 void oled_show(void);
 void OLED_Show_progress_bar(uint8_t temp,uint8_t chr_star,uint8_t chr_default,uint8_t x,uint8_t y,uint8_t size,uint8_t mode);
 void OLED_Show_Seting(void);

@@ -29,5 +29,28 @@ typedef struct {
     const uint32_t size;
 } sector_info_t;
 
+typedef struct {
 
+	char * name;
+    program_target_t algo;
+} algo_info_t;
+
+enum 
+{
+	F0 = 0,
+	F1,
+	F3,
+	F4,
+	F7,
+	H7
+};
+
+extern const program_target_t flash_algo_F0;
+extern const program_target_t flash_algo_F1;
+extern const program_target_t flash_algo_F3;
+extern const program_target_t flash_algo_F4;
+extern const program_target_t flash_algo_F7;
+extern const program_target_t flash_algo_H7;
+extern algo_info_t STM32_ALGO[6];
+void algo_init(void);
 #endif
