@@ -72,8 +72,8 @@ uint8_t FLASH_SWD(uint8_t *File)
 								address += 1024;
 								progess = (((double)address / f_size(&fnew)) * 100);
 								//OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
-								OLED_ShowNumber(50, 30, progess, 2, 12);
-								OLED_ShowString(62, 30, "%", 12, 1);
+								OLED_ShowNumber(40, 20, progess, 3, 16);
+								OLED_ShowString(70, 20, "%", 16, 1);
 							}
 							else
 								return 0;
@@ -82,13 +82,12 @@ uint8_t FLASH_SWD(uint8_t *File)
 						{
 							HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 							swd_set_target_reset(0); //复位运行
-							OLED_ShowNumber(32, 30, 100, 5, 12);
-							OLED_ShowString(62, 30, "%", 12, 1);
-							OLED_ShowString(0, 40, "==========", 12, 1);
-							OLED_ShowString(0, 50, "FLASH DONE", 12, 1);
+							OLED_ShowNumber(40, 20, 100, 3, 16);
+							OLED_ShowString(70, 20, "%", 16, 1);
+							for (uint8_t i = 0; i < 8; i++)
+								OLED_Show_CH_String(35 + i * 6, Y4, oled_CH5[i], 12, 1);
 							HAL_Delay(1000);
 							OLED_Clear();
-
 							file_name = 0;
 							name_cnt = 0;
 							address = 0;
@@ -149,9 +148,14 @@ void Select_BIN(void)
 			{
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 				for (uint8_t i = 0; i < 8; i++)
-		OLED_Show_CH_String(29 + i * 6, 0, oled_CH3[i], 12, 1);
+					OLED_Show_CH_String(35 + i * 6, 0, oled_CH3[i], 12, 1);
 				while (!FLASH_SWD((uint8_t *)Name_Buffer[file_name]))
 				{
+					if (button_num == 1)
+					{
+						Show.windows = 0;
+						break;
+					}
 					uint8_t WaitTips[] = "....";
 					OLED_ShowString(32, 30, "             ", 12, 1);
 					OLED_ShowString(0, 30, "WAIT", 12, 1);
@@ -170,7 +174,6 @@ void Select_BIN(void)
 			}
 		}
 	}
-	
 
 	button_num = 0;
 	OLED_ShowString(110, file_name, "<<", 12, 1);
@@ -231,9 +234,10 @@ void Select_FLM(void)
 	else if (button_num == 2)
 	{
 		OLED_Clear();
-		OLED_ShowString(20, 30, "Set Success!", 12, 1);
+		for (uint8_t i = 0; i < 10; i++)
+			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
 		Select_algo = file_name / 10;
-		HAL_Delay(1000);
+		HAL_Delay(2000);
 		show_dap = 1;
 		OLED_Clear();
 		Show.windows = 0;

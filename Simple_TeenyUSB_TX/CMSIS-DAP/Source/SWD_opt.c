@@ -4,7 +4,7 @@
  */
 #include "swd_host.h"
 #include "SWD_opt.h"
-uint8_t Select_algo = 0;
+uint8_t Select_algo = 1;
 
 error_t target_opt_init(void)
 {

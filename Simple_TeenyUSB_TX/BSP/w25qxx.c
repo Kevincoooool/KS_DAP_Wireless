@@ -35,24 +35,22 @@ uint16_t W25QXX_TYPE = W25Q128; //默认是W25Q128
 
 /* 读ID */
 uint8_t w25x_read_id = 0x90;
-uint8_t temp_ID[5] = {0,0,0,0,0};						// 接收缓存
+uint8_t temp_ID[5] = {0, 0, 0, 0, 0}; // 接收缓存
 void ReadID(void)
 {
-	
-	
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);	// 使能CS
-	HAL_SPI_Transmit(&hspi2, &w25x_read_id, 1, 100);		// 读ID发送指令
-	HAL_SPI_Receive(&hspi2, temp_ID, 5, 100);				// 读取ID
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);	// 失能CS
-	
-	/* 测试打印 */
 
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET); // 使能CS
+	HAL_SPI_Transmit(&hspi2, &w25x_read_id, 1, 100);	   // 读ID发送指令
+	HAL_SPI_Receive(&hspi2, temp_ID, 5, 100);			   // 读取ID
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);   // 失能CS
+
+	/* 测试打印 */
 }
 uint8_t W25QXX_Init(void)
 {
-	
+
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	MX_SPI2_Init();				   //初始化SPI
+	MX_SPI2_Init(); //初始化SPI
 	__HAL_RCC_SPI2_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	GPIO_InitStruct.Pin = GPIO_PIN_12;
@@ -76,10 +74,11 @@ uint8_t W25QXX_Init(void)
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	
 	W25QXX_TYPE = W25QXX_ReadID(); //读取FLASH ID.
-	if (W25QXX_TYPE != 0xff) return 0;
-	else return 1;
+	if (W25QXX_TYPE != 0xff)
+		return 0;
+	else
+		return 1;
 }
 
 //读取W25QXX的状态寄存器
@@ -312,7 +311,7 @@ void W25QXX_PowerDown(void)
 	W25QXX_CS_RESET;		  //使能器件
 	SPI_RW_2(W25X_PowerDown); //发送掉电命令
 	W25QXX_CS_SET;			  //取消片选
-	//	delay_us(3);			//等待TPD
+							  //	delay_us(3);			//等待TPD
 }
 //唤醒
 void W25QXX_WAKEUP(void)
@@ -320,5 +319,5 @@ void W25QXX_WAKEUP(void)
 	W25QXX_CS_RESET;				 //使能器件
 	SPI_RW_2(W25X_ReleasePowerDown); //  send W25X_PowerDown command 0xAB
 	W25QXX_CS_SET;					 //取消片选
-	//	delay_us(3);				   //等待TRES1
+									 //	delay_us(3);				   //等待TRES1
 }

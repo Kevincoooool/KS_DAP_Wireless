@@ -11,7 +11,28 @@
 #ifndef __SHOW_H
 #define __SHOW_H
 #include "stm32f1xx.h"
+#define Line1_Begin 30
+#define Line2_Begin 5
+#define Line3_Begin 5
+#define Line4_Begin 30
+#define Line5_Begin 0
 
+#define X_Begin 0
+#define Y_Begin 47
+#define Z_Begin 95
+
+#define Line1_Begin1 0
+#define Line2_Begin1 0
+#define Line3_Begin1 40
+#define Line4_Begin1 0
+#define Line5_Begin1 0
+
+#define Y0 0
+#define Y1 14
+#define Y2 Y1 + 12
+#define Y3 Y2 + 12
+#define Y4 Y3 + 12
+#define Y5 Y4 + 12
 #define REVERSE(DATA,BIT) (DATA)^(1<<(BIT))//按位取反
 #define BIT0	0x0001
 #define BIT1	0x0002

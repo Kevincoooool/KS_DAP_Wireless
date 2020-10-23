@@ -7,8 +7,8 @@
 	*  按键按下为高电平，设置 KEY_ON=1， KEY_OFF=0
 	*  若按键按下为低电平，把宏设置成KEY_ON=0 ，KEY_OFF=1 即可
 	*/
-#define KEY_ON 0
-#define KEY_OFF 1
+#define KEY_ON 1
+#define KEY_OFF 0
 
 #define BTN_NAME_MAX 32 //名字最大为32字节
 

@@ -548,16 +548,6 @@
               <FilePath>..\BSP\oledfont.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\bsp_key.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\BSP\bsp_key.h</FilePath>
-            </File>
-            <File>
               <FileName>bsp_button.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\bsp_button.c</FilePath>
@@ -1539,16 +1529,6 @@
               <FilePath>..\BSP\oledfont.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\bsp_key.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\BSP\bsp_key.h</FilePath>
-            </File>
-            <File>
               <FileName>bsp_button.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\bsp_button.c</FilePath>
@@ -2390,16 +2370,6 @@
               <FileName>oledfont.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\bsp_key.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\BSP\bsp_key.h</FilePath>
             </File>
             <File>
               <FileName>bsp_button.c</FileName>
@@ -3314,16 +3284,6 @@
               <FilePath>..\BSP\oledfont.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\bsp_key.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\BSP\bsp_key.h</FilePath>
-            </File>
-            <File>
               <FileName>bsp_button.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\bsp_button.c</FilePath>
@@ -4234,16 +4194,6 @@
               <FileName>oledfont.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\oledfont.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\BSP\bsp_key.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_key.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\BSP\bsp_key.h</FilePath>
             </File>
             <File>
               <FileName>bsp_button.c</FileName>
