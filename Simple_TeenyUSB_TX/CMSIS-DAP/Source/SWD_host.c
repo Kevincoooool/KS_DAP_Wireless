@@ -86,7 +86,9 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
 uint8_t swd_init(void)
 {
 //    DAP_Setup();
-//   PORT_SWD_SETUP();
+//  PORT_SWD_SETUP();
+
+GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_nRESET_Pin;
 
     return 1;
 }

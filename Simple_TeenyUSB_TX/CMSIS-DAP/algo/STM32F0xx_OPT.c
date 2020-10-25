@@ -39,5 +39,5 @@ const program_target_t flash_algo_F0 = {
     0x20000000,  // location to write prog_blob in target RAM
     sizeof(flash_code_F0),  // prog_blob size
     flash_code_F0,  // address of prog_blob
-    0x00000010,  // ram_to_flash_bytes_to_be_written
+    0x00000400,  // ram_to_flash_bytes_to_be_written
 };

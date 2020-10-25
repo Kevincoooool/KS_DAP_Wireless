@@ -28,7 +28,7 @@
 #define Line5_Begin1 0
 
 #define Y0 0
-#define Y1 14
+#define Y1 Y0 + 12
 #define Y2 Y1 + 12
 #define Y3 Y2 + 12
 #define Y4 Y3 + 12
@@ -47,17 +47,29 @@
 #define BIT10 0x0400
 #define BIT11 0x0800
 
-struct _Show
+typedef struct 
 {
-	uint8_t hardware_type;
-	uint8_t oled_delay;
 	uint8_t windows;
-	
+	uint8_t mode;
+}_Show;
+enum
+{
+	SHOW_MENU = 0,
+	SHOW_FLM,
+	SHOW_BIN,
+	SHOW_AUTO,
+	SHOW_ONLINE,
+	SHOW_OFFLINE,
+	SHOW_WIRELESS,
+	SHOW_WL_TX,
+	SHOW_WL_RX,
+
 };
-
-extern struct _Show Show;
-
-void Select_Menu(void);
-void oled_show(void);
+extern _Show Show;
+uint8_t Select_Mode(void);
+void Menu_Show(void);
 void Show_Duty(void);
+void Select_Offline(void);
+void Select_WL_MODE(void);
+void Display_WL_MODE(void);
 #endif

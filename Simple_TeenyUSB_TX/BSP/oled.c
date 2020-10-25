@@ -47,6 +47,7 @@ void OLED_Display_On(void)
 	OLED_WR_Byte(0X14, OLED_CMD); //DCDC ON
 	OLED_WR_Byte(0XAF, OLED_CMD); //DISPLAY ON
 }
+
 //πÿ±’OLEDœ‘ æ
 void OLED_Display_Off(void)
 {

@@ -17,5 +17,5 @@ void Display_FLM(void);
 void Select_FLM(void);
 uint8_t FLASH_SWD(uint8_t *File);
 uint8_t usbd_hid_process_offline(void);
-
+void Auto_Fash(void);
 #endif  /* __USBD_HID_H_ */

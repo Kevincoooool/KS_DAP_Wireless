@@ -42,6 +42,18 @@
 #include "show.h"
 #include "ff.h"		/* FatFs configurations and declarations */
 #include "diskio.h" /* Declarations of low level disk I/O functions */
+
+enum
+{
+	MODE_SET_NORMAL = 0,
+	MODE_SET_ONLINE,
+	MODE_SET_OFFLINE,
+	MODE_SET_ALGO,
+	MODE_SET_FILE,
+	MODE_SET_WIRELESS,
+	MODE_SET_TX,
+	MODE_SET_RX,
+};
 extern volatile uint8_t rx_len;
 extern volatile uint8_t recv_end_flag;
 extern uint8_t  rx_buffer[100];

@@ -14,7 +14,7 @@ uint8_t long_press = 0;
  *                         函数声明     
  *******************************************************************/
 static char *StrnCopy(char *dst, const char *src, uint32_t n);
-static void Print_Btn_Info(Button_t *btn);
+//static void Print_Btn_Info(Button_t *btn);
 static void Add_Button(Button_t *btn);
 
 /************************************************************
@@ -488,23 +488,23 @@ static char *StrnCopy(char *dst, const char *src, uint32_t n)
   * @version v1.0
   * @note    NULL
   ***********************************************************/
-static void Print_Btn_Info(Button_t *btn)
-{
+//static void Print_Btn_Info(Button_t *btn)
+//{
 
-	// printf("button struct information:\n\
-  //             btn->Name:%s \n\
-  //             btn->Button_State:%d \n\
-  //             btn->Button_Trigger_Event:%d \n\
-  //             btn->Button_Trigger_Level:%d \n\
-  //             btn->Button_Last_Level:%d \n\
-  //             ",
-	//             btn->Name,
-	//             btn->Button_State,
-	//             btn->Button_Trigger_Event,
-	//             btn->Button_Trigger_Level,
-	//             btn->Button_Last_Level);
-	Search_Button();
-}
+//	// printf("button struct information:\n\
+//  //             btn->Name:%s \n\
+//  //             btn->Button_State:%d \n\
+//  //             btn->Button_Trigger_Event:%d \n\
+//  //             btn->Button_Trigger_Level:%d \n\
+//  //             btn->Button_Last_Level:%d \n\
+//  //             ",
+//	//             btn->Name,
+//	//             btn->Button_State,
+//	//             btn->Button_Trigger_Event,
+//	//             btn->Button_Trigger_Level,
+//	//             btn->Button_Last_Level);
+//	Search_Button();
+//}
 /************************************************************
   * @brief   使用单链表将按键连接起来
 	* @param   NULL

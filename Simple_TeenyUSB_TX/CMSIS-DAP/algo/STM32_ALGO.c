@@ -4,6 +4,7 @@
 #include "flash_blob.h"
 #include "stdlib.h"
 #include "string.h"
+
 algo_info_t STM32_ALGO[6]={0};
 void algo_init(void)
 {
