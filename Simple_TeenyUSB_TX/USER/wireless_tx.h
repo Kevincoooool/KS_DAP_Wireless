@@ -32,7 +32,6 @@ enum
     seng_hid_data
 };
 uint8_t usbd_hid_process_wireless_tx(void);
-void Delay20ms(void);
 uint8_t CalcCheck(uint8_t *buffer, uint8_t len);
 uint8_t SumCheck(uint8_t *buffer, uint8_t len);
 #endif

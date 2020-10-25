@@ -98,9 +98,10 @@ int main(void)
 	Button_Init();
 	while (1)
 	{
+		
 		Select_Menu();
 		Show_Duty();
-		// HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
+		//HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
 #if !ONLINE
 //    NRF_Check_Event(); //检测nrf数据
 //    if (NRF_Connect() == 0)
@@ -123,7 +124,9 @@ int main(void)
 #endif
 		if (cdc_len)
 		{
-			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+			//tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+			while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
+            ;
 			cdc_len = 0;
 		}
 

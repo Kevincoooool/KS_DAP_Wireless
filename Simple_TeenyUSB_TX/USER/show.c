@@ -99,14 +99,12 @@ void OLED_Show_FLM(void)
 		OLED_Clear();
 	}
 	Display_FLM();
-
 	while (1)
 	{
 		Select_FLM();
 		if (Show.windows == 0)
 			break;
 	}
-
 	OLED_Refresh_Gram(); //¿ªÊ¼ÏÔÊ¾
 }
 
@@ -117,14 +115,12 @@ void OLED_Show_BIN(void)
 {
 	uint8_t page;
 	static uint8_t page_temp;
-
 	if (page_temp != page)
 	{
 		page_temp = page;
 		OLED_Clear();
 	}
 	Display_BIN();
-
 	while (1)
 	{
 		Select_BIN();
@@ -149,15 +145,20 @@ void OLED_Show_Auto(void)
 				OLED_Show_CH_String(35 + i * 6, Y0, oled_CH3[i], 12, 1);
 			while (!FLASH_SWD((uint8_t *)Name_Buffer[file_name]))
 			{
+				if(button_num ==1)
+				{
+					Show.windows = 0;
+					break;
+				}
 				uint8_t WaitTips[] = "....";
-				OLED_ShowString(62, 20, "             ", 12, 1);
-				OLED_ShowString(30, 20, "WAIT", 12, 1);
+				OLED_ShowString(62, Y4, "             ", 12, 1);
+				OLED_ShowString(30, Y4, "WAIT", 12, 1);
 				for (uint8_t i = 0; i < 4; i++)
 				{
-					OLED_ShowChar(62 + i * 6, 30, WaitTips[i], 12, 1);
+					OLED_ShowChar(62 + i * 6, Y4, WaitTips[i], 12, 1);
 					HAL_Delay(500);
 				}
-				OLED_ShowString(65, 30, "               ", 12, 1);
+				OLED_ShowString(65, Y4, "               ", 12, 1);
 			}
 			Continue = 0;
 			if(swd_init_debug())

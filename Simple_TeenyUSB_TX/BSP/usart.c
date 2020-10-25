@@ -25,6 +25,8 @@ volatile uint8_t rx_len = 0;        //接收数据长度
 volatile uint8_t recv_end_flag = 0; //接收完成标记位
 uint8_t rx_buffer[65];              //接收缓存
 char BUFFER_SIZE = 65;              //不定长数据的最大长度，设置为100则最大长度为100
+
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;

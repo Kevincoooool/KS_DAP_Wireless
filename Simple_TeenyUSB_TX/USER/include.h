@@ -26,7 +26,6 @@
 #include "swd_host.h"
 #include "SWD_flash.h"
 #include "SWD_opt.h"
-
 #include "button.h"
 #include "bsp_button.h"
 #include "tusb_cdc.h"

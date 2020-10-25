@@ -58,8 +58,10 @@ uint8_t FLASH_SWD(uint8_t *File)
 			{
 				if (target_flash_init(0x08000000) == ERROR_SUCCESS)
 				{
+					OLED_ShowString(30, 20, "Erase Chip", 16, 1);
 					if (target_flash_erase_chip() == ERROR_SUCCESS)
 					{
+						OLED_ShowString(30, 20, "           ", 16, 1);
 						while (readflag)
 						{
 							f_read(&fnew, rData, 1024, (void *)&bytesread);
@@ -92,7 +94,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 							name_cnt = 0;
 							address = 0;
 							Display_BIN();
-							file_name = 0;
+							//Show.windows = 3;
 							readflag = 1;
 							return 1;
 						}
