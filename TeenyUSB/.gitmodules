@@ -1,0 +1,9 @@
+[submodule "TeenyDT"]
+	path = TeenyDT
+	url = https://github.com/teenydt/teenydt.github.io.git
+[submodule "mcu_lib/st_driver"]
+	path = mcu_lib/st_driver
+	url = https://github.com/hathach/st_driver.git
+[submodule "pc_test_tool"]
+	path = pc_test_tool
+	url = https://github.com/xtoolbox/TeenyUSB_pc_tool.git

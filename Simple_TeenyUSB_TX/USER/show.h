@@ -4,13 +4,15 @@
  * @Author       : Kevincoooool
  * @Date         : 2020-10-15 18:33:12
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-10-15 18:33:43
+ * @LastEditTime : 2020-11-06 18:14:21
  * @FilePath     : \Simple_TeenyUSB_TX\USER\show.h
  */
 
 #ifndef __SHOW_H
 #define __SHOW_H
-#include "stm32f1xx.h"
+#include "include.h"
+
+
 #define Line1_Begin 30
 #define Line2_Begin 5
 #define Line3_Begin 5
@@ -26,13 +28,21 @@
 #define Line3_Begin1 40
 #define Line4_Begin1 0
 #define Line5_Begin1 0
-
+#if OLED_0_96
 #define Y0 0
 #define Y1 Y0 + 12
 #define Y2 Y1 + 12
 #define Y3 Y2 + 12
 #define Y4 Y3 + 12
 #define Y5 Y4 + 12
+#else
+#define Y0 0
+#define Y1 Y0 + 8
+#define Y2 Y1 + 8
+#define Y3 Y2 + 8
+#define Y4 Y3 + 12
+#define Y5 Y4 + 12
+#endif
 #define REVERSE(DATA, BIT) (DATA) ^ (1 << (BIT)) //按位取反
 #define BIT0 0x0001
 #define BIT1 0x0002

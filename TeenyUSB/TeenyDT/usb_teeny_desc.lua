@@ -334,8 +334,10 @@ function Generate_TeenyUSB_header(dev, maxEp, maxMem)
     }, [[
 #ifndef __$(PREFIX)TEENY_USB_INIT_H__
 #define __$(PREFIX)TEENY_USB_INIT_H__
+
+#define "teeny_usb_device.h"
 // forward declare the tusb_descriptors struct
-typedef struct _tusb_descriptors tusb_descriptors;
+typedef struct _tusb_descriptors tusb_descriptors_t;
 
 #define $(PREFIX)VID                                            $(VID)
 #define $(PREFIX)PID                                            $(PID)
@@ -351,6 +353,18 @@ typedef struct _tusb_descriptors tusb_descriptors;
 #define $(PREFIX)EP_NUM                                         ($(PREFIX)MAX_EP + 1)
 
 ]])
+    if true then
+        return genCode({},[[
+#ifndef __$(PREFIX)TEENY_USB_DESC_H__
+#define __$(PREFIX)TEENY_USB_DESC_H__
+
+#include "teeny_usb_device.h"
+extern const tusb_descriptors_t $(PREFIX)descriptors;
+#endif
+
+]])
+    end
+
     r = r .. init_ep_for_fs_core(dev, epInfo)
 
     epInfo.calcRxFifo = epInfo.controlEpNum * 5 + 8 + (epInfo.maxOutSize/4 + 1) + epInfo.outEpNum * 2 + 1
@@ -469,7 +483,7 @@ end
 -- generate descriptor for teeny usb
 function Generate_TeenyUSB_desc(dev)
     local r = [[
-#include "teeny_usb.h"
+#include "teeny_usb_desc.h"
 
 ]]
     local genCode = BeginGenCode(dev)
@@ -486,12 +500,21 @@ $(BODY)};
         r = r .. genCode({
             SIZE = fieldValue(v, "wTotalLength"), 
             BODY = Ident(descToString(v, true)),
-            ID = #dev.children > 1 and (i-1) or ""}, [[
+            ID = i}, [[
 #define  $(PREFIX)CONFIG$(ID)_DESCRIPTOR_SIZE  ($(SIZE))
 __ALIGN_BEGIN  const uint8_t $(PREFIX)ConfigDescriptor$(ID) [$(SIZE)] __ALIGN_END = {
 $(BODY)};
 ]])
     end
+
+    r = r .. genCode({count = #dev.children}, "#define $(PREFIX)CONFIG_COUNT $(count)\n"..
+    "const desc_t $(PREFIX)ConfigDescriptors[$(PREFIX)CONFIG_COUNT] = {\n")
+    for i,v in ipairs(dev.children) do
+        r = r .. genCode({ID = i}, "  $(PREFIX)ConfigDescriptor$(ID),\n")
+    end
+    r = r .. "};\n"
+
+
 -- generate string descriptors
     local strDef = genCode({}, "$(PREFIX)StringDescriptor0,\n")
     r = r .. genCode({SIZE=4}, [[
@@ -525,6 +548,7 @@ const uint8_t* const $(PREFIX)StringDescriptors[$(SIZE)] = {
 $(BODY)};
 ]])
     -- find ext descriptors
+    r = r .. "#define HAS_WCID\n#define HAS_WCID_20\n#define WCID_VENDOR_CODE 0x17\n"
     for i, v in ipairs(dev.extDesc) do
         if type(v.handler) == "function" then
             r = r .. v.handler(dev, v)
@@ -536,45 +560,52 @@ $(BODY)};
 
     r = r .. genCode({},[[
 
+#if defined($(PREFIX)WCID_DESCRIPTOR_SIZE) || \
+    defined($(PREFIX)WCID_PROPERTIES_SIZE) || \
+    defined($(PREFIX)WCID_BOS_SIZE) || \
+    defined($(PREFIX)WCID_DESC_SET_SIZE)
 
-$(PREFIX)TXEP_MAX_SIZE
-$(PREFIX)RXEP_MAX_SIZE
-//  Device descriptors
-const tusb_descriptors $(PREFIX)descriptors = {
-  .device = $(PREFIX)DeviceDescriptor,
-  .config = $(PREFIX)ConfigDescriptor,
-  .strings = $(PREFIX)StringDescriptors,
-  .string_cnt = $(PREFIX)STRING_COUNT,
-#if defined(HAS_WCID)
+const tusb_extra_desc_t $(PREFIX)extra_descriptor = {
 #if defined($(PREFIX)WCID_DESCRIPTOR_SIZE)
-  .wcid_desc = $(PREFIX)WCIDDescriptor,
+    .wcid_desc = $(PREFIX)WCIDDescriptor,
 #else
-  .wcid_desc = 0,
+    .wcid_desc = 0,
 #endif // $(PREFIX)WCID_DESCRIPTOR_SIZE)
 
 #if defined($(PREFIX)WCID_PROPERTIES_SIZE)
-  .wcid_properties = $(PREFIX)WCIDProperties,
+    .wcid_properties = $(PREFIX)WCIDProperties,
 #else
-  .wcid_properties = 0,
+    .wcid_properties = 0,
 #endif // $(PREFIX)WCID_PROPERTIES_SIZE
 
-#endif // HAS_WCID
-
-#if defined(HAS_WCID_20)
 #if defined($(PREFIX)WCID_BOS_SIZE)
-  .wcid_bos = $(PREFIX)WCIDBOS,
+    .wcid_bos = $(PREFIX)WCIDBOS,
 #else
-  .wcid_bos = 0,  
+    .wcid_bos = 0,  
 #endif // $(PREFIX)WCID_BOS_SIZE)
 
 #if defined($(PREFIX)WCID_DESC_SET_SIZE)
-  .wcid_desc_set = $(PREFIX)WCIDDescriptorSet,
+    .wcid_desc_set = $(PREFIX)WCIDDescriptorSet,
 #else
-  .wcid_desc_set = 0,  
+    .wcid_desc_set = 0,  
 #endif // $(PREFIX)WCID_DESC_SET_SIZE
+};
+#define $(PREFIX)EXT_DESC  (&$(PREFIX)extra_descriptor)
+#else
+#define $(PREFIX)EXT_DESC  (0)
+#endif
 
 
-#endif // HAS_WCID_20
+//$(PREFIX)TXEP_MAX_SIZE
+//$(PREFIX)RXEP_MAX_SIZE
+//  Device descriptors
+const tusb_descriptors_t $(PREFIX)descriptors = {
+  .device = $(PREFIX)DeviceDescriptor,
+  .configs = $(PREFIX)ConfigDescriptors,
+  .config_count = $(PREFIX)CONFIG_COUNT,
+  .strings = $(PREFIX)StringDescriptors,
+  .string_cnt = $(PREFIX)STRING_COUNT,
+  .extra = $(PREFIX)EXT_DESC,
 };
 ]])
     return r

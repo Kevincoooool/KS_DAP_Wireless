@@ -251,7 +251,7 @@ fieldSize = nil
 function outputString(v, desc, ident)
     ident = ident or 0
     if fieldSize(desc) == 2 then
-        v = "LOBYTE("..v.."), HIBYTE(" .. v .. ")"
+        v = "LO_BYTE("..v.."), HI_BYTE(" .. v .. ")"
     end
     if SIMPLE then return v .. ", " end
     return v ..','.. string.rep(" ", comment_col - #v - 1 - ident) .. "/* " .. desc .. " */\n"

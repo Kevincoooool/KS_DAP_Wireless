@@ -1,7 +1,7 @@
 /*
  * Name   :  teeny_usb_init.h
  * Author :  admin@xtoolbox.org
- * Date   :  2020-09-14 09:44:36
+ * Date   :  2019-12-03 11:20:36
 
  * Desc   :  This file is auto generate by the TeenyDT
  *           Visit http://dt.tusb.org for more info

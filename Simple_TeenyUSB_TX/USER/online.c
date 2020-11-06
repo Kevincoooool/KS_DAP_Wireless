@@ -3,20 +3,14 @@
  * @version: 
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:35:23
- * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-21 21:36:53
- * @FilePath: \Simple_TeenyUSB\USER\online.c
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-11-06 18:11:43
+ * @FilePath     : \Simple_TeenyUSB_TX\USER\online.c
  */
 /***************************************************************/
 #include "DAP_Config.h"
 #include "DAP_Common.h"
 #include "DAP.h"
-#include "include.h"
-#include "teeny_usb.h"
-#include "tusbd_user.h"
-#include "tusbd_hid.h"
-#include "tusbd_cdc.h"
-#include "tusbd_msc.h"
 #include "online.h"
 
 extern tusb_hid_device_t hid_dev;

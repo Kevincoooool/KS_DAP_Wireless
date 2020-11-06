@@ -563,6 +563,11 @@
           <GroupName>CMSIS-DAP</GroupName>
           <Files>
             <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
@@ -598,14 +603,14 @@
               <FilePath>..\CMSIS-DAP\Source\SWD_host.c</FilePath>
             </File>
             <File>
-              <FileName>SWO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
-            </File>
-            <File>
               <FileName>SWD_opt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1544,6 +1549,11 @@
           <GroupName>CMSIS-DAP</GroupName>
           <Files>
             <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
@@ -1579,14 +1589,14 @@
               <FilePath>..\CMSIS-DAP\Source\SWD_host.c</FilePath>
             </File>
             <File>
-              <FileName>SWO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
-            </File>
-            <File>
               <FileName>SWD_opt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2387,6 +2397,11 @@
           <GroupName>CMSIS-DAP</GroupName>
           <Files>
             <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
@@ -2422,14 +2437,14 @@
               <FilePath>..\CMSIS-DAP\Source\SWD_host.c</FilePath>
             </File>
             <File>
-              <FileName>SWO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
-            </File>
-            <File>
               <FileName>SWD_opt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3299,6 +3314,11 @@
           <GroupName>CMSIS-DAP</GroupName>
           <Files>
             <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
@@ -3334,14 +3354,14 @@
               <FilePath>..\CMSIS-DAP\Source\SWD_host.c</FilePath>
             </File>
             <File>
-              <FileName>SWO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
-            </File>
-            <File>
               <FileName>SWD_opt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4211,6 +4231,11 @@
           <GroupName>CMSIS-DAP</GroupName>
           <Files>
             <File>
+              <FileName>DAP_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CMSIS-DAP\Include\DAP_config.h</FilePath>
+            </File>
+            <File>
               <FileName>DAP.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\DAP.c</FilePath>
@@ -4246,14 +4271,14 @@
               <FilePath>..\CMSIS-DAP\Source\SWD_host.c</FilePath>
             </File>
             <File>
-              <FileName>SWO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
-            </File>
-            <File>
               <FileName>SWD_opt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CMSIS-DAP\Source\SWD_opt.c</FilePath>
+            </File>
+            <File>
+              <FileName>SWO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CMSIS-DAP\Source\SWO.c</FilePath>
             </File>
           </Files>
         </Group>

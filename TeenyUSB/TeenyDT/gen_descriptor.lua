@@ -118,7 +118,7 @@ f:close()
 local desc = load(s)()
 
 local c_name = 'teeny_usb_desc.c'
-local h_name = 'teeny_usb_init.h'
+local h_name = 'teeny_usb_desc.h'
 local c_gen = Generate_TeenyUSB_desc
 local h_gen = Generate_TeenyUSB_header
 if mode and mode:sub(1,1) == "o" then

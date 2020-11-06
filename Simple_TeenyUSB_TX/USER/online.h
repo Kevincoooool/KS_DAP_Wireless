@@ -3,14 +3,14 @@
  * @version: 
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:37:28
- * @LastEditors: Kevincoooool
- * @LastEditTime: 2020-08-21 20:09:33
- * @FilePath: \Simple_TeenyUSB\USER\online.h
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-10-30 19:23:09
+ * @FilePath     : \Simple_TeenyUSB_TX\USER\online.h
  */
 #ifndef __ONLINE_HID_H__
 #define __ONLINE_HID_H__
 
-#include "stm32f1xx.h"
+#include "include.h"
 
 
 uint8_t usbd_hid_process_online(void);

@@ -1,10 +1,10 @@
 /*
  * Name   :  teeny_usb_init.h
  * Author :  admin@xtoolbox.org
- * Date   :  2020-09-14 09:47:36
+ * Date   :  2019-10-27 18:08:54
 
  * Desc   :  This file is auto generate by the TeenyDT
- *           Visit http://dt.tusb.org for more info
+ *           Visit https://github.com/xtoolbox/TeenyDT for more info
  */
 
 /*
@@ -13,9 +13,9 @@
   Content type is lua script:
   ------------- lua script begin ------------
 return Device {
-    strManufacturer = "KS_DIY",
-    strProduct = "KS Wireless CMSIS-DAP",
-    strSerial = "996_996_996",
+    strManufacturer = "TeenyUSB",
+    strProduct = "TeenyUSB Composite DEMO",
+    strSerial = "TUSB123456",
     idVendor = 0x0483,
     idProduct = 0x0011,
     prefix = "COMP",
@@ -30,21 +30,33 @@ return Device {
             EndPoint(IN(1), BulkDouble, 32),
             EndPoint(OUT(1),  BulkDouble, 32),
         },
-
+        Interface{
+            WCID=WinUSB,
+            strInterface = "TeenyUSB WinUSB",
+            GUID="{1D4B2365-4749-48EA-B38A-7C6FDDDD7E26}",
+            EndPoint(IN(3),  BulkDouble, 32),
+            EndPoint(OUT(3), BulkDouble, 32),
+        },
+        Interface{
+            bInterfaceClass = 0x08,        -- MSC
+            bInterfaceSubClass = 0x06,     -- SCSI
+            bInterfaceProtocol = 0x50,     -- BOT
+            EndPoint(IN(4),  BulkDouble, 64),
+            EndPoint(OUT(5), BulkDouble, 64),
+        },
    }
 }
 
-
   ------------- lua script end   ------------
  */
-#ifndef __COMP_TEENY_USB_INIT_H__
-#define __COMP_TEENY_USB_INIT_H__
+#ifndef __TEENY_USB_INIT_H__
+#define __TEENY_USB_INIT_H__
 // forward declare the tusb_descriptors struct
 typedef struct _tusb_descriptors tusb_descriptors;
 
 #define COMP_VID                                            0x0483
 #define COMP_PID                                            0x0011
-#define COMP_STRING_COUNT                                   (4)
+#define COMP_STRING_COUNT                                   (5)
 
 // device.bmAttributes & 0x40   USB_CONFIG_SELF_POWERED
 // device.bmAttributes & 0x20   USB_CONFIG_REMOTE_WAKEUP
@@ -52,7 +64,7 @@ typedef struct _tusb_descriptors tusb_descriptors;
 
 
 // Endpoint usage:
-#define COMP_MAX_EP                                         (2)
+#define COMP_MAX_EP                                         (5)
 #define COMP_EP_NUM                                         (COMP_MAX_EP + 1)
 
 ///////////////////////////////////////////////
@@ -109,16 +121,58 @@ typedef struct _tusb_descriptors tusb_descriptors;
 #define COMP_EP2_RX0_ADDR                                   (COMP_USB_BUF_START + (192))
 #define COMP_EP2_RX1_ADDR                                   (COMP_USB_BUF_START + (208))
 
+// EndPoints 3 defines
+#define COMP_EP3_RX_SIZE                                    (32)
+#define COMP_EP3_RX_ADDR                                    (COMP_USB_BUF_START + (224))
+#define COMP_EP3_TX_SIZE                                    (32)
+#define COMP_EP3_TX_ADDR                                    (COMP_USB_BUF_START + (256))
+#define COMP_EP3_RX_TYPE                                    USB_EP_BULK
+#define COMP_EP3_TX_TYPE                                    USB_EP_BULK
+
+#define COMP_EP3_TYPE                                       USB_EP_BULK
+#define COMP_EP3_TX0_ADDR                                   (COMP_USB_BUF_START + (224))
+#define COMP_EP3_TX1_ADDR                                   (COMP_USB_BUF_START + (256))
+#define COMP_EP3_RX0_ADDR                                   (COMP_USB_BUF_START + (224))
+#define COMP_EP3_RX1_ADDR                                   (COMP_USB_BUF_START + (256))
+
+// EndPoints 4 defines
+#define COMP_EP4_RX_SIZE                                    (0)
+#define COMP_EP4_RX_ADDR                                    (COMP_USB_BUF_START + (288))
+#define COMP_EP4_TX_SIZE                                    (64)
+#define COMP_EP4_TX_ADDR                                    (COMP_USB_BUF_START + (288))
+#define COMP_EP4_RX_TYPE                                    USB_EP_Invalid
+#define COMP_EP4_TX_TYPE                                    USB_EP_BULK
+
+#define COMP_EP4_TYPE                                       USB_EP_BULK
+#define COMP_EP4_TX0_ADDR                                   (COMP_USB_BUF_START + (288))
+#define COMP_EP4_TX1_ADDR                                   (COMP_USB_BUF_START + (352))
+#define COMP_EP4_RX0_ADDR                                   (COMP_USB_BUF_START + (288))
+#define COMP_EP4_RX1_ADDR                                   (COMP_USB_BUF_START + (352))
+
+// EndPoints 5 defines
+#define COMP_EP5_RX_SIZE                                    (64)
+#define COMP_EP5_RX_ADDR                                    (COMP_USB_BUF_START + (416))
+#define COMP_EP5_TX_SIZE                                    (0)
+#define COMP_EP5_TX_ADDR                                    (COMP_USB_BUF_START + (480))
+#define COMP_EP5_RX_TYPE                                    USB_EP_BULK
+#define COMP_EP5_TX_TYPE                                    USB_EP_Invalid
+
+#define COMP_EP5_TYPE                                       USB_EP_BULK
+#define COMP_EP5_TX0_ADDR                                   (COMP_USB_BUF_START + (416))
+#define COMP_EP5_TX1_ADDR                                   (COMP_USB_BUF_START + (480))
+#define COMP_EP5_RX0_ADDR                                   (COMP_USB_BUF_START + (416))
+#define COMP_EP5_RX1_ADDR                                   (COMP_USB_BUF_START + (480))
+
 
 // EndPoint max packed sizes
 extern const uint8_t COMP_txEpMaxSize[];
 #define COMP_TXEP_MAX_SIZE                                  \
 const uint8_t COMP_txEpMaxSize[] = \
-{ COMP_EP0_TX_SIZE, COMP_EP1_TX_SIZE, COMP_EP2_TX_SIZE,  };
+{ COMP_EP0_TX_SIZE, COMP_EP1_TX_SIZE, COMP_EP2_TX_SIZE, COMP_EP3_TX_SIZE, COMP_EP4_TX_SIZE, 0,  };
 extern const uint8_t COMP_rxEpMaxSize[];
 #define COMP_RXEP_MAX_SIZE                                  \
 const uint8_t COMP_rxEpMaxSize[] = \
-{ COMP_EP0_RX_SIZE, COMP_EP1_RX_SIZE, COMP_EP2_RX_SIZE,  };
+{ COMP_EP0_RX_SIZE, COMP_EP1_RX_SIZE, COMP_EP2_RX_SIZE, COMP_EP3_RX_SIZE, 0, COMP_EP5_RX_SIZE,  };
 
 // EndPoints init function for USB FS core
 #define COMP_TUSB_INIT_EP_FS(dev) \
@@ -138,33 +192,50 @@ const uint8_t COMP_rxEpMaxSize[] = \
     SET_TX_ADDR(dev, PCD_ENDP2, COMP_EP2_TX_ADDR);  \
     SET_RX_ADDR(dev, PCD_ENDP2, COMP_EP2_RX_ADDR);  \
     SET_RX_CNT(dev, PCD_ENDP2, COMP_EP2_RX_SIZE);  \
+    /* Init ep3 */ \
+    INIT_EP_BiDirection(dev, PCD_ENDP3, COMP_EP3_TYPE);  \
+    SET_TX_ADDR(dev, PCD_ENDP3, COMP_EP3_TX_ADDR);  \
+    SET_RX_ADDR(dev, PCD_ENDP3, COMP_EP3_RX_ADDR);  \
+    SET_RX_CNT(dev, PCD_ENDP3, COMP_EP3_RX_SIZE);  \
+    /* Init ep4 */ \
+    INIT_EP_TxDouble(dev, PCD_ENDP4, COMP_EP4_TYPE);     \
+    SET_DOUBLE_ADDR(dev, PCD_ENDP4, COMP_EP4_TX0_ADDR, COMP_EP4_TX1_ADDR);  \
+    SET_DBL_TX_CNT(dev, PCD_ENDP4, 0);     \
+    /* Init ep5 */ \
+    INIT_EP_RxDouble(dev, PCD_ENDP5, COMP_EP5_TYPE);     \
+    SET_DOUBLE_ADDR(dev, PCD_ENDP5, COMP_EP5_RX0_ADDR, COMP_EP5_RX1_ADDR);  \
+    SET_DBL_RX_CNT(dev, PCD_ENDP5, COMP_EP5_RX_SIZE);     \
 }while(0)
 
 ///////////////////////////////////////////////
 //// Endpoint define for STM32 OTG Core
 ///////////////////////////////////////////////
-#define COMP_OTG_MAX_OUT_SIZE                               (32)
+#define COMP_OTG_MAX_OUT_SIZE                               (64)
 #define COMP_OTG_CONTROL_EP_NUM                             (1)
-#define COMP_OTG_OUT_EP_NUM                                 (2)
-// RX FIFO size / 4 > (CONTROL_EP_NUM * 5 + 8) +  (MAX_OUT_SIZE / 4 + 1) + (OUT_EP_NUM*2) + 1 = 27
+#define COMP_OTG_OUT_EP_NUM                                 (4)
+// RX FIFO size / 4 > (CONTROL_EP_NUM * 5 + 8) +  (MAX_OUT_SIZE / 4 + 1) + (OUT_EP_NUM*2) + 1 = 39
 
 ///////////////////////////////////////////////
 //// Endpoint define for STM32 OTG FS Core
 ///////////////////////////////////////////////
 #define COMP_OTG_RX_FIFO_SIZE_FS                            (256)
 #define COMP_OTG_RX_FIFO_ADDR_FS                            (0)
-// Sum of IN ep max packet size is 112
+// Sum of IN ep max packet size is 208
 // Remain Fifo size is 1024 in bytes, Rx Used 256 bytes 
 
 // TODO:
 // I don't know why the max count of TX fifo should <= (7 * EpMaxPacket)
 // But it seems the STM32F7xx can be large than (7 * EpMaxPacket)
 #define COMP_EP0_TX_FIFO_ADDR_FS                            (256)
-#define COMP_EP0_TX_FIFO_SIZE_FS                            (COMP_EP0_TX_SIZE * 7)
-#define COMP_EP1_TX_FIFO_ADDR_FS                            (704)
-#define COMP_EP1_TX_FIFO_SIZE_FS                            (COMP_EP1_TX_SIZE * 7)
-#define COMP_EP2_TX_FIFO_ADDR_FS                            (928)
-#define COMP_EP2_TX_FIFO_SIZE_FS                            (COMP_EP2_TX_SIZE * 7)
+#define COMP_EP0_TX_FIFO_SIZE_FS                            (COMP_EP0_TX_SIZE * 4)
+#define COMP_EP1_TX_FIFO_ADDR_FS                            (512)
+#define COMP_EP1_TX_FIFO_SIZE_FS                            (COMP_EP1_TX_SIZE * 4)
+#define COMP_EP2_TX_FIFO_ADDR_FS                            (640)
+#define COMP_EP2_TX_FIFO_SIZE_FS                            (COMP_EP2_TX_SIZE * 4)
+#define COMP_EP3_TX_FIFO_ADDR_FS                            (704)
+#define COMP_EP3_TX_FIFO_SIZE_FS                            (COMP_EP3_TX_SIZE * 4)
+#define COMP_EP4_TX_FIFO_ADDR_FS                            (832)
+#define COMP_EP4_TX_FIFO_SIZE_FS                            (COMP_EP4_TX_SIZE * 4)
 // EndPoints init function for USB OTG core
 #if defined(USB_OTG_FS)
 #define COMP_TUSB_INIT_EP_OTG_FS(dev) \
@@ -183,6 +254,15 @@ const uint8_t COMP_rxEpMaxSize[] = \
       INIT_EP_Tx(dev, PCD_ENDP2, COMP_EP2_TX_TYPE, COMP_EP2_TX_SIZE);  \
       SET_TX_FIFO(dev, PCD_ENDP2, COMP_EP2_TX_FIFO_ADDR_FS, COMP_EP2_TX_FIFO_SIZE_FS);  \
       INIT_EP_Rx(dev, PCD_ENDP2, COMP_EP2_RX_TYPE, COMP_EP2_RX_SIZE); \
+      /* Init Ep3  */\
+      INIT_EP_Tx(dev, PCD_ENDP3, COMP_EP3_TX_TYPE, COMP_EP3_TX_SIZE);  \
+      SET_TX_FIFO(dev, PCD_ENDP3, COMP_EP3_TX_FIFO_ADDR_FS, COMP_EP3_TX_FIFO_SIZE_FS);  \
+      INIT_EP_Rx(dev, PCD_ENDP3, COMP_EP3_RX_TYPE, COMP_EP3_RX_SIZE); \
+      /* Init Ep4  */\
+      INIT_EP_Tx(dev, PCD_ENDP4, COMP_EP4_TX_TYPE, COMP_EP4_TX_SIZE);  \
+      SET_TX_FIFO(dev, PCD_ENDP4, COMP_EP4_TX_FIFO_ADDR_FS, COMP_EP4_TX_FIFO_SIZE_FS);  \
+      /* Init Ep5  */\
+      INIT_EP_Rx(dev, PCD_ENDP5, COMP_EP5_RX_TYPE, COMP_EP5_RX_SIZE); \
     }\
   }while(0)
 
@@ -196,7 +276,7 @@ const uint8_t COMP_rxEpMaxSize[] = \
 ///////////////////////////////////////////////
 #define COMP_OTG_RX_FIFO_SIZE_HS                            (512)
 #define COMP_OTG_RX_FIFO_ADDR_HS                            (0)
-// Sum of IN ep max packet size is 112
+// Sum of IN ep max packet size is 208
 // Remain Fifo size is 3584 in bytes, Rx Used 512 bytes 
 
 // TODO:
@@ -208,6 +288,10 @@ const uint8_t COMP_rxEpMaxSize[] = \
 #define COMP_EP1_TX_FIFO_SIZE_HS                            (COMP_EP1_TX_SIZE * 7)
 #define COMP_EP2_TX_FIFO_ADDR_HS                            (1184)
 #define COMP_EP2_TX_FIFO_SIZE_HS                            (COMP_EP2_TX_SIZE * 7)
+#define COMP_EP3_TX_FIFO_ADDR_HS                            (1296)
+#define COMP_EP3_TX_FIFO_SIZE_HS                            (COMP_EP3_TX_SIZE * 7)
+#define COMP_EP4_TX_FIFO_ADDR_HS                            (1520)
+#define COMP_EP4_TX_FIFO_SIZE_HS                            (COMP_EP4_TX_SIZE * 7)
 // EndPoints init function for USB OTG core
 #if defined(USB_OTG_HS)
 #define COMP_TUSB_INIT_EP_OTG_HS(dev) \
@@ -226,6 +310,15 @@ const uint8_t COMP_rxEpMaxSize[] = \
       INIT_EP_Tx(dev, PCD_ENDP2, COMP_EP2_TX_TYPE, COMP_EP2_TX_SIZE);  \
       SET_TX_FIFO(dev, PCD_ENDP2, COMP_EP2_TX_FIFO_ADDR_HS, COMP_EP2_TX_FIFO_SIZE_HS);  \
       INIT_EP_Rx(dev, PCD_ENDP2, COMP_EP2_RX_TYPE, COMP_EP2_RX_SIZE); \
+      /* Init Ep3  */\
+      INIT_EP_Tx(dev, PCD_ENDP3, COMP_EP3_TX_TYPE, COMP_EP3_TX_SIZE);  \
+      SET_TX_FIFO(dev, PCD_ENDP3, COMP_EP3_TX_FIFO_ADDR_HS, COMP_EP3_TX_FIFO_SIZE_HS);  \
+      INIT_EP_Rx(dev, PCD_ENDP3, COMP_EP3_RX_TYPE, COMP_EP3_RX_SIZE); \
+      /* Init Ep4  */\
+      INIT_EP_Tx(dev, PCD_ENDP4, COMP_EP4_TX_TYPE, COMP_EP4_TX_SIZE);  \
+      SET_TX_FIFO(dev, PCD_ENDP4, COMP_EP4_TX_FIFO_ADDR_HS, COMP_EP4_TX_FIFO_SIZE_HS);  \
+      /* Init Ep5  */\
+      INIT_EP_Rx(dev, PCD_ENDP5, COMP_EP5_RX_TYPE, COMP_EP5_RX_SIZE); \
     }\
   }while(0)
 
@@ -285,11 +378,22 @@ const uint8_t COMP_rxEpMaxSize[] = \
 #define  EP_NUM  COMP_EP_NUM
 #endif
 
+// Enable double buffer related code
+#define  HAS_DOUBLE_BUFFER
+
 extern const uint8_t* const COMP_StringDescriptors[COMP_STRING_COUNT];
 extern const tusb_descriptors COMP_descriptors;
 
 #define COMP_REPORT_DESCRIPTOR_SIZE_IF0  (24)
 extern const uint8_t COMP_ReportDescriptor_if0[COMP_REPORT_DESCRIPTOR_SIZE_IF0];
 
+// Enable WCID related code
+#define  HAS_WCID
 
-#endif   // #ifndef __COMP_TEENY_USB_INIT_H__
+#ifndef WCID_VENDOR_CODE
+#define  WCID_VENDOR_CODE       0x17
+extern const uint8_t WCID_StringDescriptor_MSOS[];
+#endif
+
+
+#endif   // #ifndef __TEENY_USB_INIT_H__

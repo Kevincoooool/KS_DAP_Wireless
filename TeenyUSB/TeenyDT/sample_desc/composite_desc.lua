@@ -1,8 +1,8 @@
 return Device {
-    strManufacturer = "TeenyUSB",
-    strProduct = "TeenyUSB Composite DEMO",
+    strManufacturer = "KSDIY",
+    strProduct = "KSDIY 996 CMSIS-DAP",
     strSerial = "TUSB123456",
-    idVendor = 0x0483,
+    idVendor = 0x0484,
     idProduct = 0x0011,
     prefix = "COMP",
     Config {
@@ -18,7 +18,7 @@ return Device {
         },
         Interface{
             WCID=WinUSB,
-            strInterface = "TeenyUSB WinUSB",
+            strInterface = "KSDIY 996 CMSIS-DAP V2",
             GUID="{1D4B2365-4749-48EA-B38A-7C6FDDDD7E26}",
             EndPoint(IN(3),  BulkDouble, 32),
             EndPoint(OUT(3), BulkDouble, 32),

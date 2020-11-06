@@ -4,16 +4,11 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-20 11:51:46
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-10-15 12:25:00
+ * @LastEditTime : 2020-10-30 20:05:28
  * @FilePath     : \Simple_TeenyUSB_TX\USER\include.h
  */
 #ifndef _INCLUDE_H
 #define _INCLUDE_H
-
-#define ONLINE          1
-#define WIRELESS_TX     0
-#define WIRELESS_RX     0
-#define OFFLINE         0
 #include "bsp_nrf2401.h"
 #include "bsp_spi.h"
 #include "wireless_rx.h"
@@ -37,11 +32,20 @@
 #include "tusbd_cdc_rndis.h"
 #include "board_config.h"
 #include "flash_blob.h"
-#include "DAP.h"
 #include "usart.h"
 #include "show.h"
 #include "ff.h"		/* FatFs configurations and declarations */
 #include "diskio.h" /* Declarations of low level disk I/O functions */
+#include "gpio.h"
+#include "string.h"
+#include "oledfont.h"
+#include "oled.h"
+#include "stm32f1xx.h"
+#include "DAP_config.h"
+#define ONLINE          1
+#define WIRELESS_TX     0
+#define WIRELESS_RX     0
+#define OFFLINE         0
 
 enum
 {

@@ -4,10 +4,11 @@
 * @Author: Kevincoooool
 * @Date: 2020-08-04 20:32:30
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-10-18 17:51:37
+ * @LastEditTime : 2020-11-06 18:08:32
  * @FilePath     : \Simple_TeenyUSB_TX\USER\main.c
 */
 #include "include.h"
+
 void Work_State(void);
 /***********************文件系统使用定义************************/
 FIL fnew; /* file objects */
@@ -19,16 +20,23 @@ UINT br, bw;		  /* File R/W count */
 BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
 extern uint8_t MYUSB_Request[64 + 1];
 extern uint8_t MYUSB_Response[64 + 1];
-extern int hid_len, cdc_len;
-extern uint8_t cdc_buf[32];
+
+extern int hid_len, cdc_len, user_len;
+extern uint8_t cdc_buf[64];
+extern uint8_t user_buf[];
+
 extern tusb_hid_device_t hid_dev;
 extern tusb_cdc_device_t cdc_dev;
 extern tusb_msc_device_t msc_dev;
+extern tusb_msc_device_t user_dev;
 extern tusb_device_config_t device_config;
+
 extern uint8_t button_num;
 uint8_t NRF_OK = 1;
+
 uint8_t In_MYUSB_Response[64 + 3]; // Request  Buffer
 uint8_t Out_MYUSB_Request[64 + 3]; // Response Buffer
+
 extern uint8_t dealing_data;
 extern int8_t file_name, name_cnt;
 extern char Name_Buffer[20][20];
@@ -41,6 +49,7 @@ int main(void)
 	DAP_Setup();
 	OLED_Init();
 	OLED_Clear(); //清空OLED屏幕
+	OLED_ShowString(20, 4, "DAPLink", 24, 1);
 	tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE);
 	tusb_set_device_config(dev, &device_config);
 	tusb_open_device(dev);
@@ -51,19 +60,20 @@ int main(void)
 	RES_FS = f_mount(&fs, "", 1);
 	if (RES_FS == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
 	{
-		//OLED_ShowString(0, Y4, "Fatfs Success..", 12, 1);
+		//		f_mkfs("", 0, work, sizeof(work));
+		//OLED_ShowString(0, 0, "Fatfs Success..", 12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
 	}
 	else if (RES_FS == FR_NO_FILESYSTEM) //如果是新芯片还没有文件系统
 	{
-		//OLED_ShowString(0, Y4, "Fatfs Format..", 12, 1);
+		OLED_ShowString(0, 0, "Fatfs Format..", 12, 1);
 		f_mkfs("", 0, work, sizeof(work));
-		//OLED_ShowString(0, Y4, "Format Finished", 12, 1);
+		OLED_ShowString(0, 0, "Format Finished", 12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
 	}
 	else
 	{
-		//OLED_ShowString(0, Y4, "Fatfs Failed..", 12, 1);
+		OLED_ShowString(0, 0, "Fatfs Failed..", 12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
 	}
 	//先读取一次文件到文件列表
@@ -78,7 +88,10 @@ int main(void)
 			name_cnt++;
 		}
 	}
+
+	HAL_Delay(1000);
 	Button_Init();
+	OLED_Clear();
 	while (1)
 	{
 		Work_State();
@@ -88,13 +101,25 @@ int main(void)
 //    {
 //    }
 #endif
+		if (hid_len)
+		{
+			hid_len = 0;
+			usbd_hid_process_online();
+		}
+		if (user_len)
+		{
+
+			tusb_user_device_send(&user_dev, user_buf, user_len);
+			user_len = 0;
+		}
 		if (cdc_len)
 		{
-			//tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-			while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
-				;
+			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+			//while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
+			//;
 			cdc_len = 0;
 		}
+
 		tusb_msc_device_loop(&msc_dev);
 	}
 }

@@ -54,9 +54,8 @@ This information includes:
 
 /* I removed RTE directory from the source code. Zach Lee */
 
-#include "stm32f1xx.h"                             // Debug Unit Cortex-M Processor Header File
-#include "stm32f1xx_hal_conf.h"
-#include "stm32f1xx_hal_gpio.h"
+#include "include.h"                             // Debug Unit Cortex-M Processor Header File
+
 #include "swd_host.h"
 
 
@@ -332,7 +331,51 @@ __STATIC_INLINE void PORT_OFF (void) {
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
+//位带操作,实现51类似的GPIO控制功能
+//具体实现思想,参考<<CM3权威指南>>第五章(87页~92页).
+//IO口操作宏定义
+#define BITBAND(addr, bitnum) ((addr & 0xF0000000)+0x2000000+((addr &0xFFFFF)<<5)+(bitnum<<2)) 
+#define MEM_ADDR(addr)  *((volatile unsigned long  *)(addr)) 
+#define BIT_ADDR(addr, bitnum)   MEM_ADDR(BITBAND(addr, bitnum)) 
+//IO口地址映射
+#define GPIOA_ODR_Addr    (GPIOA_BASE+12) //0x4001080C 
+#define GPIOB_ODR_Addr    (GPIOB_BASE+12) //0x40010C0C 
+#define GPIOC_ODR_Addr    (GPIOC_BASE+12) //0x4001100C 
+#define GPIOD_ODR_Addr    (GPIOD_BASE+12) //0x4001140C 
+#define GPIOE_ODR_Addr    (GPIOE_BASE+12) //0x4001180C 
+#define GPIOF_ODR_Addr    (GPIOF_BASE+12) //0x40011A0C    
+#define GPIOG_ODR_Addr    (GPIOG_BASE+12) //0x40011E0C    
 
+#define GPIOA_IDR_Addr    (GPIOA_BASE+8) //0x40010808 
+#define GPIOB_IDR_Addr    (GPIOB_BASE+8) //0x40010C08 
+#define GPIOC_IDR_Addr    (GPIOC_BASE+8) //0x40011008 
+#define GPIOD_IDR_Addr    (GPIOD_BASE+8) //0x40011408 
+#define GPIOE_IDR_Addr    (GPIOE_BASE+8) //0x40011808 
+#define GPIOF_IDR_Addr    (GPIOF_BASE+8) //0x40011A08 
+#define GPIOG_IDR_Addr    (GPIOG_BASE+8) //0x40011E08 
+ 
+//IO口操作,只对单一的IO口!
+//确保n的值小于16!
+#define PAout(n)   BIT_ADDR(GPIOA_ODR_Addr,n)  //输出 
+#define PAin(n)    BIT_ADDR(GPIOA_IDR_Addr,n)  //输入 
+
+#define PBout(n)   BIT_ADDR(GPIOB_ODR_Addr,n)  //输出 
+#define PBin(n)    BIT_ADDR(GPIOB_IDR_Addr,n)  //输入 
+
+#define PCout(n)   BIT_ADDR(GPIOC_ODR_Addr,n)  //输出 
+#define PCin(n)    BIT_ADDR(GPIOC_IDR_Addr,n)  //输入 
+
+#define PDout(n)   BIT_ADDR(GPIOD_ODR_Addr,n)  //输出 
+#define PDin(n)    BIT_ADDR(GPIOD_IDR_Addr,n)  //输入 
+
+#define PEout(n)   BIT_ADDR(GPIOE_ODR_Addr,n)  //输出 
+#define PEin(n)    BIT_ADDR(GPIOE_IDR_Addr,n)  //输入
+
+#define PFout(n)   BIT_ADDR(GPIOF_ODR_Addr,n)  //输出 
+#define PFin(n)    BIT_ADDR(GPIOF_IDR_Addr,n)  //输入
+
+#define PGout(n)   BIT_ADDR(GPIOG_ODR_Addr,n)  //输出 
+#define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //输入
 
 // SWCLK/TCK I/O pin -------------------------------------
 
@@ -364,6 +407,7 @@ __STATIC_FORCEINLINE void     PIN_SWCLK_TCK_CLR (void) {
 \return Current status of the SWDIO/TMS DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN  (void) {
+//	return PBin(9) ;
   return (uint32_t)(JTAG_TMS_GPIO_Port->ODR & JTAG_TMS_Pin ? 1:0);
 }
 
@@ -371,6 +415,7 @@ __STATIC_FORCEINLINE uint32_t PIN_SWDIO_TMS_IN  (void) {
 Set the SWDIO/TMS DAP hardware I/O pin to high level.
 */
 __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_SET (void) {
+//	PBout(9) = 1;
   JTAG_TMS_GPIO_Port->BSRR = JTAG_TMS_Pin;
 }
 
@@ -385,7 +430,8 @@ __STATIC_FORCEINLINE void     PIN_SWDIO_TMS_CLR (void) {
 \return Current status of the SWDIO DAP hardware I/O pin.
 */
 __STATIC_FORCEINLINE uint32_t PIN_SWDIO_IN      (void) {
-  return (uint32_t)(JTAG_TMS_GPIO_Port->IDR & JTAG_TMS_Pin ? 1:0);
+//	return PBin(9);
+ return (uint32_t)(JTAG_TMS_GPIO_Port->IDR & JTAG_TMS_Pin ? 1:0);
 }
 
 /** SWDIO I/O pin: Set Output (used in SWD mode only).
@@ -397,11 +443,12 @@ __STATIC_FORCEINLINE void     PIN_SWDIO_OUT     (uint32_t bit) {
 	* Sometimes the func "SWD_TransferFunction" of SW_DP.c will
 	* issue "2" as param instead of "0". Zach Lee
 	*/
-  if ((bit & 1U) == 1) {
-    JTAG_TMS_GPIO_Port->BSRR = JTAG_TMS_Pin;
-  } else {
-    JTAG_TMS_GPIO_Port->BRR  = JTAG_TMS_Pin;
-  }
+//	PBout(9) = bit;
+   if ((bit & 1U) == 1) {
+     JTAG_TMS_GPIO_Port->BSRR = JTAG_TMS_Pin;
+   } else {
+     JTAG_TMS_GPIO_Port->BRR  = JTAG_TMS_Pin;
+   }
 }
 
 /** SWDIO I/O pin: Switch to Output mode (used in SWD mode only).
