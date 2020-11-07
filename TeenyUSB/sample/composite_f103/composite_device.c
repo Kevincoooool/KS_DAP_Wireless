@@ -44,11 +44,11 @@
 #include "tusbd_cdc.h"
 #include "tusbd_msc.h"
 #include "online.h"
-#define USER_RX_EP_SIZE   16
+#define USER_RX_EP_SIZE   32
 #define CDC_RX_EP_SIZE    32
-#define HID_RX_EP_SIZE    64
+#define HID_RX_EP_SIZE    16
 extern const uint8_t COMP_ReportDescriptor_if0[];
-#define HID_REPORT_DESC         COMP_ReportDescriptor_if0
+#define HID_REPORT_DESC         0
 #define HID_REPORT_DESC_SIZE    24
 
 // allocate more buffer for better performance
@@ -59,8 +59,8 @@ int user_send_done(tusb_user_device_t* raw, const void* data, uint16_t len);
 
 tusb_user_device_t user_dev = {
   .backend = &user_device_backend,
-  .ep_in = 3,
-  .ep_out = 3,
+  .ep_in = 1,
+  .ep_out = 2,
   .on_recv_data = user_recv_data,
   .on_send_done = user_send_done,
   .rx_buf = user_buf,
@@ -94,9 +94,9 @@ void cdc_line_coding_change(tusb_cdc_device_t* cdc);
 
 tusb_cdc_device_t cdc_dev = {
   .backend = &cdc_device_backend,
-  .ep_in = 1,
-  .ep_out = 1,
-  .ep_int = 5,
+  .ep_in = 3,
+  .ep_out = 3,
+  .ep_int = 8,
   .on_recv_data = cdc_recv_data,
   .on_send_done = cdc_send_done,
   .on_line_coding_change = cdc_line_coding_change,
@@ -121,9 +121,9 @@ tusb_msc_device_t msc_dev = {
 
 // make sure the interface order is same in "composite_desc.lua"
 static tusb_device_interface_t* device_interfaces[] = {
-  (tusb_device_interface_t*)&hid_dev,
+//  (tusb_device_interface_t*)&hid_dev,
   (tusb_device_interface_t*)&cdc_dev, 0,   // CDC need two interfaces
-//  (tusb_device_interface_t*)&user_dev,
+  (tusb_device_interface_t*)&user_dev,
   (tusb_device_interface_t*)&msc_dev,
 };
 
@@ -143,14 +143,14 @@ int user_len = 0;
 int user_recv_data(tusb_user_device_t* raw, const void* data, uint16_t len)
 {
   user_len = (int)len;
-	WINUSB_GetOutReport(user_buf, user_len);
+//	WINUSB_GetOutReport(user_buf, user_len);
   return 1; // return 1 means the recv buffer is busy
 }
 
 int user_send_done(tusb_user_device_t* raw, const void* data, uint16_t len)
 {
   tusb_set_rx_valid(raw->dev, raw->ep_out);
-	WINUSB_SetInReport();
+//	WINUSB_SetInReport();
   return 0;
 }
 
@@ -158,14 +158,14 @@ int hid_len = 0;
 int hid_recv_data(tusb_hid_device_t* hid, const void* data, uint16_t len)
 {
   hid_len = (int)len;
-	HID_GetOutReport(hid_buf, len);
+//	HID_GetOutReport(hid_buf, len);
   return 1; // return 1 means the recv buffer is busy
 }
 
 int hid_send_done(tusb_hid_device_t* hid, const void* data, uint16_t len)
 {
   tusb_set_rx_valid(hid->dev, hid->ep_out);
-	HID_SetInReport();
+//	HID_SetInReport();
   return 0;
 }
 
@@ -214,13 +214,13 @@ void stdio_init(void);
 //      user_len = 0;
 //    }
 
-//    if(hid_len){
-//      for(int i=0;i<hid_len;i++){
-//        hid_buf[i]+=2;
-//      }
-//      tusb_hid_device_send(&hid_dev, hid_buf, hid_len);
-//      hid_len = 0;
-//    }
+////    if(hid_len){
+////      for(int i=0;i<hid_len;i++){
+////        hid_buf[i]+=2;
+////      }
+////      tusb_hid_device_send(&hid_dev, hid_buf, hid_len);
+////      hid_len = 0;
+////    }
 
 //    if(cdc_len){
 //      for(int i=0;i<cdc_len;i++){
@@ -277,10 +277,11 @@ int msc_block_write(tusb_msc_device_t* msc, uint8_t lun, const uint8_t *buf, uin
 #else
 
 #if defined(FLASH_SIZE)
-#define PROGRAM_SIZE  16*1024*1024ul
+#define PROGRAM_SIZE  20*1024ul
 #define START_ADDR (const uint8_t *)(0x08000000ul + PROGRAM_SIZE)
-#define BLOCK_SIZE 512
-#define BLOCK_COUNT PROGRAM_SIZE / BLOCK_SIZE
+#define BLOCK_SIZE FLASH_PAGE_SIZE
+//#define BLOCK_COUNT PROGRAM_SIZE / BLOCK_SIZE
+#define BLOCK_COUNT ((FLASH_SIZE - 20*1024ul) / FLASH_PAGE_SIZE)
 int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32_t *block_size)
 {
   *block_size = BLOCK_SIZE;
@@ -291,16 +292,16 @@ int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32
 int msc_block_read(tusb_msc_device_t *msc, uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
   uint32_t len = block_len * BLOCK_SIZE;
-//  memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
-  W25QXX_Read(buf, ( block_addr * BLOCK_SIZE), len);
+  memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
+//  W25QXX_Read(buf, ( block_addr * BLOCK_SIZE), len);
   return len;
 }
 
 int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
   uint32_t len = block_len * BLOCK_SIZE;
-//  flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
-	W25QXX_Write((uint8_t *)buf,(uint32_t)block_addr * BLOCK_SIZE,  len);
+  flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
+//	W25QXX_Write((uint8_t *)buf,(uint32_t)block_addr * BLOCK_SIZE,  len);
   return len;
 }
 

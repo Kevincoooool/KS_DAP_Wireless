@@ -697,20 +697,23 @@ uint32_t OLED_Pow(uint8_t m,uint8_t n)
 //mode:0,反色显示;1,正常显示
 void OLED_ShowNumber(uint8_t x,uint8_t y,uint32_t num,uint8_t len,uint8_t size1,uint8_t mode)
 {
-	uint8_t t,temp,m=0;
-	if(size1==8)m=2;
-	for(t=0;t<len;t++)
+	uint8_t t, temp;
+	uint8_t enshow = 0;
+	for (t = 0; t < len; t++)
 	{
-		temp=(num/OLED_Pow(10,len-t-1))%10;
-			if(temp==0)
+		temp = (num / OLED_Pow(10, len - t - 1)) % 10;
+		if (enshow == 0 && t < (len - 1))
+		{
+			if (temp == 0)
 			{
-				OLED_ShowChar(x+(size1/2+m)*t,y,'0',size1,mode);
-      }
-			else 
-			{
-			  OLED_ShowChar(x+(size1/2+m)*t,y,temp+'0',size1,mode);
+				OLED_ShowChar(x + (size1 / 2) * t, y, ' ', size1, mode);
+				continue;
 			}
-  }
+			else
+				enshow = 1;
+		}
+		OLED_ShowChar(x + (size1 / 2) * t, y, temp + '0', size1, mode);
+	}
 	OLED_Refresh();//更新显示
 }
 

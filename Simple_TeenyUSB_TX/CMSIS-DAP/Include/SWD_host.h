@@ -1,3 +1,12 @@
+/*
+ * @Descripttion : 
+ * @version      : 
+ * @Author       : Kevincoooool
+ * @Date         : 2020-08-22 17:55:57
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-11-07 10:21:30
+ * @FilePath     : \Simple_TeenyUSB_TX\CMSIS-DAP\Include\SWD_host.h
+ */
 #ifndef SWDHOST_CM_H
 #define SWDHOST_CM_H
 
@@ -31,6 +40,6 @@ uint8_t swd_flash_syscall_exec(const program_syscall_t *sysCallParam, uint32_t e
 void swd_set_target_reset(uint8_t asserted);
 uint8_t swd_set_target_state_hw(TARGET_RESET_STATE state);
 uint8_t swd_set_target_state_sw(TARGET_RESET_STATE state);
-
+void vResetTarget(uint8_t bit);
 
 #endif

@@ -4,11 +4,11 @@
 * @Author: Kevincoooool
 * @Date: 2020-08-04 20:32:30
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-06 18:08:32
+ * @LastEditTime : 2020-11-07 13:57:02
  * @FilePath     : \Simple_TeenyUSB_TX\USER\main.c
 */
 #include "include.h"
-
+#include "DAP.h"
 void Work_State(void);
 /***********************文件系统使用定义************************/
 FIL fnew; /* file objects */
@@ -92,26 +92,28 @@ int main(void)
 	HAL_Delay(1000);
 	Button_Init();
 	OLED_Clear();
+//	SPI1->CR1	|=1<<6;//EN SPI
 	while (1)
 	{
-		Work_State();
+
+		 Work_State();
 #if !ONLINE
 //    NRF_Check_Event(); //检测nrf数据
 //    if (NRF_Connect() == 0)
 //    {
 //    }
 #endif
-		if (hid_len)
-		{
-			hid_len = 0;
-			usbd_hid_process_online();
-		}
-		if (user_len)
-		{
+//		if (hid_len)
+//		{
+//			hid_len = 0;
+//			usbd_hid_process_online();
+//		}
+//		if (user_len)
+//		{
 
-			tusb_user_device_send(&user_dev, user_buf, user_len);
-			user_len = 0;
-		}
+//			tusb_user_device_send(&user_dev, user_buf, user_len);
+//			user_len = 0;
+//		}
 		if (cdc_len)
 		{
 			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
@@ -136,8 +138,9 @@ void Work_State(void)
 	case MODE_SET_ONLINE: //有线仿真模式  当正常DAP使用
 		if (hid_len)
 		{
-			hid_len = 0;
+			
 			usbd_hid_process_online();
+			//hid_len = 0;
 		}
 		break;
 	case MODE_SET_OFFLINE: //脱机烧录模式  自动烧录  选择文件和下载算法

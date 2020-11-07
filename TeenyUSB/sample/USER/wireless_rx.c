@@ -17,11 +17,11 @@ static uint8_t SumCheck(uint8_t *buffer, uint8_t len);
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern tusb_hid_device_t hid_dev;
-extern uint8_t MYUSB_Request[DAP_PACKET_SIZE];	// Request  Buffer
-extern uint8_t MYUSB_Response[DAP_PACKET_SIZE]; // Response Buffer
+extern uint8_t MYUSB_Request_HID[DAP_PACKET_SIZE];	// Request  Buffer
+extern uint8_t MYUSB_Response_HID[DAP_PACKET_SIZE]; // Response Buffer
 extern uint8_t dealing_data;
-uint8_t In_MYUSB_Request[DAP_PACKET_SIZE + 3];	 // Request  Buffer
-uint8_t Out_MYUSB_Response[DAP_PACKET_SIZE + 3]; // Response Buffer
+uint8_t In_MYUSB_Request_HID[DAP_PACKET_SIZE + 3];	 // Request  Buffer
+uint8_t Out_MYUSB_Response_HID[DAP_PACKET_SIZE + 3]; // Response Buffer
 uint8_t state_w_rx = wait_dap_tx_data;
 
 uint8_t usbd_hid_process_wireless_rx(void)
@@ -41,19 +41,19 @@ uint8_t usbd_hid_process_wireless_rx(void)
 		{
 			dealing_data = 1;
 
-			memcpy(MYUSB_Request, rx_buffer, DAP_PACKET_SIZE);
+			memcpy(MYUSB_Request_HID, rx_buffer, DAP_PACKET_SIZE);
 			//如需要校验则取消注释
 			//            for (uint8_t i = 1; i < 65; i++)
 			//            {
-			//                MYUSB_Request[i - 1] = In_MYUSB_Request[i];
+			//                MYUSB_Request_HID[i - 1] = In_MYUSB_Request_HID[i];
 			//            }
-			//            if (In_MYUSB_Request[0] == 0xAA && In_MYUSB_Request[66] == 0xFB && SumCheck(MYUSB_Request, 65) == In_MYUSB_Request[65])
+			//            if (In_MYUSB_Request_HID[0] == 0xAA && In_MYUSB_Request_HID[66] == 0xFB && SumCheck(MYUSB_Request_HID, 65) == In_MYUSB_Request_HID[65])
 			//            {
 			//                state_w_rx = get_dap_reponse;
 			//            }
 			//            else
 			//            {
-			//                memcpy(MYUSB_Response, MYUSB_Request, DAP_PACKET_SIZE);
+			//                memcpy(MYUSB_Response_HID, MYUSB_Request_HID, DAP_PACKET_SIZE);
 			//                state_w_rx = get_dap_reponse;
 			//            }
 			state_w_rx = get_dap_reponse;
@@ -66,24 +66,24 @@ uint8_t usbd_hid_process_wireless_rx(void)
 		}
 		break;
 	case get_dap_reponse:
-		memset(MYUSB_Response, 0, 65);
-		DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
+		memset(MYUSB_Response_HID, 0, 65);
+		DAP_ProcessCommand(MYUSB_Request_HID, MYUSB_Response_HID);
 		state_w_rx = seng_nrf_data;
 		break;
 	case seng_nrf_data:
 		//如需要校验则取消注释
-		//        Out_MYUSB_Response[0] = 0xAA;
-		//        Out_MYUSB_Response[65] = SumCheck(MYUSB_Response, 65);
-		//        Out_MYUSB_Response[66] = 0xFB;
+		//        Out_MYUSB_Response_HID[0] = 0xAA;
+		//        Out_MYUSB_Response_HID[65] = SumCheck(MYUSB_Response_HID, 65);
+		//        Out_MYUSB_Response_HID[66] = 0xFB;
 		//        for (uint8_t i = 1; i < 65; i++)
 		//        {
-		//            Out_MYUSB_Response[i] = MYUSB_Response[i - 1];
+		//            Out_MYUSB_Response_HID[i] = MYUSB_Response_HID[i - 1];
 		//        }
-		while (HAL_UART_Transmit(&huart1, MYUSB_Response, DAP_PACKET_SIZE, 1000) != HAL_OK)
+		while (HAL_UART_Transmit(&huart1, MYUSB_Response_HID, DAP_PACKET_SIZE, 1000) != HAL_OK)
 			;
 		HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
 		state_w_rx = wait_dap_tx_data;
-		//memset(MYUSB_Request, 0, 65);
+		//memset(MYUSB_Request_HID, 0, 65);
 		dealing_data = 0;
 		break;
 
@@ -111,7 +111,7 @@ uint8_t usbd_hid_process_wireless_rx(void)
 //         if (recv_end_flag == 1 && !dealing_data)
 //         {
 //             dealing_data = 1;
-//             memcpy(MYUSB_Request, rx_buffer, rx_len);
+//             memcpy(MYUSB_Request_HID, rx_buffer, rx_len);
 //             rx_len = 0;        //清除计数
 //             recv_end_flag = 0; //清除接收结束标志位
 //             state_w_rx = get_dap_reponse;
@@ -122,12 +122,12 @@ uint8_t usbd_hid_process_wireless_rx(void)
 //         }
 //         break;
 //     case get_dap_reponse:
-//         memset(MYUSB_Response, 0, 65);
-//         DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
+//         memset(MYUSB_Response_HID, 0, 65);
+//         DAP_ProcessCommand(MYUSB_Request_HID, MYUSB_Response_HID);
 //         state_w_rx = seng_nrf_data;
 //         break;
 //     case seng_nrf_data:
-//         HAL_UART_Transmit(&huart1, MYUSB_Response, DAP_PACKET_SIZE, 1000);
+//         HAL_UART_Transmit(&huart1, MYUSB_Response_HID, DAP_PACKET_SIZE, 1000);
 //         HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);
 //         state_w_rx = wait_dap_tx_data;
 //         dealing_data = 0;

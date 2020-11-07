@@ -12,7 +12,7 @@
 
 #include "include.h"
 
-
+uint8_t usbd_winusb_process_online(void);
 uint8_t usbd_hid_process_online(void);
 void HID_ProcessCommand(uint8_t *request, uint8_t *response);
 void HID_GetOutReport(uint8_t *EpBuf, uint32_t len);

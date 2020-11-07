@@ -120,7 +120,7 @@ static tusb_device_interface_t *device_interfaces[] = {
     (tusb_device_interface_t *)&hid_dev,
     (tusb_device_interface_t *)&cdc_dev,
     0, // CDC need two interfaces
-   (tusb_device_interface_t*)&user_dev,
+//   (tusb_device_interface_t*)&user_dev,
     (tusb_device_interface_t *)&msc_dev,
 };
 
@@ -279,6 +279,7 @@ int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uin
   uint32_t len = block_len * BLOCK_SIZE;
 //  flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
 	W25QXX_Write((uint8_t *)buf,(uint32_t)block_addr * BLOCK_SIZE,  len);
+	
   return len;
 }
 

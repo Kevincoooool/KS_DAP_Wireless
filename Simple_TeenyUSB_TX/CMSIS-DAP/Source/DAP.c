@@ -328,7 +328,7 @@ static uint32_t DAP_SWJ_Pins(const uint8_t *request, uint8_t *response)
   uint32_t value;
   uint32_t select;
   uint32_t wait;
-
+uint32_t timestamp;
   value = *(request + 0);
   select = *(request + 1);
   wait = (*(request + 2) << 0) |
@@ -371,13 +371,21 @@ static uint32_t DAP_SWJ_Pins(const uint8_t *request, uint8_t *response)
     PIN_nRESET_OUT(value >> DAP_SWJ_nRESET);
   }
 
-  if (wait)
-  {
-    if (wait > 3000000U)
-    {
+  if (wait != 0U) {
+#if (TIMESTAMP_CLOCK != 0U)
+    if (wait > 3000000U) { 
       wait = 3000000U;
     }
-    TIMER_START(wait);
+#if (TIMESTAMP_CLOCK >= 1000000U)
+    wait *= TIMESTAMP_CLOCK / 1000000U;
+#else
+    wait /= 1000000U / TIMESTAMP_CLOCK;
+#endif
+#else
+    wait  = 1U;
+#endif
+ //   TIMER_START(wait);
+	timestamp = TIMESTAMP_GET();
     do
     {
       if (select & (1U << DAP_SWJ_SWCLK_TCK))
@@ -416,7 +424,7 @@ static uint32_t DAP_SWJ_Pins(const uint8_t *request, uint8_t *response)
         }
       }
       break;
-    } while (!TIMER_EXPIRED());
+    } while ((TIMESTAMP_GET() - timestamp) < wait);
     TIMER_STOP();
   }
 
@@ -536,7 +544,59 @@ static uint32_t DAP_SWD_Configure(const uint8_t *request, uint8_t *response)
 
   return ((1U << 16) | 1U);
 }
+// Process SWD Sequence command and prepare response
+//   request:  pointer to request data
+//   response: pointer to response data
+//   return:   number of bytes in response (lower 16 bits)
+//             number of bytes in request (upper 16 bits)
+static uint32_t DAP_SWD_Sequence(const uint8_t *request, uint8_t *response) {
+  uint32_t sequence_info;
+  uint32_t sequence_count;
+  uint32_t request_count;
+  uint32_t response_count;
+  uint32_t count;
 
+#if (DAP_SWD != 0)
+  *response++ = DAP_OK;
+#else
+  *response++ = DAP_ERROR;
+#endif
+  request_count  = 1U;
+  response_count = 1U;
+
+  sequence_count = *request++;
+  while (sequence_count--) {
+    sequence_info = *request++;
+    count = sequence_info & SWD_SEQUENCE_CLK;
+    if (count == 0U) { 
+      count = 64U;
+    }
+    count = (count + 7U) / 8U;
+#if (DAP_SWD != 0)
+    if ((sequence_info & SWD_SEQUENCE_DIN) != 0U) {
+      PIN_SWDIO_OUT_DISABLE();
+    } else {
+      
+    }
+    SWD_Sequence(sequence_info, request, response);
+    if (sequence_count == 0U) {
+      
+    }
+#endif
+    if ((sequence_info & SWD_SEQUENCE_DIN) != 0U) {
+      request_count++;
+#if (DAP_SWD != 0)
+      response += count;
+      response_count += count;
+#endif
+    } else {
+      request += count;
+      request_count += count + 1U;
+    }
+  }
+
+  return ((request_count << 16) | response_count);
+}
 // Process JTAG Sequence command and prepare response
 //   request:  pointer to request data
 //   response: pointer to response data
@@ -1756,7 +1816,9 @@ uint32_t DAP_ProcessCommand(const uint8_t *request, uint8_t *response)
   case ID_DAP_SWD_Configure:
     num = DAP_SWD_Configure(request, response);
     break;
-
+case ID_DAP_SWD_Sequence:
+      num = DAP_SWD_Sequence(request, response);
+      break;
   case ID_DAP_JTAG_Sequence:
     num = DAP_JTAG_Sequence(request, response);
     break;

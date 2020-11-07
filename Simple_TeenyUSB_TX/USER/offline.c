@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-21 20:06:12
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-06 18:11:23
+ * @LastEditTime : 2020-11-07 12:18:43
  * @FilePath     : \Simple_TeenyUSB_TX\USER\offline.c
  */
 #include "offline.h"
@@ -17,16 +17,17 @@ extern FATFS fs; /* Work area (file system object) for logical drives */
 extern FRESULT Res;
 extern UINT br, bw;			 /* File R/W count */
 extern BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
+uint8_t *rData[1024] ,Check_Data[1024] ;
 #if OLED_0_96
 /***********************变量定义************************/
-char rData[1024] = "";
+
 uint8_t readflag = 1;
 uint32_t addr = 0;
 uint32_t i = 0;
 uint16_t bytesread;
 char Name_Buffer[20][20];
 int8_t file_name = 0, name_cnt = 0;
-
+uint8_t Need_Next = 0;
 extern uint8_t button_num;
 extern uint8_t Select_algo;
 extern uint8_t Select_file;
@@ -69,11 +70,25 @@ uint8_t FLASH_SWD(uint8_t *File)
 							}
 							if (target_flash_program_page(0x08000000 + burn_addr, (const uint8_t *)&rData[0], 1024) == ERROR_SUCCESS)
 							{
+								swd_read_memory(0x08000000+burn_addr,Check_Data,1024);
+								if(memcmp(Check_Data,rData,1024)!=0)
+								{
+									OLED_Clear();
+									OLED_ShowString(20, Y1, "Verify Faild!!", 12, 1);
+									HAL_Delay(1000);
+									OLED_Clear();
+									burn_addr = 0;
+									readflag = 1;
+									return 1;
+								}
 								burn_addr += 1024;
 								progess = (((double)burn_addr / f_size(&fnew)) * 100);
 								//OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
-								OLED_ShowNumber(50, Y3, progess, 3, 12,1);
-								OLED_ShowString(70, Y3, "%", 12, 1);
+								OLED_ShowNumber(50, Y0, progess, 3, 12,1);
+								OLED_ShowString(70, Y0, "%", 12, 1);
+								
+								memset(rData,0xFF,1024);
+								memset(Check_Data,0xFF,1024);
 							}
 							else
 								return 0;
@@ -114,6 +129,8 @@ void Auto_Fash(void)
 {
 	if (swd_init_debug())
 	{
+		if(Need_Next == 1||button_num == 9)
+		{
 		OLED_ShowString(0, 50, "Connected!!!", 12, 1);
 		if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK)
 		{
@@ -145,9 +162,11 @@ void Auto_Fash(void)
 			OLED_ShowString(0, Y3, "Open Bin failed", 12, 1);
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 		}
+		}
 	}
 	else
 	{
+		Need_Next = 1;
 		OLED_ShowString(0, 50, "Disconnected", 12, 1);
 	}
 	
@@ -199,7 +218,7 @@ void Display_BIN(void)
 			if (!FileInfo.fname[0])
 				break;
 			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-			OLED_ShowNumber(0, choose, (choose + 12) / 12, 1, 12);
+			OLED_ShowNumber(0, choose, (choose + 12) / 12, 1, 12,1);
 			OLED_ShowString(8, choose, ".", 12, 1);
 			OLED_ShowString(16, choose, (const uint8_t *)Name_Buffer[name_cnt], 12, 1);
 			choose += 12;
@@ -213,7 +232,7 @@ void Display_FLM(void)
 	static uint8_t choose = Y0;
 	for (uint8_t i = 0; i < 6; i++)
 	{
-		OLED_ShowNumber(0, choose, (i + 1), 1, 12);
+		OLED_ShowNumber(0, choose, (i + 1), 1, 12,1);
 		OLED_ShowString(8, choose, ".", 12, 1);
 		OLED_ShowString(16, choose, (const uint8_t *)STM32_ALGO[choose / 10].name, 12, 1);
 		choose += 10;
@@ -341,7 +360,7 @@ void Select_FLM(void)
 /***********************文件系统使用定义************************/
 
 /***********************变量定义************************/
-char rData[1024] = "";
+
 uint8_t readflag = 1;
 uint32_t addr = 0;
 uint32_t i = 0;
@@ -359,7 +378,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 	Res = f_open(&fnew, (const TCHAR *)File, FA_READ);
 	if (Res == FR_OK)
 	{
-		uint32_t progess = 0x0, burn_addr = 0x0;
+		uint32_t progess = 0x0, burn_addr = 0x0 ,time;
 		readflag = 1;
 		if (swd_init_debug())
 		{
@@ -375,7 +394,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 			target_opt_uninit();
 			if (swd_init_debug())
 			{
-
+				time = HAL_GetTick();
 				if (target_flash_init(0x08000000) == ERROR_SUCCESS)
 				{
 
@@ -385,6 +404,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 						while (readflag)
 						{
 							f_read(&fnew, rData, 1024, (void *)&bytesread);
+							
 
 							if (bytesread < 1024)
 							{
@@ -392,17 +412,36 @@ uint8_t FLASH_SWD(uint8_t *File)
 							}
 							if (target_flash_program_page(0x08000000 + burn_addr, (const uint8_t *)&rData[0], 1024) == ERROR_SUCCESS)
 							{
+								
+								swd_read_memory(0x08000000+burn_addr,Check_Data,1024);
+								if(memcmp(Check_Data,rData,1024)!=0)
+								{
+									OLED_Clear();
+									OLED_ShowString(20, Y1, "Verify Faild!!", 12, 1);
+									HAL_Delay(1000);
+									OLED_Clear();
+									burn_addr = 0;
+									readflag = 1;
+									return 1;
+								}
 								burn_addr += 1024;
 								progess = (((double)burn_addr / f_size(&fnew)) * 100);
 								//OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
 								OLED_ShowNumber(50, Y0, progess, 3, 12,1);
 								OLED_ShowString(70, Y0, "%", 12, 1);
+								
+								memset(rData,0xFF,1024);
+								memset(Check_Data,0xFF,1024);
 							}
 							else
 								return 0;
 						}
 						if (swd_init_debug())
 						{
+							OLED_ShowNumber(0, Y0, (HAL_GetTick() - time)/1000, 2, 12,1);
+							OLED_ShowString(13, Y0, ".", 12,1);
+							OLED_ShowNumber(18, Y0, ((HAL_GetTick() - time)/10)%100, 2, 12,1);
+							OLED_ShowString(30, Y0, "S", 12,1);
 							HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 							swd_set_target_reset(0); //复位运行
 							OLED_ShowNumber(50, Y0, 100, 3, 12,1);
@@ -411,7 +450,6 @@ uint8_t FLASH_SWD(uint8_t *File)
 								OLED_Show_CH_String(35 + i * 6, Y2, oled_CH5[i], 12, 1);
 							HAL_Delay(1000);
 							OLED_Clear();
-							
 							burn_addr = 0;
 							readflag = 1;
 							return 1;
@@ -532,7 +570,7 @@ void Display_BIN(void)
 			if (!FileInfo.fname[0])
 				break;
 			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-			OLED_ShowNumber(0, choose, (choose + 12) / 12, 1, 8,1);
+			OLED_ShowNumber(0, choose, (choose + 8) / 8, 1, 8,1);
 			OLED_ShowString(8, choose, ".", 8, 1);
 			OLED_ShowString(16, choose, (uint8_t *)Name_Buffer[name_cnt], 8, 1);
 			choose += 8;
@@ -589,3 +627,4 @@ void Select_FLM(void)
 	OLED_ShowString(110, choose, "<<", 8, 1);
 }
 #endif
+

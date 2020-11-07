@@ -42,6 +42,7 @@
 #include "oled.h"
 #include "stm32f1xx.h"
 #include "DAP_config.h"
+
 #define ONLINE          1
 #define WIRELESS_TX     0
 #define WIRELESS_RX     0

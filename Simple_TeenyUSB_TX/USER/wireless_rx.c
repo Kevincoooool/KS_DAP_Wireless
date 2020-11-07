@@ -4,12 +4,11 @@
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:35:23
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-10-15 12:27:15
+ * @LastEditTime : 2020-11-07 12:36:12
  * @FilePath     : \Simple_TeenyUSB_TX\USER\wireless_rx.c
  */
 /***************************************************************/
 #include "DAP_Config.h"
-#include "DAP_Common.h"
 #include "DAP.h"
 #include "wireless_rx.h"
 static uint8_t CalcCheck(uint8_t *buffer, uint8_t len);

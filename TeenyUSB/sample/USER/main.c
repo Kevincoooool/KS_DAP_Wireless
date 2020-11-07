@@ -61,40 +61,40 @@ int main(void)
 //	tusb_open_device(dev);
 //	MX_USART1_UART_Init();
 //	MX_USART2_UART_Init();
-	W25QXX_Init();
-	algo_init();
-	RES_FS = f_mount(&fs, "", 1);
+//	W25QXX_Init();
+//	algo_init();
+//	RES_FS = f_mount(&fs, "", 1);
 
-	if (RES_FS == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
-	{
+//	if (RES_FS == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
+//	{
+////		f_mkfs("", 0, work, sizeof(work));
+//		OLED_ShowString(0, Y4, "Fatfs Success..", 8, 1);
+//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+//	}
+//	else if (RES_FS == FR_NO_FILESYSTEM) //如果是新芯片还没有文件系统
+//	{
+//		OLED_ShowString(0, Y4, "Fatfs Format..", 12, 1);
 //		f_mkfs("", 0, work, sizeof(work));
-		OLED_ShowString(0, Y4, "Fatfs Success..", 8, 1);
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
-	}
-	else if (RES_FS == FR_NO_FILESYSTEM) //如果是新芯片还没有文件系统
-	{
-		OLED_ShowString(0, Y4, "Fatfs Format..", 12, 1);
-		f_mkfs("", 0, work, sizeof(work));
-		OLED_ShowString(0, Y4, "Format Finished", 12, 1);
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
-	}
-	else
-	{
-		OLED_ShowString(0, Y4, "Fatfs Failed..", 12, 1);
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
-	}
-	//先读取一次文件到文件列表
-	if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
-	{
-		f_readdir(&DirInfo, &FileInfo);
-		while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
-		{
-			if (!FileInfo.fname[0])
-				break;
-			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-			name_cnt++;
-		}
-	}
+//		OLED_ShowString(0, Y4, "Format Finished", 12, 1);
+//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+//	}
+//	else
+//	{
+//		OLED_ShowString(0, Y4, "Fatfs Failed..", 12, 1);
+//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
+//	}
+//	//先读取一次文件到文件列表
+//	if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
+//	{
+//		f_readdir(&DirInfo, &FileInfo);
+//		while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
+//		{
+//			if (!FileInfo.fname[0])
+//				break;
+//			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
+//			name_cnt++;
+//		}
+//	}
 	SetDescriptor(&g_dev, &COMP_descriptors);
 	tusb_set_device_config(&g_dev, &device_config);
 	tusb_open_device(&g_dev, TUSB_DEFAULT_DEV_PARAM);
@@ -116,15 +116,15 @@ int main(void)
 		if (hid_len)
 		{
 			
-			//usbd_hid_process_online();
-			tusb_hid_device_send(&hid_dev, hid_buf, hid_len);
+			usbd_hid_process_online();
+			//tusb_hid_device_send(&hid_dev, hid_buf, hid_len);
 			hid_len = 0;
 		}
 		if(user_len){
       
-			//usbd_hid_process_online();
-      tusb_user_device_send(&user_dev, user_buf, user_len);
-		user_len = 0;
+			usbd_winusb_process_online();
+//      tusb_user_device_send(&user_dev, user_buf, user_len);
+			user_len = 0;
 		}
 		if (cdc_len)
 		{

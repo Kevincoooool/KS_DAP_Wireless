@@ -85,10 +85,10 @@ static uint8_t swd_transfer_retry(uint32_t req, uint32_t *data)
 
 uint8_t swd_init(void)
 {
-//    DAP_Setup();
-//  PORT_SWD_SETUP();
+	// DAP_Setup();
+	// PORT_SWD_SETUP();
 
-GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_nRESET_Pin;
+	GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_nRESET_Pin;
 
     return 1;
 }
@@ -807,6 +807,30 @@ static uint8_t swd_read_idcode(uint32_t *id)
     *id = (tmp_out[3] << 24) | (tmp_out[2] << 16) | (tmp_out[1] << 8) | tmp_out[0];
     return 1;
 }
+#if SWD_SPI
+static uint8_t JTAG2SWD()
+{
+  uint32_t tmp = 0;
+	uint8_t LineRst[7]={0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+	uint8_t	swd_switch1[2]={0x9E,0xE7};
+	uint8_t	swd_switch2[2]={0x6D,0xB7};
+
+	
+	SPI_TX7(LineRst);
+	SPI_TX2(swd_switch1);
+	SPI_TX7(LineRst);
+	SPI_TX2(swd_switch2);
+	SPI_TX7(LineRst);
+
+    if (!swd_read_idcode(&tmp)) {
+			//printf("Read IDCODE Fault 0x%.4X\r\n",tmp);
+        return 0;
+    }
+//		printf("IDCODE : 0x%.4X\r\n",tmp);
+    return 1;
+}
+
+#else
 
 static uint8_t JTAG2SWD()
 {
@@ -834,7 +858,7 @@ static uint8_t JTAG2SWD()
 
     return 1;
 }
-
+#endif
 uint8_t swd_init_debug(void)
 {
     uint32_t tmp = 0;

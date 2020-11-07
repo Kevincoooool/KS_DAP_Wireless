@@ -145,26 +145,46 @@ void HID_SetInReport(void)
 }
 
 #else
-uint8_t MYUSB_Request[DAP_PACKET_SIZE + 1];	 // Request  Buffer
-uint8_t MYUSB_Response[DAP_PACKET_SIZE + 1]; // Response Buffer
-uint8_t dealing_data = 0;
+uint8_t MYUSB_Request_HID[DAP_PACKET_SIZE + 1];	 // Request  Buffer
+uint8_t MYUSB_Response_HID[DAP_PACKET_SIZE + 1]; // Response Buffer
+uint8_t MYUSB_Request_WINUSB[DAP_PACKET_SIZE + 1];	 // Request  Buffer
+uint8_t MYUSB_Response_WINUSB[DAP_PACKET_SIZE + 1]; // Response Buffer
+
+uint8_t dealing_data = 0,dealing_data1 = 0,dealing_data2 = 0;
 extern int hid_len,user_len;
 uint8_t usbd_hid_process_online(void)
 {
 #if ONLINE
 	//如果需要收数据
-	if (dealing_data)
+	if (dealing_data1)
 	{
-		DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
-		tusb_hid_device_send(&hid_dev, MYUSB_Response, DAP_PACKET_SIZE);
-//		tusb_user_device_send(&user_dev, MYUSB_Response, DAP_PACKET_SIZE);
-		dealing_data = 0;
+		DAP_ProcessCommand(MYUSB_Request_HID, MYUSB_Response_HID);
+		tusb_hid_device_send(&hid_dev, MYUSB_Response_HID, DAP_PACKET_SIZE);
+		
+		dealing_data1 = 0;
 		//		hid_len = 0;
 		return 1;
 	}
 #endif
 	return 0;
 }
+
+uint8_t usbd_winusb_process_online(void)
+{
+#if ONLINE
+	//如果需要收数据
+	if (dealing_data2)
+	{
+		DAP_ProcessCommand(MYUSB_Request_WINUSB, MYUSB_Response_WINUSB);
+		tusb_user_device_send(&user_dev, MYUSB_Response_WINUSB, DAP_PACKET_SIZE);
+		dealing_data2 = 0;
+		//		hid_len = 0;
+		return 1;
+	}
+#endif
+	return 0;
+}
+
 /****************************************************************
  * 获取USB HID数据
  ***************************************************************/
@@ -178,11 +198,11 @@ void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 		return;
 	}
 	//没有在处理数据过程中才会接收 不然直接退出
-	if (dealing_data)
+	if (dealing_data1)
 		return; // Discard packet when buffer is full
-	memcpy(MYUSB_Request, EpBuf, 64);
-	dealing_data = 1;
-	hid_len = 64;
+	memcpy(MYUSB_Request_HID, EpBuf, 64);
+	dealing_data1 = 1;
+	
 }
 
 /*
@@ -205,11 +225,11 @@ void WINUSB_GetOutReport(uint8_t *EpBuf, uint32_t len)
 		return;
 	}
 	//没有在处理数据过程中才会接收 不然直接退出
-	if (dealing_data)
+	if (dealing_data2)
 		return; // Discard packet when buffer is full
-	memcpy(MYUSB_Request, EpBuf, 64);
-	dealing_data = 1;
-	user_len = 64;
+	memcpy(MYUSB_Request_WINUSB, EpBuf, 64);
+	dealing_data2 = 1;
+	
 }
 
 /*
@@ -218,5 +238,6 @@ USB HID发送完成
 */
 void WINUSB_SetInReport(void)
 {
+	user_len= 0;
 }
 #endif

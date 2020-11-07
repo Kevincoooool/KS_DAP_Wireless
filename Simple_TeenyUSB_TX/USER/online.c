@@ -9,7 +9,6 @@
  */
 /***************************************************************/
 #include "DAP_Config.h"
-#include "DAP_Common.h"
 #include "DAP.h"
 #include "online.h"
 

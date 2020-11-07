@@ -15,11 +15,11 @@ extern int hid_len;
 extern tusb_hid_device_t hid_dev;
 extern tusb_cdc_device_t cdc_dev;
 extern UART_HandleTypeDef huart1;
-extern uint8_t MYUSB_Request[DAP_PACKET_SIZE + 1];	// Request  Buffer
-extern uint8_t MYUSB_Response[DAP_PACKET_SIZE + 1]; // Response Buffer
+extern uint8_t MYUSB_Request_HID[DAP_PACKET_SIZE + 1];	// Request  Buffer
+extern uint8_t MYUSB_Response_HID[DAP_PACKET_SIZE + 1]; // Response Buffer
 
-extern uint8_t In_MYUSB_Response[DAP_PACKET_SIZE + 3]; // Request  Buffer
-extern uint8_t Out_MYUSB_Request[DAP_PACKET_SIZE + 3]; // Response Buffer
+extern uint8_t In_MYUSB_Response_HID[DAP_PACKET_SIZE + 3]; // Request  Buffer
+extern uint8_t Out_MYUSB_Request_HID[DAP_PACKET_SIZE + 3]; // Response Buffer
 
 extern uint8_t dealing_data;
 uint8_t state_w_tx = wait_hid_data;
@@ -43,35 +43,35 @@ uint8_t usbd_hid_process_wireless_tx(void)
 
 			state_w_tx = dap_tx_send;
 			//如需要校验则取消注释
-			// Out_MYUSB_Request[0] = 0xAA;
-			// Out_MYUSB_Request[65] = SumCheck(MYUSB_Request, 64);
-			// Out_MYUSB_Request[66] = 0xFB;
+			// Out_MYUSB_Request_HID[0] = 0xAA;
+			// Out_MYUSB_Request_HID[65] = SumCheck(MYUSB_Request_HID, 64);
+			// Out_MYUSB_Request_HID[66] = 0xFB;
 			// for (uint8_t i = 1; i < 65; i++)
 			// {
-			//     Out_MYUSB_Request[i] = MYUSB_Request[i - 1];
+			//     Out_MYUSB_Request_HID[i] = MYUSB_Request_HID[i - 1];
 			// }
 		}
 		else
 			state_w_tx = wait_hid_data;
 		break;
 	case dap_tx_send:
-		while (HAL_UART_Transmit(&huart1, MYUSB_Request, DAP_PACKET_SIZE, 1000) != HAL_OK)
+		while (HAL_UART_Transmit(&huart1, MYUSB_Request_HID, DAP_PACKET_SIZE, 1000) != HAL_OK)
 			;
-		memset(MYUSB_Response, 0, DAP_PACKET_SIZE);
+		memset(MYUSB_Response_HID, 0, DAP_PACKET_SIZE);
 		state_w_tx = wait_dap_rx_reply;
 		break;
 	case wait_dap_rx_reply:
 
 		if (recv_end_flag == 1)
 		{
-			memcpy(MYUSB_Response, rx_buffer, BUFFER_SIZE);
+			memcpy(MYUSB_Response_HID, rx_buffer, BUFFER_SIZE);
 			//如需要校验则取消注释
-			//tusb_cdc_device_send(&cdc_dev, In_MYUSB_Response, BUFFER_SIZE);
+			//tusb_cdc_device_send(&cdc_dev, In_MYUSB_Response_HID, BUFFER_SIZE);
 			//             for (uint8_t i = 1; i < 65; i++)
 			//             {
-			//                 MYUSB_Response[i - 1] = In_MYUSB_Response[i];
+			//                 MYUSB_Response_HID[i - 1] = In_MYUSB_Response_HID[i];
 			//             }
-			//             if (In_MYUSB_Response[0] == 0xAA && In_MYUSB_Response[66] == 0xFB && SumCheck(MYUSB_Response, 64) == In_MYUSB_Response[65])
+			//             if (In_MYUSB_Response_HID[0] == 0xAA && In_MYUSB_Response_HID[66] == 0xFB && SumCheck(MYUSB_Response_HID, 64) == In_MYUSB_Response_HID[65])
 			//             {
 			//                 state_w_tx = seng_hid_data;
 			//             }
@@ -90,7 +90,7 @@ uint8_t usbd_hid_process_wireless_tx(void)
 		break;
 
 	case seng_hid_data:
-		tusb_hid_device_send(&hid_dev, MYUSB_Response, DAP_PACKET_SIZE);
+		tusb_hid_device_send(&hid_dev, MYUSB_Response_HID, DAP_PACKET_SIZE);
 		state_w_tx = wait_hid_data;
 		dealing_data = 0;
 		HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE);

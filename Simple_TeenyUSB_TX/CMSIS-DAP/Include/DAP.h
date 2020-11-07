@@ -40,6 +40,7 @@
 #define ID_DAP_SWJ_Clock                0x11U
 #define ID_DAP_SWJ_Sequence             0x12U
 #define ID_DAP_SWD_Configure            0x13U
+#define ID_DAP_SWD_Sequence             0x1DU
 #define ID_DAP_JTAG_Sequence            0x14U
 #define ID_DAP_JTAG_Configure           0x15U
 #define ID_DAP_JTAG_IDCODE              0x16U
@@ -171,6 +172,10 @@
 #define JTAG_SEQUENCE_TMS               0x40U   // TMS value
 #define JTAG_SEQUENCE_TDO               0x80U   // TDO capture
 
+// SWD Sequence Info
+#define SWD_SEQUENCE_CLK                0x3FU   // SWCLK count
+#define SWD_SEQUENCE_DIN                0x80U   // SWDIO capture
+
 
 #include <stddef.h>
 #include <stdint.h>
@@ -211,6 +216,8 @@ extern volatile uint8_t    DAP_TransferAbort;   // Transfer Abort Flag
 
 // Functions
 extern void     SWJ_Sequence    (uint32_t count, const uint8_t *data);
+extern void     SWD_Sequence    (uint32_t info,  const uint8_t *swdo, uint8_t *swdi);
+
 extern void     JTAG_Sequence   (uint32_t info,  const uint8_t *tdi, uint8_t *tdo);
 extern void     JTAG_IR         (uint32_t ir);
 extern uint32_t JTAG_ReadIDCode (void);
@@ -259,6 +266,6 @@ static __forceinline void PIN_DELAY_FAST (void) {
   __nop();
 #endif
 }
-
+void DAP_Setup(void);
 
 #endif  /* __DAP_H__ */

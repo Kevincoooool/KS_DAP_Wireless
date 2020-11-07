@@ -41,6 +41,7 @@ uint8_t Select_Mode(void)
 		OLED_Clear();
 		if (choose == Y2)
 		{
+			
 			Show.mode = MODE_SET_ONLINE;
 			Show.windows = SHOW_ONLINE;
 			for (uint8_t i = 0; i < 12; i++)
@@ -48,6 +49,7 @@ uint8_t Select_Mode(void)
 		}
 		else if (choose == Y3)
 		{
+			
 			Show.mode = MODE_SET_OFFLINE;
 			Show.windows = SHOW_OFFLINE;
 			button_num = 0;
@@ -100,12 +102,12 @@ void Display_Offline(void)
 {
 	///////////////////////////////第一行///////////////////////////////////
 	//下载算法
-	OLED_ShowNumber(0, Y0, 1, 1, 12);
+	OLED_ShowNumber(0, Y0, 1, 1, 12,1);
 	OLED_ShowString(8, Y0, ".", 12, 1);
 	OLED_ShowString(16, Y0, (const uint8_t *)STM32_ALGO[Select_algo].name, 12, 1);
 	///////////////////////////////第二行///////////////////////////////////
 	//下载文件
-	OLED_ShowNumber(0, Y1, 2, 1, 12);
+	OLED_ShowNumber(0, Y1, 2, 1, 12,1);
 	OLED_ShowString(8, Y1, ".", 12, 1);
 	OLED_ShowString(16, Y1, (const uint8_t *)Name_Buffer[Select_file], 12, 1);
 	///////////////////////////////第三行/////////////////////////////////
@@ -122,13 +124,13 @@ void Display_WL_MODE(void)
 {
 	///////////////////////////////第一行///////////////////////////////////
 	//下载算法
-	OLED_ShowNumber(0, Y0, 1, 1, 12);
+	OLED_ShowNumber(0, Y0, 1, 1, 12,1);
 	OLED_ShowString(8, Y0, ".", 12, 1);
 	for (uint8_t i = 0; i < 10; i++)
 		OLED_Show_CH_String(Line1_Begin + i * 6, Y0, oled_CH6[i], 12, 1);
 	///////////////////////////////第二行///////////////////////////////////
 	//下载文件
-	OLED_ShowNumber(0, Y1, 2, 1, 12);
+	OLED_ShowNumber(0, Y1, 2, 1, 12,1);
 	OLED_ShowString(8, Y1, ".", 12, 1);
 	for (uint8_t i = 0; i < 10; i++)
 		OLED_Show_CH_String(Line1_Begin + i * 6, Y1, oled_CH7[i], 12, 1);
@@ -378,7 +380,7 @@ uint8_t Select_Mode(void)
 	{
 		if(choose>=12)
 		choose -= 12;
-		if (choose < 0)
+		if (choose <= 0)
 			choose = 0;
 		OLED_ShowString(0, choose + 12, "  ", 12, 1);
 	}
@@ -387,6 +389,7 @@ uint8_t Select_Mode(void)
 		OLED_Clear();
 		if (choose == 0)
 		{
+			
 			Show.mode = MODE_SET_ONLINE;
 			Show.windows = SHOW_ONLINE;
 			for (uint8_t i = 0; i < 12; i++)
@@ -394,6 +397,7 @@ uint8_t Select_Mode(void)
 		}
 		else if (choose == 12)
 		{
+			
 			Show.mode = MODE_SET_OFFLINE;
 			Show.windows = SHOW_OFFLINE;
 			button_num = 0;
@@ -486,20 +490,20 @@ void Display_WL_MODE(void)
 //选择脱机烧录模式中的下载算法和文件
 void Select_Offline(void)
 {
-	static uint8_t choose = Y0;
+	static uint8_t choose = Y2;
 	if (button_num == 1)
 	{
-		if (choose < Y3)
+		if (choose < Y2)
 		choose += 8;
-		if (choose >= Y3)
-			choose = Y3;
+		if (choose >= Y2)
+			choose = Y2;
 		OLED_ShowString(110, choose - 8, "  ", 8, 1);
 	}
 	else if (button_num == 3)
 	{
 		if (choose > Y0)
 			choose -= 8;
-		if (choose < Y0)
+		if (choose <= Y0)
 			choose = Y0;
 		OLED_ShowString(110, choose + 8, "  ", 8, 1);
 	}
@@ -690,3 +694,4 @@ void Show_Duty(void)
 	}
 }
 #endif
+
