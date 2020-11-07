@@ -31,25 +31,19 @@
 
 #define SW_CLOCK_CYCLE()                \
   PIN_SWCLK_CLR();                      \
-  PIN_DELAY();                          \
-  PIN_SWCLK_SET();                      \
-  PIN_DELAY()
+  PIN_SWCLK_SET();                     
 
 #define SW_WRITE_BIT(bit)               \
   PIN_SWDIO_OUT(bit);                   \
   PIN_SWCLK_CLR();                      \
-  PIN_DELAY();                          \
-  PIN_SWCLK_SET();                      \
-  PIN_DELAY()
+  PIN_SWCLK_SET();                     
 
 #define SW_READ_BIT(bit)                \
   PIN_SWCLK_CLR();                      \
-  PIN_DELAY();                          \
   bit = PIN_SWDIO_IN();                 \
-  PIN_SWCLK_SET();                      \
-  PIN_DELAY()
+  PIN_SWCLK_SET();                    
 
-#define PIN_DELAY() PIN_DELAY_SLOW(DAP_Data.clock_delay)
+#define PIN_DELAY() PIN_DELAY_FAST()
 
 
 // Generate SWJ Sequence

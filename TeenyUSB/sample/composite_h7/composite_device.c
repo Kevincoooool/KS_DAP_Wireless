@@ -48,7 +48,7 @@
 #define CDC_RX_EP_SIZE    32
 #define HID_RX_EP_SIZE    64
 extern const uint8_t COMP_ReportDescriptor_if0[];
-#define HID_REPORT_DESC         0
+#define HID_REPORT_DESC         COMP_ReportDescriptor_if0
 #define HID_REPORT_DESC_SIZE    24
 
 // allocate more buffer for better performance
@@ -60,7 +60,7 @@ int user_send_done(tusb_user_device_t* raw, const void* data, uint16_t len);
 tusb_user_device_t user_dev = {
   .backend = &user_device_backend,
   .ep_in = 1,
-  .ep_out = 2,
+  .ep_out = 1,
   .on_recv_data = user_recv_data,
   .on_send_done = user_send_done,
   .rx_buf = user_buf,
@@ -74,7 +74,7 @@ int hid_send_done(tusb_hid_device_t* hid, const void* data, uint16_t len);
 
 tusb_hid_device_t hid_dev = {
   .backend = &hid_device_backend,
-  .ep_in = 1,
+  .ep_in = 2,
   .ep_out = 2,
   .on_recv_data = hid_recv_data,
   .on_send_done = hid_send_done,
@@ -121,7 +121,7 @@ tusb_msc_device_t msc_dev = {
 
 // make sure the interface order is same in "composite_desc.lua"
 static tusb_device_interface_t* device_interfaces[] = {
-//  (tusb_device_interface_t*)&hid_dev,
+  (tusb_device_interface_t*)&hid_dev,
   (tusb_device_interface_t*)&cdc_dev, 0,   // CDC need two interfaces
   (tusb_device_interface_t*)&user_dev,
   (tusb_device_interface_t*)&msc_dev,
@@ -142,9 +142,15 @@ void tusb_delay_ms(uint32_t ms)
 int user_len = 0;
 int user_recv_data(tusb_user_device_t* raw, const void* data, uint16_t len)
 {
+	if(len)
+	{
   user_len = (int)len;
+	
 	WINUSB_GetOutReport(user_buf, user_len);
   return 1; // return 1 means the recv buffer is busy
+	}
+	else
+		return 0;
 }
 
 int user_send_done(tusb_user_device_t* raw, const void* data, uint16_t len)

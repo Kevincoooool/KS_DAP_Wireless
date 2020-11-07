@@ -371,12 +371,19 @@ static uint32_t DAP_SWJ_Pins(const uint8_t *request, uint8_t *response)
     PIN_nRESET_OUT(value >> DAP_SWJ_nRESET);
   }
 
-  if (wait)
-  {
-    if (wait > 3000000U)
-    {
+  if (wait != 0U) {
+#if (TIMESTAMP_CLOCK != 0U)
+    if (wait > 3000000U) { 
       wait = 3000000U;
     }
+#if (TIMESTAMP_CLOCK >= 1000000U)
+    wait *= TIMESTAMP_CLOCK / 1000000U;
+#else
+    wait /= 1000000U / TIMESTAMP_CLOCK;
+#endif
+#else
+    wait  = 1U;
+#endif
     TIMER_START(wait);
     do
     {

@@ -19,6 +19,7 @@
 #include "tusbd_hid.h"
 #include "tusbd_cdc.h"
 #include "tusbd_msc.h"
+#include "DAP.h"
 extern tusb_device_t g_dev;
 void Work_State(void);
 /***********************文件系统使用定义************************/
@@ -103,9 +104,29 @@ int main(void)
 	}
 //	HAL_Delay(500);
 	Button_Init();
+GPIO_InitTypeDef GPIO_InitStruct = {0};
+__HAL_RCC_GPIOB_CLK_ENABLE();
+//  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
+//  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
+//  HAL_GPIO_WritePin(JTAG_TDI_GPIO_Port, JTAG_TDI_Pin, GPIO_PIN_SET);
+//  HAL_GPIO_WritePin(JTAG_nTRST_GPIO_Port, JTAG_nTRST_Pin, GPIO_PIN_SET);
+//  HAL_GPIO_WritePin(JTAG_nRESET_GPIO_Port, JTAG_nRESET_Pin, GPIO_PIN_SET);
+  GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin|JTAG_nTRST_Pin|JTAG_nRESET_Pin;
 
+  /*Configure GPIO pins : JTAG_TCK_Pin JTAG_TMS_Pin JTAG_TDI_Pin */
+  GPIO_InitStruct.Pin = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	while (1)
 	{
+//		GPIOB->ODR = 1<<11;
+//        GPIOB->ODR = 0<<11;
+//		GPIOB->ODR = 1<<11;
+//        GPIOB->ODR = 0<<11;
+//		GPIOB->BSRR = JTAG_TCK_Pin;
+//		GPIOB->BSRR = JTAG_TCK_Pin <<16;
 //		Work_State();
 #if !ONLINE
 //    NRF_Check_Event(); //检测nrf数据
@@ -120,19 +141,19 @@ int main(void)
 			//tusb_hid_device_send(&hid_dev, hid_buf, hid_len);
 			hid_len = 0;
 		}
-		if(user_len){
-      
-			usbd_winusb_process_online();
-//      tusb_user_device_send(&user_dev, user_buf, user_len);
-			user_len = 0;
-		}
-		if (cdc_len)
-		{
-			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-//			while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
-//				;
-			cdc_len = 0;
-		}
+//		if(user_len){
+//      
+//			usbd_winusb_process_online();
+////      tusb_user_device_send(&user_dev, user_buf, user_len);
+//			user_len = 0;
+//		}
+//		if (cdc_len)
+//		{
+//			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+////			while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
+////				;
+//			cdc_len = 0;
+//		}
 
 		tusb_msc_device_loop(&msc_dev);
 	}
@@ -151,7 +172,7 @@ void Work_State(void)
 		if (hid_len)
 		{
 			hid_len = 0;
-			usbd_hid_process_online();
+//			usbd_hid_process_online();
 		}
 		break;
 	case MODE_SET_OFFLINE: //脱机烧录模式  自动烧录  选择文件和下载算法

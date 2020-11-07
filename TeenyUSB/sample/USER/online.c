@@ -12,9 +12,14 @@
 #include "DAP_Common.h"
 #include "DAP.h"
 #include "online.h"
+uint8_t MYUSB_Request_HID[DAP_PACKET_SIZE + 1];	 // Request  Buffer
+uint8_t MYUSB_Response_HID[DAP_PACKET_SIZE + 1]; // Response Buffer
+uint8_t MYUSB_Request_WINUSB[DAP_PACKET_SIZE + 1];	 // Request  Buffer
+uint8_t MYUSB_Response_WINUSB[DAP_PACKET_SIZE + 1]; // Response Buffer
 
+uint8_t dealing_data = 0,dealing_data1 = 0,dealing_data2 = 0;
 extern tusb_hid_device_t hid_dev;
-extern tusb_hid_device_t user_dev;
+extern tusb_user_device_t user_dev;
 #if 0
 extern tusb_cdc_device_t cdc_dev;
 extern uint8_t cdc_buf[32];
@@ -56,6 +61,8 @@ uint8_t usbd_hid_process(void)
 
 			//USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS,USB_Response[USB_Out_queue_in],DAP_PACKET_SIZE);
 			tusb_hid_device_send(&hid_dev, USB_Response[USB_Out_queue_out], DAP_PACKET_SIZE);
+			//tusb_user_device_send(&user_dev, USB_Response[USB_Out_queue_out], DAP_PACKET_SIZE);
+
 		}
 		//不需要回复 因为接收数据包USB_Out_queue_in 页数没有用完
 		else
@@ -99,12 +106,7 @@ void HID_GetOutReport(uint8_t *EpBuf, uint32_t len)
 		USB_In_queue_in = 0;
 	if (USB_In_queue_in == USB_In_queue_out)
 		USB_RequestFlag = 1;
-	cdc_buf[0] = USB_In_queue_in;
-	cdc_buf[1] = USB_In_queue_out;
-	cdc_buf[2] = USB_Out_queue_in;
-	cdc_buf[3] = USB_Out_queue_out;
-	cdc_buf[4] = 0x11;
-	tusb_cdc_device_send(&cdc_dev, cdc_buf, 5);
+
 }
 
 /*
@@ -125,32 +127,17 @@ void HID_SetInReport(void)
 			USB_Out_queue_out = 0;
 		if (USB_Out_queue_out == USB_Out_queue_in)
 			USB_ResponseFlag = 0;
-		cdc_buf[0] = USB_In_queue_in;
-		cdc_buf[1] = USB_In_queue_out;
-		cdc_buf[2] = USB_Out_queue_in;
-		cdc_buf[3] = USB_Out_queue_out;
-		cdc_buf[4] = 0x55;
-		tusb_cdc_device_send(&cdc_dev, cdc_buf, 5);
+
 	}
 	else //如果等于就需要回复
 	{
 		USB_ResponseIdle = 1;
-		cdc_buf[0] = USB_In_queue_in;
-		cdc_buf[1] = USB_In_queue_out;
-		cdc_buf[2] = USB_Out_queue_in;
-		cdc_buf[3] = USB_Out_queue_out;
-		cdc_buf[4] = 0x33;
-		tusb_cdc_device_send(&cdc_dev, cdc_buf, 5);
+
 	}
 }
 
 #else
-uint8_t MYUSB_Request_HID[DAP_PACKET_SIZE + 1];	 // Request  Buffer
-uint8_t MYUSB_Response_HID[DAP_PACKET_SIZE + 1]; // Response Buffer
-uint8_t MYUSB_Request_WINUSB[DAP_PACKET_SIZE + 1];	 // Request  Buffer
-uint8_t MYUSB_Response_WINUSB[DAP_PACKET_SIZE + 1]; // Response Buffer
 
-uint8_t dealing_data = 0,dealing_data1 = 0,dealing_data2 = 0;
 extern int hid_len,user_len;
 uint8_t usbd_hid_process_online(void)
 {
@@ -178,7 +165,6 @@ uint8_t usbd_winusb_process_online(void)
 		DAP_ProcessCommand(MYUSB_Request_WINUSB, MYUSB_Response_WINUSB);
 		tusb_user_device_send(&user_dev, MYUSB_Response_WINUSB, DAP_PACKET_SIZE);
 		dealing_data2 = 0;
-		//		hid_len = 0;
 		return 1;
 	}
 #endif
@@ -227,7 +213,7 @@ void WINUSB_GetOutReport(uint8_t *EpBuf, uint32_t len)
 	//没有在处理数据过程中才会接收 不然直接退出
 	if (dealing_data2)
 		return; // Discard packet when buffer is full
-	memcpy(MYUSB_Request_WINUSB, EpBuf, 64);
+	memcpy(MYUSB_Request_WINUSB, EpBuf, len);
 	dealing_data2 = 1;
 	
 }

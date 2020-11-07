@@ -11,7 +11,7 @@
 #define __ONLINE_HID_H__
 
 #include "include.h"
-
+uint8_t usbd_hid_process(void);
 uint8_t usbd_winusb_process_online(void);
 uint8_t usbd_hid_process_online(void);
 void HID_ProcessCommand(uint8_t *request, uint8_t *response);

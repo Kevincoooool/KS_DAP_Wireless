@@ -4,7 +4,7 @@ version      :
 Author       : Kevincoooool
 Date         : 2020-10-31 11:38:04
 LastEditors  : Kevincoooool
-LastEditTime : 2020-11-07 18:33:58
+LastEditTime : 2020-11-07 21:01:04
 FilePath     : \TeenyUSB\sample\composite_h7\composite_desc.lua
 --]]
 return Device {
@@ -15,11 +15,11 @@ return Device {
     idProduct = 0x0011,
     prefix = "COMP",
     Config {
-        -- USB_HID{
-        --     ReadEp = EndPoint(IN(1),  Interrupt, 64),
-        --     WriteEp = EndPoint(OUT(1), Interrupt, 64),
-        --     report = HID_InOut(64),
-        -- },
+        USB_HID{
+            ReadEp = EndPoint(IN(2),  Interrupt, 64),
+            WriteEp = EndPoint(OUT(2), Interrupt, 64),
+            report = HID_InOut(64),
+        },
         CDC_ACM{
             EndPoint(IN(5),  Interrupt, 16),
             EndPoint(IN(3), BulkDouble, 32),
@@ -30,9 +30,9 @@ return Device {
             -- DAP link GUID
 			extDesc=WinUSB("{CDB3B5AD-293B-4663-AA36-1AAE46463776}"),
 			bInterfaceClass = 0xff,
-            bInterfaceSubClass = 0x00,
+            bInterfaceSubClass = 0xff,
             EndPoint(IN(1),  BulkDouble, 64),
-            EndPoint(OUT(2), BulkDouble, 64),
+            EndPoint(OUT(1), BulkDouble, 64),
         },
         Interface{
             bInterfaceClass = 0x08,        -- MSC
