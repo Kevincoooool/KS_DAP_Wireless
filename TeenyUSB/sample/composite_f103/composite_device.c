@@ -46,7 +46,7 @@
 #include "online.h"
 #define USER_RX_EP_SIZE   32
 #define CDC_RX_EP_SIZE    32
-#define HID_RX_EP_SIZE    16
+#define HID_RX_EP_SIZE    64
 extern const uint8_t COMP_ReportDescriptor_if0[];
 #define HID_REPORT_DESC         0
 #define HID_REPORT_DESC_SIZE    24
@@ -60,7 +60,7 @@ int user_send_done(tusb_user_device_t* raw, const void* data, uint16_t len);
 tusb_user_device_t user_dev = {
   .backend = &user_device_backend,
   .ep_in = 1,
-  .ep_out = 2,
+  .ep_out = 1,
   .on_recv_data = user_recv_data,
   .on_send_done = user_send_done,
   .rx_buf = user_buf,
@@ -121,7 +121,7 @@ tusb_msc_device_t msc_dev = {
 
 // make sure the interface order is same in "composite_desc.lua"
 static tusb_device_interface_t* device_interfaces[] = {
-//  (tusb_device_interface_t*)&hid_dev,
+  (tusb_device_interface_t*)&hid_dev,
   (tusb_device_interface_t*)&cdc_dev, 0,   // CDC need two interfaces
   (tusb_device_interface_t*)&user_dev,
   (tusb_device_interface_t*)&msc_dev,
@@ -158,14 +158,14 @@ int hid_len = 0;
 int hid_recv_data(tusb_hid_device_t* hid, const void* data, uint16_t len)
 {
   hid_len = (int)len;
-//	HID_GetOutReport(hid_buf, len);
+	HID_GetOutReport(hid_buf, len);
   return 1; // return 1 means the recv buffer is busy
 }
 
 int hid_send_done(tusb_hid_device_t* hid, const void* data, uint16_t len)
 {
   tusb_set_rx_valid(hid->dev, hid->ep_out);
-//	HID_SetInReport();
+	HID_SetInReport();
   return 0;
 }
 

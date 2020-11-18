@@ -60,7 +60,7 @@ This information includes:
 #define SWD_SPI 0
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK 72000000U ///< Specifies the CPU Clock in Hz.
+#define CPU_CLOCK 2000000U ///< Specifies the CPU Clock in Hz.
 
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
@@ -89,7 +89,7 @@ This information includes:
 /// Default communication speed on the Debug Access Port for SWD and JTAG mode.
 /// Used to initialize the default SWD/JTAG clock frequency.
 /// The command \ref DAP_SWJ_Clock can be used to overwrite this default setting.
-#define DAP_DEFAULT_SWJ_CLOCK 1000000U ///< Default SWD/JTAG clock frequency in Hz.
+#define DAP_DEFAULT_SWJ_CLOCK 40000000U ///< Default SWD/JTAG clock frequency in Hz.
 
 /// Maximum Package Size for Command and Response data.
 /// This configuration settings is used to optimize the communication performance with the
@@ -292,6 +292,7 @@ __STATIC_INLINE void PORT_JTAG_SETUP(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	//  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
 	//  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
 	//  HAL_GPIO_WritePin(JTAG_TDI_GPIO_Port, JTAG_TDI_Pin, GPIO_PIN_SET);
@@ -333,6 +334,7 @@ Configures the DAP Hardware I/O pins for Serial Wire Debug (SWD) mode:
 */
 __STATIC_INLINE void PORT_SWD_SETUP(void)
 {
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 	//  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
@@ -426,7 +428,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to high level.
 __STATIC_FORCEINLINE void PIN_SWDIO_TMS_SET(void)
 {
 	// PBout(9) = 1;
-	 JTAG_TMS_GPIO_Port->BSRR = JTAG_TMS_Pin;
+	JTAG_TMS_GPIO_Port->BSRR = JTAG_TMS_Pin;
 }
 
 /** SWDIO/TMS I/O pin: Set Output to Low.
@@ -435,7 +437,7 @@ Set the SWDIO/TMS DAP hardware I/O pin to low level.
 __STATIC_FORCEINLINE void PIN_SWDIO_TMS_CLR(void)
 {
 	// PBout(9) = 0;
-	 JTAG_TMS_GPIO_Port->BRR = JTAG_TMS_Pin;
+	JTAG_TMS_GPIO_Port->BRR = JTAG_TMS_Pin;
 }
 
 /** SWDIO I/O pin: Get Input (used in SWD mode only).
@@ -457,7 +459,7 @@ __STATIC_FORCEINLINE void PIN_SWDIO_OUT(uint32_t bit)
 	* Sometimes the func "SWD_TransferFunction" of SW_DP.c will
 	* issue "2" as param instead of "0". Zach Lee
 	*/
-		// PBout(9) = bit;
+	// PBout(9) = bit;
 	if ((bit & 1U) == 1)
 	{
 		JTAG_TMS_GPIO_Port->BSRR = JTAG_TMS_Pin;
@@ -474,13 +476,16 @@ called prior \ref PIN_SWDIO_OUT function calls.
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_OUT_ENABLE(void)
 {
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	//	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	GPIO_InitStruct.Pin = JTAG_TMS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(JTAG_TMS_GPIO_Port, &GPIO_InitStruct);
+	//	GPIO_InitStruct.Pin = JTAG_TMS_Pin;
+	//	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	//	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	//	HAL_GPIO_Init(JTAG_TMS_GPIO_Port, &GPIO_InitStruct);
+
+	GPIOB->CRH &= 0XFFFFFF0F;
+	GPIOB->CRH |= 0X00000030; //设置为输出
 }
 
 /** SWDIO I/O pin: Switch to Input mode (used in SWD mode only).
@@ -489,13 +494,16 @@ called prior \ref PIN_SWDIO_IN function calls.
 */
 __STATIC_FORCEINLINE void PIN_SWDIO_OUT_DISABLE(void)
 {
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	//	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	GPIO_InitStruct.Pin = JTAG_TMS_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(JTAG_TMS_GPIO_Port, &GPIO_InitStruct);
+	//	GPIO_InitStruct.Pin = JTAG_TMS_Pin;
+	//	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	//	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	//	HAL_GPIO_Init(JTAG_TMS_GPIO_Port, &GPIO_InitStruct);
+
+	GPIOB->CRH &= 0XFFFFFF0F;
+	GPIOB->CRH |= 0X00000080; //设置成输入
 }
 
 // TDI Pin I/O ---------------------------------------------
@@ -621,12 +629,12 @@ It is recommended to provide the following LEDs for status indication:
 */
 __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 {
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+	// GPIO_InitTypeDef GPIO_InitStruct = {0};
+	// GPIO_InitStruct.Pin = LED_CONNECTED_Pin;
+	// GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+	// GPIO_InitStruct.Pull = GPIO_NOPULL;
+	// GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	// HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 	if ((bit & 1U) == 1)
 	{
 		LED_GPIO_Port->BRR = LED_CONNECTED_Pin;
@@ -644,8 +652,14 @@ __STATIC_INLINE void LED_CONNECTED_OUT(uint32_t bit)
 */
 __STATIC_INLINE void LED_RUNNING_OUT(uint32_t bit)
 {
-	(void)bit;
-	; // Not available
+	if ((bit & 1U) == 1)
+	{
+		LED_GPIO_Port->BRR = LED_CONNECTED_Pin;
+	}
+	else
+	{
+		LED_GPIO_Port->BSRR = LED_CONNECTED_Pin;
+	}
 }
 
 ///@}
@@ -690,6 +704,7 @@ Status LEDs. In detail the operation of Hardware I/O and LED pins are enabled an
 */
 __STATIC_INLINE void DAP_SETUP(void)
 {
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	PORT_JTAG_SETUP();
@@ -742,18 +757,7 @@ static void PORT_SWD_SETUP(void)
 	SWD_GPIO->BRR = PIN_SWCLK;
 	SWD_GPIO->BSRR = PIN_SWDOUT;
 
-
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	//  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
-	//  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
-	//  HAL_GPIO_WritePin(JTAG_nRESET_GPIO_Port, JTAG_nRESET_Pin, GPIO_PIN_SET);
-	GPIOA->BSRR = PIN_SWCLK | PIN_SWDOUT;
-
-	// GPIO_InitStruct.Pin = PIN_SWCLK | PIN_SWDOUT;
-	// GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	// GPIO_InitStruct.Pull = GPIO_NOPULL;
-	// GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-	// HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
 }
 
 /** Disable JTAG/SWD I/O Pins.

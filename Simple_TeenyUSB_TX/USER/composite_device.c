@@ -120,7 +120,7 @@ static tusb_device_interface_t *device_interfaces[] = {
     (tusb_device_interface_t *)&hid_dev,
     (tusb_device_interface_t *)&cdc_dev,
     0, // CDC need two interfaces
-//   (tusb_device_interface_t*)&user_dev,
+  (tusb_device_interface_t*)&user_dev,
     (tusb_device_interface_t *)&msc_dev,
 };
 

@@ -104,29 +104,10 @@ int main(void)
 	}
 //	HAL_Delay(500);
 	Button_Init();
-GPIO_InitTypeDef GPIO_InitStruct = {0};
-__HAL_RCC_GPIOB_CLK_ENABLE();
-//  HAL_GPIO_WritePin(JTAG_TCK_GPIO_Port, JTAG_TCK_Pin, GPIO_PIN_SET);
-//  HAL_GPIO_WritePin(JTAG_TMS_GPIO_Port, JTAG_TMS_Pin, GPIO_PIN_SET);
-//  HAL_GPIO_WritePin(JTAG_TDI_GPIO_Port, JTAG_TDI_Pin, GPIO_PIN_SET);
-//  HAL_GPIO_WritePin(JTAG_nTRST_GPIO_Port, JTAG_nTRST_Pin, GPIO_PIN_SET);
-//  HAL_GPIO_WritePin(JTAG_nRESET_GPIO_Port, JTAG_nRESET_Pin, GPIO_PIN_SET);
-  GPIOB->BSRR = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin|JTAG_nTRST_Pin|JTAG_nRESET_Pin;
 
-  /*Configure GPIO pins : JTAG_TCK_Pin JTAG_TMS_Pin JTAG_TDI_Pin */
-  GPIO_InitStruct.Pin = JTAG_TCK_Pin|JTAG_TMS_Pin|JTAG_TDI_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	while (1)
 	{
-//		GPIOB->ODR = 1<<11;
-//        GPIOB->ODR = 0<<11;
-//		GPIOB->ODR = 1<<11;
-//        GPIOB->ODR = 0<<11;
-//		GPIOB->BSRR = JTAG_TCK_Pin;
-//		GPIOB->BSRR = JTAG_TCK_Pin <<16;
+
 //		Work_State();
 #if !ONLINE
 //    NRF_Check_Event(); //检测nrf数据

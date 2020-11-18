@@ -147,6 +147,7 @@ int user_recv_data(tusb_user_device_t* raw, const void* data, uint16_t len)
   user_len = (int)len;
 	
 	WINUSB_GetOutReport(user_buf, user_len);
+		
   return 1; // return 1 means the recv buffer is busy
 	}
 	else

@@ -4,7 +4,7 @@
  * @Author       : Kevincoooool
  * @Date         : 2020-10-15 14:27:56
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-10-15 21:08:43
+ * @LastEditTime : 2020-11-13 16:57:52
  * @FilePath     : \Simple_TeenyUSB_TX\BSP\w25qxx.c
  */
 #include "w25qxx.h"
@@ -32,20 +32,7 @@ uint16_t W25QXX_TYPE = W25Q128; //默认是W25Q128
 //容量为16M字节,共有128个Block,4096个Sector
 
 //初始化SPI FLASH的IO口
-
-/* 读ID */
-uint8_t w25x_read_id = 0x90;
-uint8_t temp_ID[5] = {0, 0, 0, 0, 0}; // 接收缓存
-void ReadID(void)
-{
-
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET); // 使能CS
-	HAL_SPI_Transmit(&hspi2, &w25x_read_id, 1, 100);	   // 读ID发送指令
-	HAL_SPI_Receive(&hspi2, temp_ID, 5, 100);			   // 读取ID
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);   // 失能CS
-
-	/* 测试打印 */
-}
+\
 uint8_t W25QXX_Init(void)
 {
 

@@ -1,3 +1,12 @@
+/*
+ * @Descripttion : 
+ * @version      : 
+ * @Author       : Kevincoooool
+ * @Date         : 2020-10-26 08:21:27
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-11-12 20:01:00
+ * @FilePath     : \Simple_TeenyUSB_TX\CMSIS-DAP\algo\STM32_ALGO.c
+ */
 /* Flash OS Routines (Automagically Generated)
  * Copyright (c) 2009-2015 ARM Limited
  */
@@ -5,7 +14,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-algo_info_t STM32_ALGO[6]={0};
+algo_info_t STM32_ALGO[];
 void algo_init(void)
 {
 	memset(STM32_ALGO,0,sizeof(STM32_ALGO));

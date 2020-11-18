@@ -144,6 +144,7 @@ void Button_Init(void)
 	Button_Attach(&Button3, BUTTON_DOUBLE, Btn3_Double_CallBack);		//双击
 	Button_Attach(&Button3, BUTTON_LONG, Btn3_Long_CallBack);			//长按
 	Button_Attach(&Button3, BUTTON_LONG_FREE, Btn3_Long_Free_CallBack); //长按
+	
 	Get_Button_Event(&Button1);
 	Get_Button_Event(&Button2);
 	Get_Button_Event(&Button3);
