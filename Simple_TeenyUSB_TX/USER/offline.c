@@ -440,6 +440,11 @@ uint8_t FLASH_SWD(uint8_t *File)
 							OLED_ShowString(13, Y0, ".", 12, 1);
 							OLED_ShowNumber(18, Y0, ((HAL_GetTick() - time) / 10) % 100, 2, 12, 1);
 							OLED_ShowString(30, Y0, "S", 12, 1);
+							
+							OLED_ShowNumber(90, Y0, f_size(&fnew)/((HAL_GetTick() - time) / 1000), 2, 12, 1);
+							OLED_ShowString(105, Y0, "Kb/s", 12, 1);
+							
+							
 							HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 							swd_set_target_reset(0); //复位运行
 							OLED_ShowNumber(50, Y0, 100, 3, 12, 1);
