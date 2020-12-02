@@ -4,7 +4,7 @@
  * @Author       : Kevincoooool
  * @Date         : 2020-10-15 18:33:12
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-06 18:14:21
+ * @LastEditTime : 2020-12-02 17:09:18
  * @FilePath     : \Simple_TeenyUSB_TX\USER\show.h
  */
 
@@ -70,4 +70,5 @@ void Show_Duty(void);
 void Select_Offline(void);
 void Select_WL_MODE(void);
 void Display_WL_MODE(void);
+void Display_Offline(void);
 #endif

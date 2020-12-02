@@ -36,7 +36,7 @@ uint16_t W25QXX_TYPE = W25Q128; //默认是W25Q128
 uint8_t W25QXX_Init(void)
 {
 
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
+//	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	MX_SPI2_Init(); //初始化SPI
 //	__HAL_RCC_SPI2_CLK_ENABLE();
 //	__HAL_RCC_GPIOB_CLK_ENABLE();
