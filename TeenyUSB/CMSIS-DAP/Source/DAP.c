@@ -30,7 +30,7 @@
 #endif
 #include "DAP_config.h"
 #include "DAP.h"
-#include "stm32f0xx_hal_gpio.h"
+#include "stm32f1xx_hal_gpio.h"
 
 #define DAP_FW_VER "996_996" // Firmware Version
 

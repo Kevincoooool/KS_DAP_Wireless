@@ -15,7 +15,7 @@ uint8_t button_num = 0;
 void Btn1_Down_CallBack(void *btn)
 {
 	button_num = 1;
-	//	OLED_ShowString(0, 40, "anxia1", 12, 1);
+
 }
 //°´¼üÒ»Ë«»÷
 void Btn1_Double_CallBack(void *btn)

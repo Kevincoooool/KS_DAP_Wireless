@@ -37,7 +37,7 @@ void MX_SPI1_Init(void)
 	hspi1.Init.Mode = SPI_MODE_MASTER;
 	hspi1.Init.Direction = SPI_DIRECTION_2LINES;
 	hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+	hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
 	hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
 	hspi1.Init.NSS = SPI_NSS_SOFT;
 	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
@@ -50,7 +50,26 @@ void MX_SPI1_Init(void)
 		SPI_OK = 2;
 	}
 	SPI_OK = 1;
+
+	// RCC->APB2ENR |=1<<12;//SPI CK EN
+	// RCC->APB2ENR |=1<<2;//GPIO CK EN
+
+	// GPIOA->CRL	&=0x0000FFFF;//GPIO INIT
+	// GPIOA->CRL	|=0x3F4B0000;//GPIO INIT
+	
+	// SPI1->CR1	|=0<<10;//DOUBULE
+	// SPI1->CR1	|=1<<9;
+	// SPI1->CR1	|=1<<8;
+	// SPI1->CR1	|=1<<7;//LSB
+	// SPI1->CR1	|=0<<11;//8BIT
+	// SPI1->CR1	|=1<<2;//HOST
+	// SPI1->CR1	|=0<<1;//CPOL LOW
+	// SPI1->CR1	|=0<<0;//CPHA 1EDGE
+	// SPI1->CR1	|=2<<3;//F/8
+	
+	// SPI1->CR1	|=1<<6;//EN SPI
 }
+
 /* SPI2 init function */
 void MX_SPI2_Init(void)
 {
@@ -91,15 +110,11 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *spiHandle)
     PA6     ------> SPI1_MISO
     PA7     ------> SPI1_MOSI 
     */
-		GPIO_InitStruct.Pin = GPIO_PIN_5;
+		GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_7;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-		GPIO_InitStruct.Pin = GPIO_PIN_7;
-		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 		GPIO_InitStruct.Pin = GPIO_PIN_6;
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;

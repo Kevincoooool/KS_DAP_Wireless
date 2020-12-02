@@ -10,7 +10,7 @@
 #ifndef __USBD_HID_H__
 #define __USBD_HID_H__
 
-#include "stm32f0xx.h"
+#include "stm32f1xx.h"
 
 
 uint8_t usbd_hid_process(void);

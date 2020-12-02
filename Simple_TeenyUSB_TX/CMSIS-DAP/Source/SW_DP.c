@@ -33,21 +33,21 @@ extern SPI_HandleTypeDef hspi1;
 	PIN_SWCLK_CLR();     \
 	PIN_SWCLK_SET();
 
-#define SW_WRITE_BIT(bit) \
-	PIN_SWDIO_OUT(bit);   \
-	PIN_SWCLK_CLR();      \
-	PIN_SWCLK_SET();
-//#define SW_WRITE_BIT(bit)               \
-//	if (bit & 1)                \
-//            {                           \
-//                GPIOB->BSRR = GPIO_PIN_9 + (GPIO_PIN_10 << 16U); \
-//                PIN_SWCLK_SET();     \
-//            } \
-//            else \
-//            { \
-//                GPIOB->BSRR = (GPIO_PIN_9 + GPIO_PIN_10) << 16U; \
-//                PIN_SWCLK_SET(); \
-//            }
+//#define SW_WRITE_BIT(bit) \
+//	PIN_SWDIO_OUT(bit);   \
+//	PIN_SWCLK_CLR();      \
+//	PIN_SWCLK_SET();
+#define SW_WRITE_BIT(bit)               \
+	if (bit & 1)                \
+            {                           \
+                GPIOB->BSRR = GPIO_PIN_9 + (GPIO_PIN_10 << 16U); \
+                PIN_SWCLK_SET();     \
+            } \
+            else \
+            { \
+                GPIOB->BSRR = (GPIO_PIN_9 + GPIO_PIN_10) << 16U; \
+                PIN_SWCLK_SET(); \
+            }
 
 #define SW_READ_BIT(bit)  \
 	PIN_SWCLK_CLR();      \

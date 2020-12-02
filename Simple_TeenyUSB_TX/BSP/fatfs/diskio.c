@@ -146,11 +146,11 @@ DRESULT disk_ioctl(
 		switch (cmd) {
         /* 扇区数量：156*2048/1024=312(KB) */
         case GET_SECTOR_COUNT:
-          *(DWORD * )buff = 16*1024*1024ul / 4096;		
+          *(DWORD * )buff = 16*1024*1024ul / FLASH_SECTOR_SIZE;		
         break;
         /* 扇区大小  */
         case GET_SECTOR_SIZE :
-          *(WORD * )buff = 4096;
+          *(WORD * )buff = FLASH_SECTOR_SIZE;
         break;
         /* 同时擦除扇区个数 */
         case GET_BLOCK_SIZE :

@@ -4,7 +4,7 @@
 * @Author: Kevincoooool
 * @Date: 2020-08-04 20:32:30
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-13 17:09:02
+ * @LastEditTime : 2020-12-02 13:31:34
  * @FilePath     : \Simple_TeenyUSB_TX\USER\main.c
 */
 #include "include.h"
@@ -33,10 +33,6 @@ extern tusb_user_device_t user_dev;
 extern tusb_device_config_t device_config;
 
 extern uint8_t button_num;
-
-uint8_t In_MYUSB_Response[64 + 3]; // Request  Buffer
-uint8_t Out_MYUSB_Request[64 + 3]; // Response Buffer
-
 extern uint8_t dealing_data;
 extern int8_t file_name, name_cnt;
 extern char Name_Buffer[20][20];
@@ -49,7 +45,7 @@ int main(void)
 	DAP_Setup();											 //DAP的IO口
 	OLED_Init();											 //OLED初始化
 	OLED_Clear();											 //清空OLED屏幕
-	OLED_ShowString(20, 4, "DAPLink", 24, 1);				 //开机显示
+//	OLED_ShowString(20, 4, "DAPLink", 24, 1);				 //开机显示
 	tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE); //初始化teenyusb
 	tusb_set_device_config(dev, &device_config);			 //初始化teenyusb
 	tusb_open_device(dev);									 //初始化teenyusb
@@ -60,15 +56,16 @@ int main(void)
 	RES_FS = f_mount(&fs, "", 1);							 //挂载文件系统到W25Q
 	if (RES_FS == FR_OK)									 /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
 	{
-		//		f_mkfs("", 0, work, sizeof(work));
+		//f_mkfs("", 0, work, sizeof(work));
 		//OLED_ShowString(0, 0, "Fatfs Success..", 12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
 	}
 	else if (RES_FS == FR_NO_FILESYSTEM) //如果是新芯片还没有文件系统
 	{
+		OLED_Clear();
 		OLED_ShowString(0, 0, "Fatfs Format..", 12, 1);
 		f_mkfs("", 0, work, sizeof(work));
-		OLED_ShowString(0, 0, "Format Finished", 12, 1);
+		OLED_ShowString(0, 1, "Format Finished", 12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
 	}
 	else
@@ -92,12 +89,15 @@ int main(void)
 	HAL_Delay(1000); //等待外部IO口电平确定再初始化按键
 	Button_Init();	 //初始化按键
 	OLED_Clear();
-	Show.mode = MODE_SET_OFFLINE;
-	Show.windows = SHOW_OFFLINE;
-
+	f_unlink("0:/write.bin");
+	Show.mode = MODE_SET_NORMAL;
+	Show.windows = SHOW_MENU;
+	
 	while (1)
 	{
-
+//		GPIOA->BSRR = PIN_SWCLK;
+//		GPIOA->BRR = PIN_SWCLK;
+//		SPI_RW_1(0x05);
 		Work_State();
 #if !ONLINE
 //    NRF_Check_Event(); //检测nrf数据
@@ -116,15 +116,9 @@ int main(void)
 //			//tusb_cdc_device_send(&cdc_dev, user_buf, user_len);
 //			user_len = 0;
 //		}
-		if (cdc_len)
-		{
-			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
-			//while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
-			//;
-			cdc_len = 0;
-		}
+		
 
-		tusb_msc_device_loop(&msc_dev);
+		 
 	}
 }
 
@@ -142,27 +136,80 @@ void Work_State(void)
 		{
 			usbd_hid_process_online();
 		}
+		if (cdc_len)
+		{
+			tusb_cdc_device_send(&cdc_dev, cdc_buf, cdc_len);
+//			while (HAL_UART_Transmit(&huart2, cdc_buf, cdc_len, 1000) != HAL_OK)
+//			;
+			cdc_len = 0;
+		}
+		HAL_UART_Receive_DMA(&huart2,rx_buffer,BUFFER_SIZE);
+		if(recv_end_flag==1)
+		{
+			recv_end_flag=0;
+			tusb_cdc_device_send(&cdc_dev, rx_buffer, rx_len);
+		}
+		tusb_msc_device_loop(&msc_dev);
 		break;
 	case MODE_SET_OFFLINE: //脱机烧录模式  自动烧录  选择文件和下载算法
 		Select_Offline();
 		Auto_Fash();
 		break;
 	case MODE_SET_ALGO: //选择烧录算法（也就是目标芯片）
-		Select_FLM();
+
 		break;
 	case MODE_SET_FILE: //选择下载文件
-		Select_BIN();
+
 		break;
 	case MODE_SET_WIRELESS: //无线模式选择模式
 		Select_WL_MODE();
 		break;
 	case MODE_SET_TX: //无线发射端模式
+		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
 		usbd_hid_process_wireless_tx();
 		break;
 	case MODE_SET_RX: //无线接收端模式
+		HAL_UART_Receive_DMA(&huart1,rx_buffer,BUFFER_SIZE);
 		usbd_hid_process_wireless_rx();
 		break;
 	default:
 		break;
 	}
 }
+void Show_Duty(void)
+{
+	static uint8_t temp;
+
+	if (Show.windows != temp)
+	{
+		temp = Show.windows;
+		OLED_Clear();
+	}
+	switch (Show.windows)
+	{
+	case SHOW_MENU:
+		Menu_Show();
+		break;
+	case SHOW_FLM:
+		Display_FLM();
+		break;
+	case SHOW_BIN:
+		Display_BIN();
+		break;
+	case SHOW_AUTO:
+
+		break;
+	case SHOW_ONLINE:
+
+		break;
+	case SHOW_OFFLINE:
+		Display_Offline();
+		break;
+	case SHOW_WIRELESS:
+		Display_WL_MODE();
+		break;
+	default:
+		break;
+	}
+}
+

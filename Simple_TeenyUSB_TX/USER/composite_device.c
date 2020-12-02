@@ -120,7 +120,7 @@ static tusb_device_interface_t *device_interfaces[] = {
     (tusb_device_interface_t *)&hid_dev,
     (tusb_device_interface_t *)&cdc_dev,
     0, // CDC need two interfaces
-  (tusb_device_interface_t*)&user_dev,
+//  (tusb_device_interface_t*)&user_dev,
     (tusb_device_interface_t *)&msc_dev,
 };
 
@@ -257,7 +257,7 @@ int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uin
 #if defined(FLASH_SIZE)
 #define PROGRAM_SIZE  16*1024*1024ul
 #define START_ADDR (const uint8_t *)(0x08000000ul + PROGRAM_SIZE)
-#define BLOCK_SIZE 512
+#define BLOCK_SIZE	512
 #define BLOCK_COUNT PROGRAM_SIZE / BLOCK_SIZE
 int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32_t *block_size)
 {

@@ -54,9 +54,9 @@ This information includes:
 
 /* I removed RTE directory from the source code. Zach Lee */
 
-#include "stm32f0xx.h"                             // Debug Unit Cortex-M Processor Header File
-#include "stm32f0xx_hal_conf.h"
-#include "stm32f0xx_hal_gpio.h"
+#include "stm32f1xx.h"                             // Debug Unit Cortex-M Processor Header File
+#include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx_hal_gpio.h"
 #include "swd_host.h"
 
 

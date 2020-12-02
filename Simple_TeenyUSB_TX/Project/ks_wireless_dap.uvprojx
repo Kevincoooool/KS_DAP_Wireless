@@ -452,6 +452,26 @@
               <FileType>5</FileType>
               <FilePath>..\USER\show.h</FilePath>
             </File>
+            <File>
+              <FileName>hex2bin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\hex2bin.c</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\hex2bin.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\lcd_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\lcd_menu.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1438,6 +1458,26 @@
               <FileType>5</FileType>
               <FilePath>..\USER\show.h</FilePath>
             </File>
+            <File>
+              <FileName>hex2bin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\hex2bin.c</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\hex2bin.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\lcd_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\lcd_menu.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2285,6 +2325,26 @@
               <FileName>show.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\show.h</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\hex2bin.c</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\hex2bin.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\lcd_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\lcd_menu.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3203,6 +3263,26 @@
               <FileType>5</FileType>
               <FilePath>..\USER\show.h</FilePath>
             </File>
+            <File>
+              <FileName>hex2bin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\hex2bin.c</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\hex2bin.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\lcd_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\lcd_menu.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4119,6 +4199,26 @@
               <FileName>show.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\show.h</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\hex2bin.c</FilePath>
+            </File>
+            <File>
+              <FileName>hex2bin.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\hex2bin.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\lcd_menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\lcd_menu.h</FilePath>
             </File>
           </Files>
         </Group>

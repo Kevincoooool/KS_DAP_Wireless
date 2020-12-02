@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:35:23
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-06 18:11:43
+ * @LastEditTime : 2020-12-01 17:55:23
  * @FilePath     : \Simple_TeenyUSB_TX\USER\online.c
  */
 /***************************************************************/
@@ -157,7 +157,6 @@ uint8_t usbd_hid_process_online(void)
 		DAP_ProcessCommand(MYUSB_Request, MYUSB_Response);
 		tusb_hid_device_send(&hid_dev, MYUSB_Response, DAP_PACKET_SIZE);
 		dealing_data = 0;
-		//		hid_len = 0;
 		return 1;
 	}
 #endif

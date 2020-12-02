@@ -32,34 +32,34 @@ uint16_t W25QXX_TYPE = W25Q128; //默认是W25Q128
 //容量为16M字节,共有128个Block,4096个Sector
 
 //初始化SPI FLASH的IO口
-\
+
 uint8_t W25QXX_Init(void)
 {
 
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	MX_SPI2_Init(); //初始化SPI
-	__HAL_RCC_SPI2_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitStruct.Pin = GPIO_PIN_12;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-	W25QXX_CS_SET; //SPI FLASH不选中
-	/**SPI2 GPIO Configuration    
-    PB13     ------> SPI2_SCK
-    PB14     ------> SPI2_MISO
-    PB15     ------> SPI2_MOSI 
-    */
-	GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_15;
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+//	__HAL_RCC_SPI2_CLK_ENABLE();
+//	__HAL_RCC_GPIOB_CLK_ENABLE();
+//	GPIO_InitStruct.Pin = GPIO_PIN_12;
+//	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+//	GPIO_InitStruct.Pull = GPIO_NOPULL;
+//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+//	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+//	W25QXX_CS_SET; //SPI FLASH不选中
+//	/**SPI2 GPIO Configuration    
+//    PB13     ------> SPI2_SCK
+//    PB14     ------> SPI2_MISO
+//    PB15     ------> SPI2_MOSI 
+//    */
+//	GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_15;
+//	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+//	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin = GPIO_PIN_14;
-	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+//	GPIO_InitStruct.Pin = GPIO_PIN_14;
+//	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+//	GPIO_InitStruct.Pull = GPIO_NOPULL;
+//	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	W25QXX_TYPE = W25QXX_ReadID(); //读取FLASH ID.
 	if (W25QXX_TYPE != 0xff)

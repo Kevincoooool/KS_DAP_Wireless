@@ -60,7 +60,7 @@ This information includes:
 #define SWD_SPI 0
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
-#define CPU_CLOCK 2000000U ///< Specifies the CPU Clock in Hz.
+#define CPU_CLOCK 72000000U ///< Specifies the CPU Clock in Hz.
 
 /// Number of processor cycles for I/O Port write operations.
 /// This value is used to calculate the SWD/JTAG clock speed that is generated with I/O
@@ -121,7 +121,7 @@ This information includes:
 #define SWO_STREAM 0 ///< SWO Streaming Trace: 1 = available, 0 = not available.
 
 /// Clock frequency of the Test Domain Timer. Timer value is returned with \ref TIMESTAMP_GET.
-#define TIMESTAMP_CLOCK 72000000 ///< Timestamp clock in Hz (0 = timestamps not supported).
+#define TIMESTAMP_CLOCK 100000 ///< Timestamp clock in Hz (0 = timestamps not supported).
 
 /// Debug Unit is connected to fixed Target Device.
 /// The Debug Unit may be part of an evaluation board and always connected to a fixed
@@ -730,6 +730,7 @@ __STATIC_INLINE uint8_t RESET_TARGET(void)
 #define PIN_SWCLK GPIO_PIN_5
 #define PIN_SWDOUT GPIO_PIN_7
 #define PIN_SWDIN GPIO_PIN_6
+
 #define PIN_nRESET_HIGH() PBout(11) = 1
 #define PIN_nRESET_LOW() PBout(11) = 0
 

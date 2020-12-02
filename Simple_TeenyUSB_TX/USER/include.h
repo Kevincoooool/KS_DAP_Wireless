@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-20 11:51:46
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-10-30 20:05:28
+ * @LastEditTime : 2020-12-01 19:05:39
  * @FilePath     : \Simple_TeenyUSB_TX\USER\include.h
  */
 #ifndef _INCLUDE_H
@@ -42,7 +42,8 @@
 #include "oled.h"
 #include "stm32f1xx.h"
 #include "DAP_config.h"
-
+#include "hex2bin.h"
+#include "lcd_menu.h"
 #define ONLINE          1
 #define WIRELESS_TX     0
 #define WIRELESS_RX     0
@@ -58,6 +59,20 @@ enum
 	MODE_SET_WIRELESS,
 	MODE_SET_TX,
 	MODE_SET_RX,
+};
+
+enum
+{
+	SHOW_MENU = 0,
+	SHOW_FLM,
+	SHOW_BIN,
+	SHOW_AUTO,
+	SHOW_ONLINE,
+	SHOW_OFFLINE,
+	SHOW_WIRELESS,
+	SHOW_WL_TX,
+	SHOW_WL_RX,
+
 };
 extern volatile uint8_t rx_len;
 extern volatile uint8_t recv_end_flag;

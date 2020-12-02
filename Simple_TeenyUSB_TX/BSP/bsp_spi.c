@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-04 20:32:30
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-12 19:26:09
+ * @LastEditTime : 2020-11-30 14:02:26
  * @FilePath     : \Simple_TeenyUSB_TX\BSP\bsp_spi.c
  */
 #include "bsp_spi.h"
@@ -15,34 +15,34 @@ void DAP_SPI_Init(void)
 {
 	MX_GPIO_Init();
 	MX_DMA_Init();
-//	MX_SPI1_Init();
+	MX_SPI1_Init();
 	MX_SPI2_Init();
 }
 
 uint8_t SPI_RW_1(uint8_t dat)
 {
-	// uint8_t d_read, d_send = dat;
-	// if (HAL_SPI_TransmitReceive(&hspi1, &d_send, &d_read, 1, 10) != HAL_OK)
+	uint8_t d_read, d_send = dat;
+	if (HAL_SPI_TransmitReceive(&hspi1, &d_send, &d_read, 1, 10) != HAL_OK)
+	{
+		d_read = 0xFF;
+	}
+	return d_read;
+	// uint16_t retry = 0;
+	// while ((SPI1->SR & 1 << 1) == 0) //等待发送区空
 	// {
-	// 	d_read = 0xFF;
+	// 	retry++;
+	// 	if (retry >= 0XFFFE)
+	// 		return 0; //超时退出
 	// }
-	// return d_read;
-	uint16_t retry = 0;
-	while ((SPI1->SR & 1 << 1) == 0) //等待发送区空
-	{
-		retry++;
-		if (retry >= 0XFFFE)
-			return 0; //超时退出
-	}
-	SPI1->DR = dat; //发送一个byte
-	retry = 0;
-	while ((SPI1->SR & 1 << 0) == 0) //等待接收完一个byte
-	{
-		retry++;
-		if (retry >= 0XFFFE)
-			return 0; //超时退出
-	}
-	return SPI1->DR; //返回收到的数据
+	// SPI1->DR = dat; //发送一个byte
+	// retry = 0;
+	// while ((SPI1->SR & 1 << 0) == 0) //等待接收完一个byte
+	// {
+	// 	retry++;
+	// 	if (retry >= 0XFFFE)
+	// 		return 0; //超时退出
+	// }
+	// return SPI1->DR; //返回收到的数据
 }
 
 uint8_t SPI_RW_2(uint8_t dat)
@@ -73,6 +73,15 @@ static void DeInit_SPI(void)
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	GPIOA->BSRR = GPIO_PIN_5;
 	GPIOA->BSRR = GPIO_PIN_7;
+	// SPI1->CR1		|=0<<6;
+	// RCC->APB2ENR	|=0<<12;
+	// RCC->APB2ENR	|=0;
+
+	// GPIOA->CRL	&=0x0000FFFF;
+	// GPIOA->CRL	|=0x37430000;
+	
+	// GPIOA->BRR=GPIO_PIN_5;
+	// GPIOA->BSRR=GPIO_PIN_7;
 }
 
 static void SPI_ON(void)
@@ -85,7 +94,7 @@ static void SPI_ON(void)
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	GPIO_InitStruct.Pin = GPIO_PIN_7;
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	
@@ -95,6 +104,12 @@ static void SPI_ON(void)
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	SPI1->CR1 |= 1 << 6; //EN SPI
+	// RCC->APB2ENR |=1<<12;
+
+	// GPIOA->CRL	&=0x0000FFFF;//GPIO INIT
+	// GPIOA->CRL	|=0x3F4B0000;//GPIO INIT
+	
+	// SPI1->CR1	|=1<<6;//EN SPI
 }
 void SPI_Switch(uint8_t ONOFF)
 {

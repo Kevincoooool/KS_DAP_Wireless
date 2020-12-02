@@ -62,19 +62,7 @@ typedef struct
 	uint8_t windows;
 	uint8_t mode;
 }_Show;
-enum
-{
-	SHOW_MENU = 0,
-	SHOW_FLM,
-	SHOW_BIN,
-	SHOW_AUTO,
-	SHOW_ONLINE,
-	SHOW_OFFLINE,
-	SHOW_WIRELESS,
-	SHOW_WL_TX,
-	SHOW_WL_RX,
 
-};
 extern _Show Show;
 uint8_t Select_Mode(void);
 void Menu_Show(void);

@@ -1,3 +1,12 @@
+/*
+ * @Descripttion : 
+ * @version      : 
+ * @Author       : Kevincoooool
+ * @Date         : 2020-08-22 17:55:57
+ * @LastEditors  : Kevincoooool
+ * @LastEditTime : 2020-12-02 13:39:56
+ * @FilePath     : \Simple_TeenyUSB_TX\CMSIS-DAP\algo\flash_blob.h
+ */
 #ifndef FLASH_BLOB_H
 #define FLASH_BLOB_H
 
@@ -51,6 +60,6 @@ extern const program_target_t flash_algo_F3;
 extern const program_target_t flash_algo_F4;
 extern const program_target_t flash_algo_F7;
 extern const program_target_t flash_algo_H7;
-extern algo_info_t STM32_ALGO[6];
+extern algo_info_t STM32_ALGO[];
 void algo_init(void);
 #endif

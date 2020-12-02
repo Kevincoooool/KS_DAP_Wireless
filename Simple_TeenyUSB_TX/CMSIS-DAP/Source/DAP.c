@@ -177,13 +177,13 @@ static __inline uint32_t TIMER_EXPIRED(void)
 #else
 
 // Start Timer
-static __inline void TIMER_START(uint32_t usec)
-{
-  SysTick->VAL = 0U;
-  SysTick->LOAD = usec * (CPU_CLOCK / 1000000U);
-  SysTick->CTRL = (1U << SysTick_CTRL_ENABLE_Pos) |
-                  (1U << SysTick_CTRL_CLKSOURCE_Pos);
-}
+//static __inline void TIMER_START(uint32_t usec)
+//{
+//  SysTick->VAL = 0U;
+//  SysTick->LOAD = usec * (CPU_CLOCK / 1000000U);
+//  SysTick->CTRL = (1U << SysTick_CTRL_ENABLE_Pos) |
+//                  (1U << SysTick_CTRL_CLKSOURCE_Pos);
+//}
 
 // Stop Timer
 static __inline void TIMER_STOP(void)
@@ -191,11 +191,11 @@ static __inline void TIMER_STOP(void)
   SysTick->CTRL = 0U;
 }
 
-// Check if Timer expired
-static __inline uint32_t TIMER_EXPIRED(void)
-{
-  return ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1U : 0U);
-}
+//// Check if Timer expired
+//static __inline uint32_t TIMER_EXPIRED(void)
+//{
+//  return ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) ? 1U : 0U);
+//}
 
 #endif
 

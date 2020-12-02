@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-21 20:06:12
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-13 17:12:08
+ * @LastEditTime : 2020-12-02 11:53:16
  * @FilePath     : \Simple_TeenyUSB_TX\USER\offline.c
  */
 #include "offline.h"
@@ -18,8 +18,6 @@ extern FRESULT Res;
 extern UINT br, bw;			 /* File R/W count */
 extern BYTE work[FF_MAX_SS]; /* Work area (larger is better for processing time) */
 uint8_t *rData[1024], Check_Data[1024];
-#if OLED_0_96
-/***********************变量定义************************/
 
 uint8_t readflag = 1;
 uint32_t addr = 0;
@@ -27,17 +25,21 @@ uint32_t i = 0;
 uint16_t bytesread;
 char Name_Buffer[20][20];
 int8_t file_name = 0, name_cnt = 0;
-uint8_t Need_Next = 0;
+
 extern uint8_t button_num;
 extern uint8_t Select_algo;
 extern uint8_t Select_file;
 extern uint8_t show_page;
+uint8_t Need_Next = 0, Burn_cnt = 0;
+#if OLED_0_96
+/***********************变量定义************************/
+
 uint8_t FLASH_SWD(uint8_t *File)
 {
 	Res = f_open(&fnew, (const TCHAR *)File, FA_READ);
 	if (Res == FR_OK)
 	{
-		static uint32_t progess = 0x0, burn_addr = 0x0;
+		uint32_t progess = 0x0, burn_addr = 0x0, time1, time2,time3;
 		readflag = 1;
 		if (swd_init_debug())
 		{
@@ -53,7 +55,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 			target_opt_uninit();
 			if (swd_init_debug())
 			{
-
+				time1 = HAL_GetTick();
 				if (target_flash_init(0x08000000) == ERROR_SUCCESS)
 				{
 
@@ -70,11 +72,12 @@ uint8_t FLASH_SWD(uint8_t *File)
 							}
 							if (target_flash_program_page(0x08000000 + burn_addr, (const uint8_t *)&rData[0], 1024) == ERROR_SUCCESS)
 							{
+
 								swd_read_memory(0x08000000 + burn_addr, Check_Data, 1024);
 								if (memcmp(Check_Data, rData, 1024) != 0)
 								{
 									OLED_Clear();
-									OLED_ShowString(20, Y1, "Verify Faild!!", 12, 1);
+									OLED_ShowString(10, Y1, "Verify Faild!!", 12, 1);
 									HAL_Delay(1000);
 									OLED_Clear();
 									burn_addr = 0;
@@ -86,23 +89,31 @@ uint8_t FLASH_SWD(uint8_t *File)
 								//OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
 								OLED_ShowNumber(50, Y0, progess, 3, 12, 1);
 								OLED_ShowString(70, Y0, "%", 12, 1);
-
-								memset(rData, 0xFF, 1024);
-								memset(Check_Data, 0xFF, 1024);
 							}
 							else
 								return 0;
 						}
+						time2 = HAL_GetTick();
 						if (swd_init_debug())
 						{
+							Burn_cnt++;
+							OLED_ShowNumber(0, Y0, (time2 - time1) / 1000, 2, 12, 1);
+							OLED_ShowString(13, Y0, ".", 12, 1);
+							OLED_ShowNumber(18, Y0, ((time2 - time1) / 10) % 100, 2, 12, 1);
+							OLED_ShowString(30, Y0, "S", 12, 1);
+							time3 = (time2 - time1) / 1000 + (((time2 - time1) / 10) % 100)/100;
+
+							OLED_ShowNumber(80, Y0, f_size(&fnew) / time3, 2, 12, 1);
+							OLED_ShowString(95, Y0, "Kb/s", 12, 1);
+
 							HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 							swd_set_target_reset(0); //复位运行
-							OLED_ShowNumber(50, Y3, 100, 3, 12, 1);
-							OLED_ShowString(70, Y3, "%", 12, 1);
+							OLED_ShowNumber(50, Y0, 100, 3, 12, 1);
+							OLED_ShowString(70, Y0, "%", 12, 1);
 							for (uint8_t i = 0; i < 8; i++)
 								OLED_Show_CH_String(35 + i * 6, Y2, oled_CH5[i], 12, 1);
-							HAL_Delay(2000);
-							OLED_ShowString(0, Y4, "                   ", 12, 1);
+							HAL_Delay(1000);
+							OLED_Clear();
 							burn_addr = 0;
 							readflag = 1;
 							return 1;
@@ -129,256 +140,302 @@ void Auto_Fash(void)
 {
 	if (swd_init_debug())
 	{
+		OLED_ShowString(0, Y4, "Connected!!!", 12, 1);
+		OLED_ShowNumber(100, Y4, Burn_cnt, 4, 12, 1);
 		if (Need_Next == 1 || button_num == 9)
 		{
-			OLED_ShowString(0, 50, "Connected!!!", 12, 1);
-			if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK)
+			if (strstr(Name_Buffer[Select_file], "HEX"))
 			{
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-				for (uint8_t i = 0; i < 8; i++)
-					OLED_Show_CH_String(35 + i * 6, Y2, oled_CH3[i], 12, 1);
-				while (!FLASH_SWD((uint8_t *)Name_Buffer[Select_file]))
+				if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK)
 				{
-					if (button_num == 1) //卡住了可以按下退出
+					if (HexFormatUncode((uint8_t *)Name_Buffer[Select_file]) != 1)
 					{
-						button_num = 0;
-						Show.windows = SHOW_MENU;
-						Show.mode = MODE_SET_NORMAL;
-						break;
-					}
-					else if (!swd_init_debug()) //芯片断开连接则退出
-					{
-						//OLED_Init();
 						OLED_Clear();
-						button_num = 0;
-						Show.windows = SHOW_OFFLINE;
-						Show.mode = MODE_SET_OFFLINE;
-						break;
+						OLED_ShowString(0, Y2, "Error!!", 12, 1);
 					}
+					else
+					{
+						//OLED_Clear();
+						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+						for (uint8_t i = 0; i < 8; i++)
+							OLED_Show_CH_String(35 + i * 6, Y3, oled_CH3[i], 12, 1); //开始烧录
+						while (!FLASH_SWD((uint8_t *)"write.bin"))					 //打开文件
+						{
+							if (button_num == 1) //卡住了可以按下退出
+							{
+								button_num = 0;
+								Show.windows = SHOW_MENU;
+								Show.mode = MODE_SET_NORMAL;
+								break;
+							}
+							else if (!swd_init_debug()) //芯片断开连接则退出
+							{
+								OLED_Clear();
+								button_num = 0;
+								Show.windows = SHOW_OFFLINE;
+								Show.mode = MODE_SET_OFFLINE;
+								break;
+							}
+						}
+						//f_unlink("0:/write.bin");
+						//如果烧录完了还连接着芯片
+						if (swd_init_debug())
+						{
+							Need_Next = 0;
+						}
+					}
+				}
+				else
+				{
+					OLED_Clear();
+					OLED_ShowString(0, Y2, "Open HEX failed", 12, 1);
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 				}
 			}
 			else
 			{
-				OLED_ShowString(0, Y3, "Open Bin failed", 12, 1);
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+				if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK) //如果存在这个文件
+				{
+					OLED_Clear();
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+					for (uint8_t i = 0; i < 8; i++)
+						OLED_Show_CH_String(35 + i * 6, Y2, oled_CH3[i], 12, 1); //开始烧录
+					while (!FLASH_SWD((uint8_t *)Name_Buffer[Select_file]))		 //打开文件
+					{
+						if (button_num == 1) //卡住了可以按下退出
+						{
+							button_num = 0;
+							Show.windows = SHOW_MENU;
+							Show.mode = MODE_SET_NORMAL;
+							break;
+						}
+						else if (!swd_init_debug()) //芯片断开连接则退出
+						{
+							OLED_Clear();
+							button_num = 0;
+							Show.windows = SHOW_OFFLINE;
+							Show.mode = MODE_SET_OFFLINE;
+							break;
+						}
+					}
+					//如果烧录完了还连接着芯片
+					if (swd_init_debug())
+					{
+						Need_Next = 0;
+					}
+				}
+				else
+				{
+					OLED_ShowString(0, Y2, "Open Bin failed", 12, 1);
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+				}
 			}
 		}
 	}
 	else
 	{
 		Need_Next = 1;
-		OLED_ShowString(0, 50, "Disconnected", 12, 1);
+		OLED_ShowNumber(100, Y4, Burn_cnt, 4, 12, 1);
+		OLED_ShowString(0, Y4, "Disconnected", 12, 1);
 	}
 }
-
-void Select_BIN(void)
+MENU_T g_tMenu_BIN;
+char *g_Menu_BIN_Text[20];
+void Display_BIN(void)
 {
-	static uint8_t choose = Y0;
+	static uint8_t fRefresh = 1;
+	static uint8_t s_MenuInit = 0;
+	if (s_MenuInit == 0)
+	{
+		name_cnt = 0;
+		memset(g_Menu_BIN_Text, 0, sizeof(g_Menu_BIN_Text));
+		if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
+		{
+			f_readdir(&DirInfo, &FileInfo);					//先读取一次无用值
+			while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
+			{
+				if (!FileInfo.fname[0])
+				{
+					for (uint8_t i = 0; i < name_cnt; i++)
+					{
+						g_Menu_BIN_Text[i] = Name_Buffer[i];
+					}
+					g_Menu_BIN_Text[name_cnt] = "&";
+					break;
+				}
+				strcpy(Name_Buffer[name_cnt], FileInfo.fname);
+				name_cnt++;
+			}
+		}
+		s_MenuInit = 1;
+		g_tMenu_BIN.Left = MENU_LEFT;
+		g_tMenu_BIN.Top = MENU_TOP;
+		g_tMenu_BIN.Height = MENU_HEIGHT;
+		g_tMenu_BIN.Width = MENU_WIDTH;
+		g_tMenu_BIN.LineCap = MENU_CAP;
+		g_tMenu_BIN.Font = 12;
+		g_tMenu_BIN.ViewLine = MENU_HEIGHT / g_tMenu_BIN.Font;
+		g_tMenu_BIN.RollBackEn = 1; /* 允许回滚 */
+		g_tMenu_BIN.GBK = 0;
+		g_tMenu_BIN.ActiveBackColor = 0;					  /* 选中行背景色ID */
+		LCD_InitMenu(&g_tMenu_BIN, (char **)g_Menu_BIN_Text); /* 初始化菜单结构 */
+	}
+
+	if (fRefresh) /* 重新进入就 刷新整个界面 */
+	{
+		fRefresh = 0;
+		LCD_DispMenu(&g_tMenu_BIN);
+		if (g_tMenu_BIN.Cursor == 0)
+		{
+			;
+		}
+	}
+
+	/* 有键按下 */
+	switch (button_num)
+	{
+	case 3: /* S键 上 */
+		OLED_Clear();
+		LCD_MoveUpMenu(&g_tMenu_BIN);
+		break;
+	case 2: /* S键 上 */
+		OLED_Clear();
+		fRefresh = 1;
+		for (uint8_t i = 0; i < 10; i++)
+			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
+		Select_file = g_tMenu_BIN.Cursor;
+		HAL_Delay(500);
+		OLED_Clear();
+		Show.windows = SHOW_OFFLINE;
+		Show.mode = MODE_SET_OFFLINE;
+		break;
+	case 1: /* S键 上 */
+		OLED_Clear();
+		LCD_MoveDownMenu(&g_tMenu_BIN);
+		break;
+	}
+	button_num = 0;
+}
+MENU_T g_tMenu_FLM;
+const uint8_t *g_Menu1_Text[] = {
+	"1.STM32F0XX",
+	"2.STM32F1XX",
+	"3.STM32F3XX",
+	"4.STM32F4XX",
+	"5.STM32F7XX",
+	"6.STM32H7XX",
+	"7.HK32F0XXX",
+	"8.HK32F1XXX",
+	"9.GD32F0XXX",
+	"10.GD32F1XX",
+	"11.MM32F1XX",
+	"&",
+};
+void Display_FLM(void)
+{
+	uint8_t fRefresh;
+	static uint8_t s_MenuInit = 0;
+
+	if (s_MenuInit == 0)
+	{
+		s_MenuInit = 1;
+
+		g_tMenu_FLM.Left = MENU_LEFT;
+		g_tMenu_FLM.Top = MENU_TOP;
+		g_tMenu_FLM.Height = MENU_HEIGHT;
+		g_tMenu_FLM.Width = MENU_WIDTH;
+		g_tMenu_FLM.LineCap = MENU_CAP;
+		g_tMenu_FLM.Font = 12;
+		g_tMenu_FLM.ViewLine = MENU_HEIGHT / g_tMenu_FLM.Font;
+		g_tMenu_FLM.RollBackEn = 1; /* 允许回滚 */
+		g_tMenu_FLM.GBK = 0;
+		g_tMenu_FLM.ActiveBackColor = 0;				   /* 选中行背景色ID */
+		LCD_InitMenu(&g_tMenu_FLM, (char **)g_Menu1_Text); /* 初始化菜单结构 */
+	}
+
+	if (fRefresh) /* 刷新整个界面 */
+	{
+		fRefresh = 0;
+		LCD_DispMenu(&g_tMenu_FLM);
+		if (g_tMenu_FLM.Cursor == 0)
+		{
+			;
+		}
+	}
+
+	/* 有键按下 */
+	switch (button_num)
+	{
+	case 3: /* S键 上 */
+		LCD_MoveUpMenu(&g_tMenu_FLM);
+		break;
+	case 2: /* S键 上 */
+		OLED_Clear();
+		fRefresh = 1;
+		for (uint8_t i = 0; i < 10; i++)
+			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
+		Select_algo = g_tMenu_FLM.Cursor;
+		HAL_Delay(500);
+		OLED_Clear();
+		Show.windows = SHOW_OFFLINE;
+		Show.mode = MODE_SET_OFFLINE;
+		break;
+	case 1: /* S键 上 */
+		LCD_MoveDownMenu(&g_tMenu_FLM);
+		break;
+	}
+	button_num = 0;
+}
+//选择脱机烧录模式中的下载算法和文件
+void Select_Offline(void)
+{
+	static uint8_t choose = Y2;
 	if (button_num == 1)
 	{
 		choose += 12;
-		if (choose >= Y5)
-			choose = Y5;
+		if (choose >= Y2)
+			choose = Y2;
 		OLED_ShowString(110, choose - 12, "  ", 12, 1);
 	}
 	else if (button_num == 3)
 	{
 		if (choose >= 12)
 			choose -= 12;
-		if (choose <= Y0)
+		if (choose < 12)
 			choose = Y0;
 		OLED_ShowString(110, choose + 12, "  ", 12, 1);
 	}
 	else if (button_num == 2)
 	{
-		Select_file = choose / 12;
-		Show.windows = SHOW_OFFLINE;
-		Show.mode = MODE_SET_OFFLINE;
-		OLED_Clear();
-		for (uint8_t i = 0; i < 10; i++)
-			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
-		HAL_Delay(500);
-		OLED_Clear();
-	}
-	button_num = 0;
-	OLED_ShowString(110, choose, "<<", 12, 1);
-}
-
-void Display_BIN(void)
-{
-	static uint8_t choose = Y0;
-	name_cnt = 0;
-	if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
-	{
-		f_readdir(&DirInfo, &FileInfo); //先读取一次无用值
-
-		while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
+		if (choose == Y0)
 		{
-			if (!FileInfo.fname[0])
-				break;
-			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-			OLED_ShowNumber(0, choose, (choose + 12) / 12, 1, 12, 1);
-			OLED_ShowString(8, choose, ".", 12, 1);
-			OLED_ShowString(16, choose, (const uint8_t *)Name_Buffer[name_cnt], 12, 1);
-			choose += 12;
-			name_cnt++;
+			Show.windows = SHOW_FLM;
+			Show.mode = MODE_SET_ALGO;
+		}
+		else if (choose == Y1)
+		{
+			Show.windows = SHOW_BIN;
+			Show.mode = MODE_SET_FILE;
+		}
+		else if (choose == Y2)
+		{
+			Need_Next = 1;
 		}
 	}
-	choose = 0;
-}
-void Display_FLM(void)
-{
-	static uint8_t choose = Y0;
-	for (uint8_t i = 0; i < 6; i++)
-	{
-		OLED_ShowNumber(0, choose, (i + 1), 1, 12, 1);
-		OLED_ShowString(8, choose, ".", 12, 1);
-		OLED_ShowString(16, choose, (const uint8_t *)STM32_ALGO[choose / 10].name, 12, 1);
-		choose += 10;
-	}
-	choose = 0;
-}
-
-void Select_FLM(void)
-{
-	static uint8_t choose = Y0;
-
-	if (button_num == 1)
-	{
-		choose += 10;
-		if (choose >= Y5)
-			choose = Y5;
-		OLED_ShowString(110, choose - 10, "  ", 12, 1);
-	}
-	else if (button_num == 3)
-	{
-		if (choose > Y0)
-			choose -= 10;
-		if (choose <= Y0)
-			choose = Y0;
-		OLED_ShowString(110, choose + 10, "  ", 12, 1);
-	}
-	else if (button_num == 2)
-	{
-		OLED_Clear();
-		for (uint8_t i = 0; i < 10; i++)
-			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
-		Select_algo = choose / 10;
-		HAL_Delay(500);
-		OLED_Clear();
-		Show.windows = SHOW_OFFLINE;
-		Show.mode = MODE_SET_OFFLINE;
-	}
 	button_num = 0;
 	OLED_ShowString(110, choose, "<<", 12, 1);
 }
-// f_open(&fnew, (const TCHAR *)"23.txt", FA_CREATE_NEW | FA_WRITE);
-// /* Write a message */
-// f_write(&fnew, "nihaoya!\r\nnihaoya!", sizeof("nihaoya!\r\nnihaoya!") - 1, &bw);
-// f_close(&fnew);
-
-// NRF_OK = NRF_Check();
-// if (NRF_OK == 0)
-// {
-//     NRF_Init(MODEL_TX2, 51);
-// }
-//	if (f_open(&fnew, (const TCHAR *)"22.txt", FA_READ) == FR_OK)
-//	{
-//		f_read(&fnew, rData, 20, (void *)&bytesread);
-//		sprintf((char*)ccc,rData,20);
-//		ccc[20]=0;
-//		OLED_ShowString(0, 40, ccc, 12, 1);
-//	}
-
-//	  if (f_open(&fnew, (const TCHAR *)"ToyDog.bin", FA_READ) == FR_OK)
-//	  {
-//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-//		OLED_ShowString(0, 20, "AUTO FLASH", 12, 1);
-//		while (!FLASH_SWD("ToyDog.bin"))
-//		{
-//		  uint8_t WaitTips[] = "...";
-//		  OLED_ShowString(75, 30, "          ", 12, 1);
-//		  OLED_ShowString(45, 30, "WAIT", 12, 1);
-//		  for (i = 0; i < 3; i++)
-//		  {
-//			OLED_ShowChar(69 + i * 6, 2, WaitTips[i], 12, 1);
-//			HAL_Delay(200);
-//		  }
-//		  OLED_ShowString(75, 30, "       ", 12, 1);
-//		}
-//		OLED_ShowString(98, 50, "BACK", 12, 1);
-//	  }
-//	  else
-//	  {
-//		OLED_ShowString(0, 30, "Open Bin failed", 12, 1);
-//		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-//	  }
-// if (!swd_init_debug())
-// {
-// 	OLED_ShowString(0, 50, "Connect Failed!", 12, 1);
-// 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-// 	HAL_Delay(1000);
-// 	OLED_ShowString(0, 50, "                ", 12, 1);
-// 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-// }
-// else
-// {
-// 	OLED_Clear();
-// 	file_name /= 10;
-// 	if (f_open(&fnew, (const TCHAR *)Name_Buffer[file_name], FA_READ) == FR_OK)
-// 	{
-// 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-// 		for (uint8_t i = 0; i < 8; i++)
-// 			OLED_Show_CH_String(35 + i * 6, 0, oled_CH3[i], 12, 1);
-// 		while (!FLASH_SWD((uint8_t *)Name_Buffer[file_name]))
-// 		{
-// 			if (button_num == 1)
-// 			{
-// 				Show.windows = 0;
-// 				break;
-// 			}
-// 			uint8_t WaitTips[] = "....";
-// 			OLED_ShowString(32, 30, "             ", 12, 1);
-// 			OLED_ShowString(0, 30, "WAIT", 12, 1);
-// 			for (uint8_t i = 0; i < 4; i++)
-// 			{
-// 				OLED_ShowChar(32 + i * 6, 30, WaitTips[i], 12, 1);
-// 				HAL_Delay(500);
-// 			}
-// 			OLED_ShowString(35, 30, "               ", 12, 1);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		OLED_ShowString(0, 30, "Open Bin failed", 12, 1);
-// 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-// 	}
-// }
-
 #else
 /***********************文件系统使用定义************************/
 
 /***********************变量定义************************/
-
-uint8_t readflag = 1;
-uint32_t addr = 0;
-uint32_t i = 0;
-uint16_t bytesread;
-char Name_Buffer[20][20];
-int8_t file_name = 0, name_cnt = 0;
-
-extern uint8_t button_num;
-extern uint8_t Select_algo;
-extern uint8_t Select_file;
-extern uint8_t show_page;
-uint8_t Need_Next = 0, Burn_cnt = 0;
 
 uint8_t FLASH_SWD(uint8_t *File)
 {
 	Res = f_open(&fnew, (const TCHAR *)File, FA_READ);
 	if (Res == FR_OK)
 	{
-		uint32_t progess = 0x0, burn_addr = 0x0, time;
+		uint32_t progess = 0x0, burn_addr = 0x0, time1, time2,time3;
 		readflag = 1;
 		if (swd_init_debug())
 		{
@@ -394,7 +451,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 			target_opt_uninit();
 			if (swd_init_debug())
 			{
-				time = HAL_GetTick();
+				time1 = HAL_GetTick();
 				if (target_flash_init(0x08000000) == ERROR_SUCCESS)
 				{
 
@@ -428,23 +485,23 @@ uint8_t FLASH_SWD(uint8_t *File)
 								//OLED_Show_progress_bar(progess / 10, 12, 12, 0, 30, 12, 1);
 								OLED_ShowNumber(50, Y0, progess, 3, 12, 1);
 								OLED_ShowString(70, Y0, "%", 12, 1);
-
 							}
 							else
 								return 0;
 						}
+						time2 = HAL_GetTick();
 						if (swd_init_debug())
 						{
 							Burn_cnt++;
-							OLED_ShowNumber(0, Y0, (HAL_GetTick() - time) / 1000, 2, 12, 1);
+							OLED_ShowNumber(0, Y0, (time2 - time1) / 1000, 2, 12, 1);
 							OLED_ShowString(13, Y0, ".", 12, 1);
-							OLED_ShowNumber(18, Y0, ((HAL_GetTick() - time) / 10) % 100, 2, 12, 1);
+							OLED_ShowNumber(18, Y0, ((time2 - time1) / 10) % 100, 2, 12, 1);
 							OLED_ShowString(30, Y0, "S", 12, 1);
-							
-							OLED_ShowNumber(90, Y0, f_size(&fnew)/((HAL_GetTick() - time) / 1000), 2, 12, 1);
+							time3 = (time2 - time1) / 1000 + (((time2 - time1) / 10) % 100)/100;
+
+							OLED_ShowNumber(90, Y0, f_size(&fnew) / time3, 2, 12, 1);
 							OLED_ShowString(105, Y0, "Kb/s", 12, 1);
-							
-							
+
 							HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 							swd_set_target_reset(0); //复位运行
 							OLED_ShowNumber(50, Y0, 100, 3, 12, 1);
@@ -483,40 +540,91 @@ void Auto_Fash(void)
 		OLED_ShowNumber(110, Y3, Burn_cnt, 4, 8, 1);
 		if (Need_Next == 1 || button_num == 9)
 		{
-			if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK) //如果存在这个文件
+			if (strstr(Name_Buffer[Select_file], "HEX"))
 			{
-				OLED_Clear();
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-				for (uint8_t i = 0; i < 8; i++)
-					OLED_Show_CH_String(35 + i * 6, Y2, oled_CH3[i], 12, 1); //开始烧录
-				while (!FLASH_SWD((uint8_t *)Name_Buffer[Select_file]))		 //打开文件
+				if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK)
 				{
-					if (button_num == 1) //卡住了可以按下退出
-					{
-						button_num = 0;
-						Show.windows = SHOW_MENU;
-						Show.mode = MODE_SET_NORMAL;
-						break;
-					}
-					else if (!swd_init_debug()) //芯片断开连接则退出
+					if (HexFormatUncode((uint8_t *)Name_Buffer[Select_file]) != 1)
 					{
 						OLED_Clear();
-						button_num = 0;
-						Show.windows = SHOW_OFFLINE;
-						Show.mode = MODE_SET_OFFLINE;
-						break;
+						OLED_ShowString(0, Y2, "Error!!", 8, 1);
+					}
+					else
+					{
+						OLED_Clear();
+						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+						for (uint8_t i = 0; i < 8; i++)
+							OLED_Show_CH_String(35 + i * 6, Y2, oled_CH3[i], 12, 1); //开始烧录
+						while (!FLASH_SWD((uint8_t *)"write.bin"))					 //打开文件
+						{
+							if (button_num == 1) //卡住了可以按下退出
+							{
+								button_num = 0;
+								Show.windows = SHOW_MENU;
+								Show.mode = MODE_SET_NORMAL;
+								break;
+							}
+							else if (!swd_init_debug()) //芯片断开连接则退出
+							{
+								OLED_Clear();
+								button_num = 0;
+								Show.windows = SHOW_OFFLINE;
+								Show.mode = MODE_SET_OFFLINE;
+								break;
+							}
+						}
+						//f_unlink("0:/write.bin");
+						//如果烧录完了还连接着芯片
+						if (swd_init_debug())
+						{
+							Need_Next = 0;
+						}
 					}
 				}
-				//如果烧录完了还连接着芯片
-				if (swd_init_debug())
+				else
 				{
-					Need_Next = 0;
+					OLED_Clear();
+					OLED_ShowString(0, Y2, "Open HEX failed", 8, 1);
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 				}
 			}
 			else
 			{
-				OLED_ShowString(0, Y2, "Open Bin failed", 8, 1);
-				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+				if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK) //如果存在这个文件
+				{
+					OLED_Clear();
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+					for (uint8_t i = 0; i < 8; i++)
+						OLED_Show_CH_String(35 + i * 6, Y2, oled_CH3[i], 12, 1); //开始烧录
+					while (!FLASH_SWD((uint8_t *)Name_Buffer[Select_file]))		 //打开文件
+					{
+						if (button_num == 1) //卡住了可以按下退出
+						{
+							button_num = 0;
+							Show.windows = SHOW_MENU;
+							Show.mode = MODE_SET_NORMAL;
+							break;
+						}
+						else if (!swd_init_debug()) //芯片断开连接则退出
+						{
+							OLED_Clear();
+							button_num = 0;
+							Show.windows = SHOW_OFFLINE;
+							Show.mode = MODE_SET_OFFLINE;
+							break;
+						}
+					}
+					//如果烧录完了还连接着芯片
+					if (swd_init_debug())
+					{
+						Need_Next = 0;
+					}
+				}
+				else
+				{
+					OLED_ShowString(0, Y2, "Open Bin failed", 8, 1);
+					HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+				}
 			}
 		}
 	}
@@ -528,108 +636,144 @@ void Auto_Fash(void)
 	}
 }
 
-void Select_BIN(void)
-{
-	static uint8_t choose = Y0;
-	if (button_num == 1)
-	{
-		if (choose < Y3)
-			choose += 8;
-		if (choose >= Y3)
-			choose = Y3;
-		OLED_ShowString(110, choose - 8, "  ", 8, 1);
-	}
-	else if (button_num == 3)
-	{
-		if (choose > Y0)
-			choose -= 8;
-		if (choose <= Y0)
-			choose = Y0;
-		OLED_ShowString(110, choose + 8, "  ", 8, 1);
-	}
-	else if (button_num == 2)
-	{
-		Select_file = choose / 8;
-		Show.windows = SHOW_OFFLINE;
-		Show.mode = MODE_SET_OFFLINE;
-		OLED_Clear();
-		for (uint8_t i = 0; i < 10; i++)
-			OLED_Show_CH_String(29 + i * 6, Y1, oled_CH4[i], 12, 1);
-		HAL_Delay(500);
-		OLED_Clear();
-	}
-	button_num = 0;
-	OLED_ShowString(110, choose, "<<", 8, 1);
-}
-
+MENU_T g_tMenu_BIN;
+char *g_Menu_BIN_Text[20];
 void Display_BIN(void)
 {
-	static uint8_t choose = Y0;
-	name_cnt = 0;
-	if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
+	static uint8_t fRefresh = 1;
+	static uint8_t s_MenuInit = 0;
+	if (s_MenuInit == 0)
 	{
-		f_readdir(&DirInfo, &FileInfo); //先读取一次无用值
-
-		while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
+		name_cnt = 0;
+		memset(g_Menu_BIN_Text, 0, sizeof(g_Menu_BIN_Text));
+		if (f_opendir(&DirInfo, (const TCHAR *)"0:") == FR_OK) /* 打开文件夹目录成功，目录信息已经在dir结构体中保存 */
 		{
-			if (!FileInfo.fname[0])
-				break;
-			strcpy(Name_Buffer[name_cnt], FileInfo.fname);
-			OLED_ShowNumber(0, choose, (choose + 8) / 8, 1, 8, 1);
-			OLED_ShowString(8, choose, ".", 8, 1);
-			OLED_ShowString(16, choose, (uint8_t *)Name_Buffer[name_cnt], 8, 1);
-			choose += 8;
-			name_cnt++;
+			f_readdir(&DirInfo, &FileInfo);					//先读取一次无用值
+			while (f_readdir(&DirInfo, &FileInfo) == FR_OK) /* 读文件信息到文件状态结构体中 */
+			{
+				if (!FileInfo.fname[0])
+				{
+					for (uint8_t i = 0; i < name_cnt; i++)
+					{
+						g_Menu_BIN_Text[i] = Name_Buffer[i];
+					}
+					g_Menu_BIN_Text[name_cnt] = "&";
+					break;
+				}
+				strcpy(Name_Buffer[name_cnt], FileInfo.fname);
+				name_cnt++;
+			}
+		}
+		s_MenuInit = 1;
+		g_tMenu_BIN.Left = MENU_LEFT;
+		g_tMenu_BIN.Top = MENU_TOP;
+		g_tMenu_BIN.Height = MENU_HEIGHT;
+		g_tMenu_BIN.Width = MENU_WIDTH;
+		g_tMenu_BIN.LineCap = MENU_CAP;
+		g_tMenu_BIN.Font = 8;
+		g_tMenu_BIN.ViewLine = MENU_HEIGHT / g_tMenu_BIN.Font;
+		g_tMenu_BIN.RollBackEn = 1; /* 允许回滚 */
+		g_tMenu_BIN.GBK = 0;
+		g_tMenu_BIN.ActiveBackColor = 0;					  /* 选中行背景色ID */
+		LCD_InitMenu(&g_tMenu_BIN, (char **)g_Menu_BIN_Text); /* 初始化菜单结构 */
+	}
+
+	if (fRefresh) /* 重新进入就 刷新整个界面 */
+	{
+		fRefresh = 0;
+		LCD_DispMenu(&g_tMenu_BIN);
+		if (g_tMenu_BIN.Cursor == 0)
+		{
+			;
 		}
 	}
-	choose = 0;
-}
-void Display_FLM(void)
-{
-	static uint8_t choose = Y0;
-	for (uint8_t i = 0; i < 4; i++)
-	{
-		OLED_ShowNumber(0, choose, (i + 1), 1, 8, 1);
-		OLED_ShowString(8, choose, ".", 8, 1);
-		OLED_ShowString(16, choose, (uint8_t *)STM32_ALGO[choose / 8].name, 8, 1);
-		choose += 8;
-	}
-	choose = 0;
-}
 
-void Select_FLM(void)
-{
-	static uint8_t choose = Y0;
-
-	if (button_num == 1)
+	/* 有键按下 */
+	switch (button_num)
 	{
-		if (choose < Y3)
-			choose += 8;
-		if (choose >= Y3)
-			choose = Y3;
-		OLED_ShowString(110, choose - 8, "  ", 8, 1);
-	}
-	else if (button_num == 3)
-	{
-		if (choose > Y0)
-			choose -= 8;
-		if (choose <= Y0)
-			choose = Y0;
-		OLED_ShowString(110, choose + 8, "  ", 8, 1);
-	}
-	else if (button_num == 2)
-	{
+	case 3: /* S键 上 */
 		OLED_Clear();
+		LCD_MoveUpMenu(&g_tMenu_BIN);
+		break;
+	case 2: /* S键 上 */
+		OLED_Clear();
+		fRefresh = 1;
 		for (uint8_t i = 0; i < 10; i++)
-			OLED_Show_CH_String(29 + i * 6, Y1, oled_CH4[i], 12, 1);
-		Select_algo = choose / 8;
+			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
+		Select_file = g_tMenu_BIN.Cursor;
 		HAL_Delay(500);
 		OLED_Clear();
 		Show.windows = SHOW_OFFLINE;
 		Show.mode = MODE_SET_OFFLINE;
+		break;
+	case 1: /* S键 上 */
+		OLED_Clear();
+		LCD_MoveDownMenu(&g_tMenu_BIN);
+		break;
 	}
 	button_num = 0;
-	OLED_ShowString(110, choose, "<<", 8, 1);
+}
+MENU_T g_tMenu_FLM;
+const uint8_t *g_Menu_FLM_Text[] = {
+	"1.STM32F0XX",
+	"2.STM32F1XX",
+	"3.STM32F3XX",
+	"4.STM32F4XX",
+	"5.STM32F7XX",
+	"6.STM32H7XX",
+	"&",
+};
+void Display_FLM(void)
+{
+	static uint8_t fRefresh = 1;
+	static uint8_t s_MenuInit = 0;
+
+	if (s_MenuInit == 0)
+	{
+		s_MenuInit = 1;
+		g_tMenu_FLM.Left = MENU_LEFT;
+		g_tMenu_FLM.Top = MENU_TOP;
+		g_tMenu_FLM.Height = MENU_HEIGHT;
+		g_tMenu_FLM.Width = MENU_WIDTH;
+		g_tMenu_FLM.LineCap = MENU_CAP;
+		g_tMenu_FLM.Font = 8;
+		g_tMenu_FLM.ViewLine = MENU_HEIGHT / g_tMenu_FLM.Font;
+		g_tMenu_FLM.RollBackEn = 1; /* 允许回滚 */
+		g_tMenu_FLM.GBK = 0;
+		g_tMenu_FLM.ActiveBackColor = 0;					  /* 选中行背景色ID */
+		LCD_InitMenu(&g_tMenu_FLM, (char **)g_Menu_FLM_Text); /* 初始化菜单结构 */
+	}
+	if (fRefresh) /* 重新进入就 刷新整个界面 */
+	{
+		fRefresh = 0;
+		LCD_DispMenu(&g_tMenu_FLM);
+		if (g_tMenu_FLM.Cursor == 0)
+		{
+			;
+		}
+	}
+	/* 有键按下 */
+	switch (button_num)
+	{
+	case 3: /* S键 上 */
+		LCD_MoveUpMenu(&g_tMenu_FLM);
+		break;
+	case 2: /* S键 上 */
+		OLED_Clear();
+		fRefresh = 1;
+		for (uint8_t i = 0; i < 10; i++)
+			OLED_Show_CH_String(29 + i * 6, Y2, oled_CH4[i], 12, 1);
+		Select_algo = g_tMenu_FLM.Cursor;
+		HAL_Delay(500);
+		OLED_Clear();
+		Show.windows = SHOW_OFFLINE;
+		Show.mode = MODE_SET_OFFLINE;
+		break;
+	case 1: /* S键 上 */
+		LCD_MoveDownMenu(&g_tMenu_FLM);
+		break;
+	}
+	button_num = 0;
 }
 //选择脱机烧录模式中的下载算法和文件
 void Select_Offline(void)
