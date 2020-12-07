@@ -1,6 +1,8 @@
 
 | KS无线DAP下载器 | 欢迎Star、项目不会停下、持续更新中 |
 | ----------------- | -------- |
+
+### 高速DAP下载器+脱机烧录 成品众筹：https://item.taobao.com/item.htm?spm=a1z09.8149145.0.0.a8aa5af8fyXiHK&id=610773587113&_u=7kjj862d27d
 * 使用Altium Designer 20画的PCB
 * 源码包含了有线模式、无线发射模式、无线接收模式和脱机烧录模式
 * 源码来源：USB部分是TeenyUSB HID+MSC+CDC,SWD部分是XVIN1987开源的SWD下载器
