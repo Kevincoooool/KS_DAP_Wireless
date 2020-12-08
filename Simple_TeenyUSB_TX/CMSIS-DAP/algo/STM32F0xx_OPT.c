@@ -33,7 +33,7 @@ const program_target_t flash_algo_F0 = {
         0x20001000
     },
 
-    0x20000400,  // mem buffer location
+    0x20000158,  // mem buffer location
     0x20000000,  // location to write prog_blob in target RAM
     sizeof(flash_code_F0),  // prog_blob size
     flash_code_F0,  // address of prog_blob

@@ -28,34 +28,64 @@ extern SPI_HandleTypeDef hspi1;
 
 #define PIN_SWCLK_SET PIN_SWCLK_TCK_SET
 #define PIN_SWCLK_CLR PIN_SWCLK_TCK_CLR
+#define PIN_DELAY() PIN_DELAY_SLOW(DAP_Data.clock_delay)
 
-#define SW_CLOCK_CYCLE() \
-	PIN_SWCLK_CLR();     \
-	PIN_SWCLK_SET();
+#define SW_CLOCK_CYCLE()                \
+ PIN_SWCLK_CLR();                      \
+ PIN_SWCLK_SET();                      
 
-//#define SW_WRITE_BIT(bit) \
-//	PIN_SWDIO_OUT(bit);   \
-//	PIN_SWCLK_CLR();      \
-//	PIN_SWCLK_SET();
 #define SW_WRITE_BIT(bit)               \
-	if (bit & 1)                \
-            {                           \
-                GPIOB->BSRR = GPIO_PIN_9 + (GPIO_PIN_10 << 16U); \
-                PIN_SWCLK_SET();     \
-            } \
-            else \
-            { \
-                GPIOB->BSRR = (GPIO_PIN_9 + GPIO_PIN_10) << 16U; \
-                PIN_SWCLK_SET(); \
-            }
+ PIN_SWDIO_OUT(bit);                   \
+ PIN_SWCLK_CLR();                      \
+ PIN_SWCLK_SET();                      
 
-#define SW_READ_BIT(bit)  \
-	PIN_SWCLK_CLR();      \
-	bit = PIN_SWDIO_IN(); \
-	PIN_SWCLK_SET();
+#define SW_READ_BIT(bit)                \
+ PIN_SWCLK_CLR();                      \
+ bit = PIN_SWDIO_IN();                 \
+ PIN_SWCLK_SET();                      
+
+// #define SW_CLOCK_CYCLE() \
+// 	PIN_SWCLK_CLR();     \
+// 	PIN_SWCLK_SET();
+
+// #define SW_WRITE_BIT(bit) \
+// 	PIN_SWDIO_OUT(bit);   \
+// 	PIN_SWCLK_CLR();      \
+// 	PIN_SWCLK_SET();
+
+
+// #define SW_READ_BIT(bit)  \
+// 	PIN_SWCLK_CLR();      \
+// 	bit = PIN_SWDIO_IN(); \
+// 	PIN_SWCLK_SET();
+
+// #define SW_CLOCK_CYCLE() \
+// 	PIN_SWCLK_CLR();     \
+// 	PIN_SWCLK_SET();
+
+// //#define SW_WRITE_BIT(bit) \
+// //	PIN_SWDIO_OUT(bit);   \
+// //	PIN_SWCLK_CLR();      \
+// //	PIN_SWCLK_SET();
+// #define SW_WRITE_BIT(bit)               \
+// 	if (bit & 1)                \
+//             {                           \
+//                 GPIOB->BSRR = GPIO_PIN_9 + (GPIO_PIN_10 << 16U); \
+//                 PIN_SWCLK_SET();     \
+//             } \
+//             else \
+//             { \
+//                 GPIOB->BSRR = (GPIO_PIN_9 + GPIO_PIN_10) << 16U; \
+//                 PIN_SWCLK_SET(); \
+//             }
+
+// #define SW_READ_BIT(bit)  \
+// 	PIN_SWCLK_CLR();      \
+// 	bit = PIN_SWDIO_IN(); \
+// 	PIN_SWCLK_SET();
 
 // #define PIN_DELAY() PIN_DELAY_SLOW(DAP_Data.clock_delay)
-#define PIN_DELAY() PIN_DELAY_FAST()
+
 // Generate SWJ Sequence
 //   count:  sequence bit count
 //   data:   pointer to sequence bit data

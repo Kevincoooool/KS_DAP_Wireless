@@ -45,7 +45,7 @@ int main(void)
 	DAP_Setup();											 //DAP的IO口
 	OLED_Init();											 //OLED初始化
 	OLED_Clear();											 //清空OLED屏幕
-//	OLED_ShowString(20, 4, "DAPLink", 24, 1);				 //开机显示
+	OLED_ShowString(20, 4, "DAPLink", 24, 1);				 //开机显示
 	tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE); //初始化teenyusb
 	tusb_set_device_config(dev, &device_config);			 //初始化teenyusb
 	tusb_open_device(dev);									 //初始化teenyusb
@@ -90,8 +90,8 @@ int main(void)
 	Button_Init();	 //初始化按键
 	OLED_Clear();
 	f_unlink("0:/write.bin");
-	Show.mode = MODE_SET_NORMAL;
-	Show.windows = SHOW_MENU;
+	Show.mode = MODE_SET_OFFLINE;
+	Show.windows = SHOW_OFFLINE;
 	
 	while (1)
 	{
