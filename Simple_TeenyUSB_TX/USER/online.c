@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-07-18 12:35:23
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-12-01 17:55:23
+ * @LastEditTime : 2021-02-01 16:22:59
  * @FilePath     : \Simple_TeenyUSB_TX\USER\online.c
  */
 /***************************************************************/
@@ -150,7 +150,7 @@ uint8_t dealing_data = 0;
 extern int hid_len;
 uint8_t usbd_hid_process_online(void)
 {
-#if ONLINE
+
 	//如果需要收数据
 	if (dealing_data)
 	{
@@ -159,7 +159,7 @@ uint8_t usbd_hid_process_online(void)
 		dealing_data = 0;
 		return 1;
 	}
-#endif
+
 	return 0;
 }
 /****************************************************************

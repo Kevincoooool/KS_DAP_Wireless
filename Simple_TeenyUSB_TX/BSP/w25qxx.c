@@ -4,7 +4,7 @@
  * @Author       : Kevincoooool
  * @Date         : 2020-10-15 14:27:56
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-13 16:57:52
+ * @LastEditTime : 2020-12-15 18:11:08
  * @FilePath     : \Simple_TeenyUSB_TX\BSP\w25qxx.c
  */
 #include "w25qxx.h"
@@ -46,20 +46,6 @@ uint8_t W25QXX_Init(void)
 //	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 //	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 //	W25QXX_CS_SET; //SPI FLASH不选中
-//	/**SPI2 GPIO Configuration    
-//    PB13     ------> SPI2_SCK
-//    PB14     ------> SPI2_MISO
-//    PB15     ------> SPI2_MOSI 
-//    */
-//	GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_15;
-//	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-//	GPIO_InitStruct.Pin = GPIO_PIN_14;
-//	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-//	GPIO_InitStruct.Pull = GPIO_NOPULL;
-//	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	W25QXX_TYPE = W25QXX_ReadID(); //读取FLASH ID.
 	if (W25QXX_TYPE != 0xff)

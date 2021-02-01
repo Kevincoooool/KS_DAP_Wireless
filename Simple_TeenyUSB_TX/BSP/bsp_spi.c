@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-04 20:32:30
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-11-30 14:02:26
+ * @LastEditTime : 2020-12-14 21:18:06
  * @FilePath     : \Simple_TeenyUSB_TX\BSP\bsp_spi.c
  */
 #include "bsp_spi.h"
@@ -27,22 +27,7 @@ uint8_t SPI_RW_1(uint8_t dat)
 		d_read = 0xFF;
 	}
 	return d_read;
-	// uint16_t retry = 0;
-	// while ((SPI1->SR & 1 << 1) == 0) //等待发送区空
-	// {
-	// 	retry++;
-	// 	if (retry >= 0XFFFE)
-	// 		return 0; //超时退出
-	// }
-	// SPI1->DR = dat; //发送一个byte
-	// retry = 0;
-	// while ((SPI1->SR & 1 << 0) == 0) //等待接收完一个byte
-	// {
-	// 	retry++;
-	// 	if (retry >= 0XFFFE)
-	// 		return 0; //超时退出
-	// }
-	// return SPI1->DR; //返回收到的数据
+
 }
 
 uint8_t SPI_RW_2(uint8_t dat)
@@ -53,12 +38,7 @@ uint8_t SPI_RW_2(uint8_t dat)
 		d_read = 0xFF;
 	}
 	return d_read;
-	//	uint8_t d_read, d_send = dat;
-	//	if (HAL_SPI_TransmitReceive_DMA(&hspi2, &d_send, &d_read, 1) != HAL_OK)
-	//	{
-	//		d_read = 0xFF;
-	//	}
-	//	return d_read;
+
 }
 static void DeInit_SPI(void)
 {
