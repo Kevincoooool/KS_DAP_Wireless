@@ -4,7 +4,7 @@
 * @Author: Kevincoooool
 * @Date: 2020-08-04 20:32:30
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2021-02-01 16:24:13
+ * @LastEditTime : 2021-05-22 17:16:45
  * @FilePath     : \Simple_TeenyUSB_TX\USER\main.c
 */
 #include "include.h"
@@ -42,6 +42,8 @@ int main(void)
 	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);		 //使用HAL_Delay才初始化
 	DAP_SPI_Init();											 //IO和SPI初始化  SPI1测试用来模拟SWD  SPI2用作W25Q
 	DAP_Setup();											 //DAP的IO口
+	W25QXX_Init();
+	HAL_Delay(1000);
 	OLED_Init();											 //OLED初始化
 	OLED_Clear();											 //清空OLED屏幕
 	OLED_ShowString(20, 4, "DAPLink", 24, 1);				 //开机显示
@@ -50,7 +52,8 @@ int main(void)
 	tusb_open_device(dev);									 //初始化teenyusb
 	MX_USART1_UART_Init();									 //串口1初始化
 	MX_USART2_UART_Init();									 //串口2初始化
-	if (W25QXX_Init())										 //W25Q初始化
+	
+	if (W25QXX_TYPE != 0xffff)										 //W25Q初始化
 	{
 		algo_init();				  //烧录算法初始化
 		RES_FS = f_mount(&fs, "", 1); //挂载文件系统到W25Q
