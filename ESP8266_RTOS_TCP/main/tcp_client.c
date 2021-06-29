@@ -1,7 +1,5 @@
 /* BSD Socket API Example
-
    This example code is in the Public Domain (or CC0 licensed, at your option.)
-
    Unless required by applicable law or agreed to in writing, this
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
@@ -86,7 +84,7 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
         if (info->disconnected.reason == WIFI_REASON_BASIC_RATE_NOT_SUPPORT)
         {
             /*Switch to 802.11 bgn mode */
-            esp_wifi_set_protocol(ESP_IF_WIFI_STA, WIFI_PROTOCAL_11B | WIFI_PROTOCAL_11G | WIFI_PROTOCAL_11N);
+            esp_wifi_set_protocol(ESP_IF_WIFI_STA, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);
         }
         esp_wifi_connect();
         xEventGroupClearBits(wifi_event_group, IPV4_GOTIP_BIT);
@@ -152,13 +150,16 @@ static void initialise_wifi_ap(void)
 
 #define BUF_SIZE 1024
 /*搞个全局变量来作为串口发送的接口*/
-static int newconn;
+static int newconn = -1;
+char rx_buffer[1024];
 static void tcp_client_task(void *pvParameters)
 {
-    char rx_buffer[1024];
+
     char addr_str[128];
     int addr_family;
     int ip_protocol;
+    int on = 1;
+    memset(rx_buffer, 0, 1024);
 
     while (1)
     {
@@ -182,6 +183,10 @@ static void tcp_client_task(void *pvParameters)
             ESP_LOGI(TAG, "Socket created");
             /*连接到服务器的地址和端口*/
             int err = connect(sock, (struct sockaddr *)&destAddr, sizeof(destAddr));
+
+            //setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (void *)&on, sizeof(on));
+            //setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (void *)&on, sizeof(on));
+
             if (err != 0)
             {
                 ESP_LOGE(TAG, "Socket unable to connect: errno %d", errno);
@@ -210,7 +215,6 @@ static void tcp_client_task(void *pvParameters)
                     gpio_set_level(GPIO_NUM_2, 1);
                 }
 
-                vTaskDelay(1 / portTICK_PERIOD_MS);
             }
             if (newconn != -1)
             {
@@ -224,11 +228,14 @@ static void tcp_client_task(void *pvParameters)
 }
 static void tcp_server_task(void *pvParameters)
 {
-    char rx_buffer[1024]={0};
     char addr_str[128];
     int addr_family;
     int ip_protocol;
+    int on = 1;
     struct sockaddr_in destAddr;
+
+    memset(rx_buffer, 0, 1024);
+
     destAddr.sin_addr.s_addr = htonl(IPADDR_ANY);
     destAddr.sin_family = AF_INET;
     destAddr.sin_port = htons(PORT);
@@ -245,6 +252,9 @@ static void tcp_server_task(void *pvParameters)
             break;
         }
         ESP_LOGI(TAG, "Socket created");
+
+        //setsockopt(listen_sock, SOL_SOCKET, SO_KEEPALIVE, (void *)&on, sizeof(on));
+        //setsockopt(listen_sock, IPPROTO_TCP, TCP_NODELAY, (void *)&on, sizeof(on));
 
         int err = bind(listen_sock, (struct sockaddr *)&destAddr, sizeof(destAddr));
         if (err != 0)
@@ -269,6 +279,10 @@ static void tcp_server_task(void *pvParameters)
             ESP_LOGE(TAG, "Unable to accept connection: errno %d", errno);
             break;
         }
+
+        //setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (void *)&on, sizeof(on));
+        //setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (void *)&on, sizeof(on));
+
         ESP_LOGI(TAG, "Socket accepted");
         gpio_set_level(GPIO_NUM_2, 0);
         newconn = sock;
@@ -298,7 +312,7 @@ static void tcp_server_task(void *pvParameters)
                 uart_write_bytes(UART_NUM_0, rx_buffer, len);
                 gpio_set_level(GPIO_NUM_2, 1);
             }
-            vTaskDelay(2 / portTICK_PERIOD_MS);
+            //vTaskDelay(2 / portTICK_PERIOD_MS);
         }
         if (newconn != -1)
         {
@@ -322,7 +336,7 @@ static void echo_task()
         .stop_bits = UART_STOP_BITS_1,
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE};
     uart_param_config(UART_NUM_0, &uart_config);
-    uart_driver_install(UART_NUM_0, BUF_SIZE, 0, 0, NULL);
+    uart_driver_install(UART_NUM_0, BUF_SIZE, 0, 0, NULL, 0);
 
     // Configure a temporary buffer for the incoming data
     uint8_t *data = (uint8_t *)malloc(BUF_SIZE);
@@ -332,14 +346,17 @@ static void echo_task()
         //从串口接收67个字节
         int len = uart_read_bytes(UART_NUM_0, data, 64, 20 / portTICK_RATE_MS);
         // Write data back to the UART
-        gpio_set_level(GPIO_NUM_2, 0);
-        int err = send(newconn, data, len, 0);
-        if (err < 0)
+        if (newconn != -1)
         {
-            ESP_LOGE(TAG, "Error uart sending: err %d", errno);
-            break;
+            gpio_set_level(GPIO_NUM_2, 0);
+            int err = send(newconn, data, len, 0);
+            if (err < 0)
+            {
+                ESP_LOGE(TAG, "Error uart sending: err %d", errno);
+                break;
+            }
+            gpio_set_level(GPIO_NUM_2, 1);
         }
-        gpio_set_level(GPIO_NUM_2, 1);
 
         // vTaskDelay(2 / portTICK_PERIOD_MS);
         //uart_write_bytes(UART_NUM_0, (const char *) data, len);
@@ -351,7 +368,7 @@ void app_main(void)
     ESP_ERROR_CHECK(nvs_flash_init());
     // initialise_wifi_sta();
     initialise_wifi_ap();
-    // xTaskCreate(tcp_client_task, "tcp_client", 4096, NULL, 5, NULL);
-    xTaskCreate(tcp_server_task, "tcp_server", 4096, NULL, 5, NULL);
-    xTaskCreate(echo_task, "uart_echo_task", 4096, NULL, 6, NULL);
+    // xTaskCreate(tcp_client_task, "tcp_client", 4096, NULL, 14, NULL);
+    xTaskCreate(tcp_server_task, "tcp_server", 4096, NULL, 14, NULL);
+    xTaskCreate(echo_task, "uart_echo_task", 4096, NULL, 15, NULL);
 }

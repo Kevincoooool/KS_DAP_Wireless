@@ -4,7 +4,7 @@
  * @Author: Kevincoooool
  * @Date: 2020-08-21 20:06:12
  * @LastEditors  : Kevincoooool
- * @LastEditTime : 2020-12-02 11:53:16
+ * @LastEditTime : 2021-05-22 17:17:20
  * @FilePath     : \Simple_TeenyUSB_TX\USER\offline.c
  */
 #include "offline.h"
@@ -43,16 +43,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 		readflag = 1;
 		if (swd_init_debug())
 		{
-			if (target_opt_init() == ERROR_SUCCESS)
-			{
-				if (target_opt_erase_chip() != ERROR_SUCCESS)
-				{
-					return 0;
-				}
-			}
-			else
-				return 0;
-			target_opt_uninit();
+
 			if (swd_init_debug())
 			{
 				time1 = HAL_GetTick();
@@ -439,22 +430,12 @@ uint8_t FLASH_SWD(uint8_t *File)
 		readflag = 1;
 		if (swd_init_debug())
 		{
-			if (target_opt_init() == ERROR_SUCCESS)
-			{
-				if (target_opt_erase_chip() != ERROR_SUCCESS)
-				{
-					return 0;
-				}
-			}
-			else
-				return 0;
-			target_opt_uninit();
 			if (swd_init_debug())
 			{
 				time1 = HAL_GetTick();
 				if (target_flash_init(0x08000000) == ERROR_SUCCESS)
 				{
-
+					OLED_Show_CH_String(35 + i * 6, Y2, oled_CH5[i], 12, 1);
 					if (target_flash_erase_chip() == ERROR_SUCCESS)
 					{
 

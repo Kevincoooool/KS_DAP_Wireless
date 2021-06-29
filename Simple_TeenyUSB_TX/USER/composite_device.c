@@ -263,7 +263,7 @@ int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uin
 extern uint16_t W25QXX_TYPE;
 int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32_t *block_size)
 {
-	if (W25QXX_TYPE == 0xffff)
+	if (W25QXX_TYPE != 0xffff)
 	{
 		*block_size = BLOCK_SIZE;
 		*block_num = BLOCK_COUNT;
@@ -279,13 +279,13 @@ int msc_get_cap(tusb_msc_device_t *msc, uint8_t lun, uint32_t *block_num, uint32
 int msc_block_read(tusb_msc_device_t *msc, uint8_t lun, uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
 	uint32_t len = block_len * BLOCK_SIZE;
-	if (W25QXX_TYPE == 0xffff)
+	if (W25QXX_TYPE != 0xffff)
 	{
-		memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
+		W25QXX_Read(buf, (block_addr * BLOCK_SIZE), len);
 	}
 	else
 	{
-		W25QXX_Read(buf, (block_addr * BLOCK_SIZE), len);
+		memcpy(buf, (uint8_t *)(START_ADDR + block_addr * BLOCK_SIZE), len);
 	}
 	return len;
 }
@@ -293,13 +293,13 @@ int msc_block_read(tusb_msc_device_t *msc, uint8_t lun, uint8_t *buf, uint32_t b
 int msc_block_write(tusb_msc_device_t *msc, uint8_t lun, const uint8_t *buf, uint32_t block_addr, uint16_t block_len)
 {
 	uint32_t len = block_len * BLOCK_SIZE;
-	if (W25QXX_TYPE == 0xffff)
+	if (W25QXX_TYPE != 0xffff)
 	{
-		flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
+		W25QXX_Write((uint8_t *)buf, (uint32_t)block_addr * BLOCK_SIZE, len);
 	}
 	else
 	{
-		W25QXX_Write((uint8_t *)buf, (uint32_t)block_addr * BLOCK_SIZE, len);
+		flash_write((uint32_t)START_ADDR + block_addr * BLOCK_SIZE, buf, len);
 	}
 	return len;
 }
