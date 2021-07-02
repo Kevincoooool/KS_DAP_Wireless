@@ -36,17 +36,18 @@ uint16_t W25QXX_TYPE = W25Q128; //默认是W25Q128
 uint8_t W25QXX_Init(void)
 {
 
-//	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	MX_SPI2_Init(); //初始化SPI
-//	__HAL_RCC_SPI2_CLK_ENABLE();
-//	__HAL_RCC_GPIOB_CLK_ENABLE();
-//	GPIO_InitStruct.Pin = GPIO_PIN_12;
-//	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-//	GPIO_InitStruct.Pull = GPIO_NOPULL;
-//	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-//	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-//	W25QXX_CS_SET; //SPI FLASH不选中
+	__HAL_RCC_SPI2_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	GPIO_InitStruct.Pin = GPIO_PIN_12;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	W25QXX_CS_SET; //SPI FLASH不选中
 
+	W25QXX_TYPE = W25QXX_ReadID(); //读取FLASH ID.
 	W25QXX_TYPE = W25QXX_ReadID(); //读取FLASH ID.
 	if (W25QXX_TYPE != 0xff)
 		return 0;

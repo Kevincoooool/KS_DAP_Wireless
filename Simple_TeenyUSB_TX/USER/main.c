@@ -40,13 +40,16 @@ int main(void)
 {
 	uint8_t RES_FS = 0;
 	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);		 //使用HAL_Delay才初始化
-	DAP_SPI_Init();											 //IO和SPI初始化  SPI1测试用来模拟SWD  SPI2用作W25Q
-	DAP_Setup();											 //DAP的IO口
+	DAP_SPI_Init();											 //IO和SPI初始化  SPI1测试用来模拟SWD  
 	W25QXX_Init();
-	HAL_Delay(1000);
+	DAP_Setup();											 //DAP的IO口
+//	W25QXX_Init();
+//	HAL_Delay(100);
+	
 	OLED_Init();											 //OLED初始化
 	OLED_Clear();											 //清空OLED屏幕
 	OLED_ShowString(20, 4, "DAPLink", 24, 1);				 //开机显示
+	
 	tusb_device_t *dev = tusb_get_device(TEST_APP_USB_CORE); //初始化teenyusb
 	tusb_set_device_config(dev, &device_config);			 //初始化teenyusb
 	tusb_open_device(dev);									 //初始化teenyusb

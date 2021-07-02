@@ -1,0 +1,33 @@
+/* Flash OS Routines (Automagically Generated)
+ * Copyright (c) 2009-2015 ARM Limited
+ */
+#include "flash_blob.h"
+
+static const uint32_t flash_code[] = {
+    {{prog_header}}
+    {{algo.format_algo_data(4, 8, "c")}}
+};
+
+const program_target_t flash_algo = {
+    {{'0x%08X' % (algo.symbols['Init'] + header_size + entry)}},  // Init
+    {{'0x%08X' % (algo.symbols['UnInit'] + header_size + entry)}},  // UnInit
+    {{'0x%08X' % (algo.symbols['EraseChip'] + header_size + entry)}},  // EraseChip
+    {{'0x%08X' % (algo.symbols['EraseSector'] + header_size + entry)}},  // EraseSector
+    {{'0x%08X' % (algo.symbols['ProgramPage'] + header_size + entry)}},  // ProgramPage
+
+    // BKPT : start of blob + 1
+    // RSB  : address to access global/static data
+    // RSP  : stack pointer
+    {
+        {{'0x%08X' % (entry + 1)}},
+        {{'0x%08X' % (entry + 1024*3)}},
+        {{'0x%08X' % stack_pointer}}
+    },
+
+    {{'0x%08X' % (entry + 1024)}},  // mem buffer location
+    {{'0x%08X' % entry}},  // location to write prog_blob in target RAM
+    sizeof(flash_code),  // prog_blob size
+    flash_code,  // address of prog_blob
+    {{'0x%08X' % algo.flash_page_size}},  // ram_to_flash_bytes_to_be_written
+};
+

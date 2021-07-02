@@ -435,7 +435,7 @@ uint8_t FLASH_SWD(uint8_t *File)
 				time1 = HAL_GetTick();
 				if (target_flash_init(0x08000000) == ERROR_SUCCESS)
 				{
-					OLED_Show_CH_String(35 + i * 6, Y2, oled_CH5[i], 12, 1);
+					//OLED_Show_CH_String(35 + i * 6, Y2, oled_CH5[i], 12, 1);
 					if (target_flash_erase_chip() == ERROR_SUCCESS)
 					{
 
@@ -658,11 +658,11 @@ void Display_BIN(void)
 		g_tMenu_BIN.ActiveBackColor = 0;					  /* 选中行背景色ID */
 		LCD_InitMenu(&g_tMenu_BIN, (char **)g_Menu_BIN_Text); /* 初始化菜单结构 */
 	}
-
+LCD_DispMenu(&g_tMenu_BIN);
 	if (fRefresh) /* 重新进入就 刷新整个界面 */
 	{
 		fRefresh = 0;
-		LCD_DispMenu(&g_tMenu_BIN);
+		
 		if (g_tMenu_BIN.Cursor == 0)
 		{
 			;
@@ -724,6 +724,7 @@ void Display_FLM(void)
 		g_tMenu_FLM.ActiveBackColor = 0;					  /* 选中行背景色ID */
 		LCD_InitMenu(&g_tMenu_FLM, (char **)g_Menu_FLM_Text); /* 初始化菜单结构 */
 	}
+	LCD_DispMenu(&g_tMenu_FLM);
 	if (fRefresh) /* 重新进入就 刷新整个界面 */
 	{
 		fRefresh = 0;
