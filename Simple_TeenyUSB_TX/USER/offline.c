@@ -525,7 +525,7 @@ void Auto_Fash(void)
 			{
 				if (f_open(&fnew, (const TCHAR *)Name_Buffer[Select_file], FA_READ) == FR_OK)
 				{
-					if (HexFormatUncode((uint8_t *)Name_Buffer[Select_file]) != 1)
+					if (HexFile2BinFile((char *)Name_Buffer[Select_file],"write.bin") != 0)
 					{
 						OLED_Clear();
 						OLED_ShowString(0, Y2, "Error!!", 8, 1);

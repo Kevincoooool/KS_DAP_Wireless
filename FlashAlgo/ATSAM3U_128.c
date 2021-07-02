@@ -1,0 +1,40 @@
+/* Flash OS Routines (Automagically Generated)
+ * Copyright (c) 2009-2015 ARM Limited
+ */
+#include "flash_blob.h"
+
+static const uint32_t flash_code[] = {
+    0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
+    0x4449493A, 0x200F6008, 0x02004939, 0x49396008, 0x20016008, 0x03C04938, 0x4B396148, 0x62584837,
+    0x48384A37, 0x62103AC0, 0x38804835, 0x07C96A81, 0x6B11D0FC, 0x00890889, 0x63111C49, 0x07096A81,
+    0x2101D5FC, 0x6A816311, 0xD5FC0709, 0x1C40482B, 0x20006258, 0x28024770, 0x4825D115, 0x6041492A,
+    0x07C96881, 0x68C2D0FC, 0xD4070791, 0x31FE4926, 0x68816041, 0xD0FC07C9, 0xD5040791, 0x60414923,
+    0x07C96881, 0x2000D0FC, 0x491F4770, 0x39084818, 0x68816041, 0xD0FC07C9, 0x47702000, 0x47702000,
+    0x4C12B530, 0x444C4D18, 0x4B116824, 0x02241B04, 0x02240C24, 0x43251F2D, 0x689D605D, 0xD0FC07ED,
+    0x08891CC9, 0xE0020089, 0x1F09CA20, 0x2900C020, 0x480DD1FA, 0x4304380A, 0x6898605C, 0xD0FC07C0,
+    0x07406898, 0xD0000F80, 0xBD302001, 0x00000004, 0x400E0800, 0x400E0A00, 0x400E1240, 0x504D4300,
+    0x400E04C0, 0x01370F01, 0x5A00000D, 0x5A00020C, 0x00000000, 0x00000000
+};
+
+const program_target_t flash_algo = {
+    0x20000021,  // Init
+    0x20000077,  // UnInit
+    0x200000AB,  // EraseChip
+    0x200000BD,  // EraseSector
+    0x200000C1,  // ProgramPage
+
+    // BKPT : start of blob + 1
+    // RSB  : address to access global/static data
+    // RSP  : stack pointer
+    {
+        0x20000001,
+        0x20000C00,
+        0x20001000
+    },
+
+    0x20000400,  // mem buffer location
+    0x20000000,  // location to write prog_blob in target RAM
+    sizeof(flash_code),  // prog_blob size
+    flash_code,  // address of prog_blob
+    0x00000100,  // ram_to_flash_bytes_to_be_written
+};
